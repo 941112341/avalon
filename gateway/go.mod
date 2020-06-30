@@ -1,4 +1,4 @@
-module server/gateway
+module github.com/941112341/avalon/gateway
 
 go 1.14
 
