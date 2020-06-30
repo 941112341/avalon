@@ -2,57 +2,27 @@ package main
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
+	"fmt"
+	"github.com/941112341/avalon/gateway/conf"
 	"net/http"
-	"sort"
 )
 
-// order 约小越先执行
-var Initializers InitializersSorted
-
-type Initializer struct {
-	Order   int
-	Name    string
-	Initial func(ctx context.Context) error
-}
-
-type InitializersSorted []Initializer
-
-func (sorted InitializersSorted) Len() int {
-	return len(sorted)
-}
-
-func (sorted InitializersSorted) Swap(i, j int) {
-	sorted[i], sorted[j] = sorted[j], sorted[i]
-}
-
-func (sorted InitializersSorted) Less(i, j int) bool {
-	return sorted[i].Order < sorted[j].Order
-}
-
-func init() {
-
-}
-
 func main() {
-
+	var err error
 	ctx := context.Background()
-	sort.Sort(Initializers)
-	for _, initializer := range Initializers {
-		if err := initializer.Initial(ctx); err != nil {
-			logrus.Errorf("initial err, task name %s, err %s", initializer.Name, err)
-			return
-		}
+	err = conf.InitConfig(ctx)
+	if err != nil {
+		panic(err)
 	}
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		writer.Write([]byte("hello world"))
 	})
-	err := http.ListenAndServeTLS(":443", "resources/1_www.jiangshihao.cn_bundle.crt", "resources/2_www.jiangshihao.cn.key", nil)
+	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", conf.Config.Https.Port), "resource/1_www.jiangshihao.cn_bundle.crt", "resource/2_www.jiangshihao.cn.key", nil)
 	if err != nil {
 		panic(err)
 	}
-	err = http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", conf.Config.Http.Port), nil)
 	if err != nil {
 		panic(err)
 	}
