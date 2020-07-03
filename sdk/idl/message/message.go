@@ -488,29 +488,29 @@ type MessageService interface {
 }
 
 type MessageServiceClient struct {
-	c thrift.TClient
+	C thrift.TClient
 }
 
 func NewMessageServiceClientFactory(t thrift.TTransport, f thrift.TProtocolFactory) *MessageServiceClient {
 	return &MessageServiceClient{
-		c: thrift.NewTStandardClient(f.GetProtocol(t), f.GetProtocol(t)),
+		C: thrift.NewTStandardClient(f.GetProtocol(t), f.GetProtocol(t)),
 	}
 }
 
 func NewMessageServiceClientProtocol(t thrift.TTransport, iprot thrift.TProtocol, oprot thrift.TProtocol) *MessageServiceClient {
 	return &MessageServiceClient{
-		c: thrift.NewTStandardClient(iprot, oprot),
+		C: thrift.NewTStandardClient(iprot, oprot),
 	}
 }
 
 func NewMessageServiceClient(c thrift.TClient) *MessageServiceClient {
 	return &MessageServiceClient{
-		c: c,
+		C: c,
 	}
 }
 
 func (p *MessageServiceClient) Client_() thrift.TClient {
-	return p.c
+	return p.C
 }
 
 // Parameters:

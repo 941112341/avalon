@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/941112341/avalon/sdk/message"
+	"github.com/941112341/avalon/sdk/idl/message"
 	"github.com/apache/thrift/lib/go/thrift"
 	"log"
 )
