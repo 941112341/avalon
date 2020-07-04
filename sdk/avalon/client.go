@@ -18,19 +18,19 @@ type iClient struct {
 }
 
 func NewClient(opts ...Option) thrift.TClient {
+	options := append([]Option{}, opts...)
+	options = append(options, defaultOptions...)
 	client := &iClient{
-		opts:   opts,
+		opts:   options,
 		config: &Config{MethodConfig: map[string]*Config{}},
 		middleware: []Middleware{
-			ConfigMiddleware, DownstreamMiddleware, RetryMiddleware, MetricsMiddleware, ThriftMiddleware,
+			ConfigMiddleware, DiscoverMiddleware, DownstreamMiddleware, RetryMiddleware, MetricsMiddleware, ThriftMiddleware,
 		},
 	}
-	for _, opt := range opts {
+	for _, opt := range options {
 		opt(client.config)
 	}
-	for _, opt := range defaultOptions {
-		opt(client.config)
-	}
+
 	var call Call
 	for i := len(client.middleware) - 1; i >= 0; i-- {
 		call = client.middleware[i](client.config, call)

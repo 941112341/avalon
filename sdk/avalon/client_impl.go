@@ -82,3 +82,12 @@ func ConfigMiddleware(config *Config, call Call) Call {
 		return call(ctx, method, args, result)
 	}
 }
+
+func DiscoverMiddleware(config *Config, call Call) Call {
+	return func(ctx context.Context, method string, args, result interface{}) error {
+		if config.HostPort == "" {
+			config.HostPort = "localhost:8888" // todo zk
+		}
+		return call(ctx, method, args, result)
+	}
+}

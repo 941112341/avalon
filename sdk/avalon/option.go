@@ -46,13 +46,6 @@ func (config *Config) Get(method string) *Config {
 	return config
 }
 
-func discoverServiceOption(config *Config) {
-	if config.HostPort == "" {
-		// todo zookeeper
-		config.HostPort = "localhost:8888"
-	}
-}
-
 func defaultConfig(config *Config) {
 	if config.Retry == 0 {
 		config.Retry = 3
@@ -70,4 +63,4 @@ func defaultConfig(config *Config) {
 	}
 }
 
-var defaultOptions []Option = []Option{discoverServiceOption, defaultConfig}
+var defaultOptions = []Option{defaultConfig}

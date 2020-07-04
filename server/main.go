@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"github.com/941112341/avalon/sdk/avalon"
 	"github.com/941112341/avalon/sdk/idl/message"
-	"github.com/apache/thrift/lib/go/thrift"
-	"log"
 )
 
 type Handler struct {
@@ -19,14 +17,12 @@ func (Handler Handler) MessageDispatcher(ctx context.Context, r *message.Message
 
 func main() {
 	processor := message.NewMessageServiceProcessor(&Handler{})
-	serverTransport, err := thrift.NewTServerSocket("localhost:8888")
+	server := avalon.NewServer(processor, func(config *avalon.Config) {
+		config.HostPort = "localhost:8888"
+	})
+	err := server.Start()
 	if err != nil {
-		log.Fatalln("Error:", err)
+		panic(err)
 	}
-	transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
-	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
-
-	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
-	fmt.Println("Running at:", "localhost:8888")
-	server.Serve()
+	defer server.Stop()
 }
