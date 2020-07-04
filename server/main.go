@@ -17,9 +17,7 @@ func (Handler Handler) MessageDispatcher(ctx context.Context, r *message.Message
 
 func main() {
 	processor := message.NewMessageServiceProcessor(&Handler{})
-	server := avalon.NewServer(processor, func(config *avalon.Config) {
-		config.HostPort = "localhost:8888"
-	})
+	server := avalon.NewServer(processor)
 	err := server.Start()
 	if err != nil {
 		panic(err)

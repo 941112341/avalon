@@ -1,34 +1,42 @@
 package avalon
 
 import (
+	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/pkg/errors"
 )
 
+type PreHook func(server *iServer) error
+
+type PostHook func(server *iServer) error
+
 type iServer struct {
-	opts      []Option
-	config    *Config
+	config    *ServerConfig
 	processor thrift.TProcessor
 
-	tServer thrift.TServer
+	preHooks  []PreHook
+	postHooks []PostHook
+	tServer   thrift.TServer
 }
 
-func NewServer(builder thrift.TProcessor, opts ...Option) *iServer {
-	options := append([]Option{}, opts...)
-	options = append(options, defaultOptions...)
-	iServer := &iServer{
-		opts:      options,
-		config:    &Config{},
+func NewServer(builder thrift.TProcessor) *iServer {
+	return NewServerWithConfig(builder, defaultServerConfig)
+}
+
+func NewServerWithConfig(builder thrift.TProcessor, config *ServerConfig) *iServer {
+	return &iServer{
+		config:    config,
 		processor: builder,
 	}
-	for _, option := range options {
-		option(iServer.config)
-	}
-
-	return iServer
 }
 
 func (server *iServer) Start() error {
+	for _, hook := range server.preHooks {
+		err := hook(server)
+		if err != nil {
+			return errors.WithMessage(err, inline.VString(hook))
+		}
+	}
 
 	serverTransport, err := thrift.NewTServerSocketTimeout(server.config.HostPort, server.config.Timeout)
 	if err != nil {
@@ -46,5 +54,13 @@ func (server *iServer) Start() error {
 }
 
 func (server *iServer) Stop() error {
-	return server.tServer.Stop()
+	err := server.tServer.Stop()
+
+	for _, hook := range server.postHooks {
+		err := hook(server)
+		if err != nil {
+			return errors.WithMessage(err, inline.VString(hook))
+		}
+	}
+	return err
 }

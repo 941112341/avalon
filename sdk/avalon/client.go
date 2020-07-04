@@ -7,30 +7,26 @@ import (
 
 type Call func(ctx context.Context, method string, args, result interface{}) error
 
-type Middleware func(config *Config, call Call) Call
+type Middleware func(config *ClientConfig, call Call) Call
 
 type iClient struct {
-	opts   []Option
-	config *Config
+	config *ClientConfig
 
 	middleware []Middleware
 	call       Call
 }
 
-func NewClient(opts ...Option) thrift.TClient {
-	options := append([]Option{}, opts...)
-	options = append(options, defaultOptions...)
+func NewClient() thrift.TClient {
+	return NewClientWithConfig(defaultClientConfig)
+}
+
+func NewClientWithConfig(config *ClientConfig) thrift.TClient {
 	client := &iClient{
-		opts:   options,
-		config: &Config{MethodConfig: map[string]*Config{}},
+		config: config,
 		middleware: []Middleware{
-			ConfigMiddleware, DiscoverMiddleware, DownstreamMiddleware, RetryMiddleware, MetricsMiddleware, ThriftMiddleware,
+			RetryMiddleware, DiscoverMiddleware, MetricsMiddleware, ThriftMiddleware,
 		},
 	}
-	for _, opt := range options {
-		opt(client.config)
-	}
-
 	var call Call
 	for i := len(client.middleware) - 1; i >= 0; i-- {
 		call = client.middleware[i](client.config, call)

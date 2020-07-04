@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func ThriftMiddleware(config *Config, _ Call) Call {
+func ThriftMiddleware(config *ClientConfig, _ Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		tArgs, ok := args.(thrift.TStruct)
 		if !ok {
@@ -49,7 +49,7 @@ func ThriftMiddleware(config *Config, _ Call) Call {
 	}
 }
 
-func MetricsMiddleware(config *Config, call Call) Call {
+func MetricsMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		t := time.Now()
 		err := call(ctx, method, args, result)
@@ -58,7 +58,7 @@ func MetricsMiddleware(config *Config, call Call) Call {
 	}
 }
 
-func RetryMiddleware(config *Config, call Call) Call {
+func RetryMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		return inline.Retry(func() error {
 			return call(ctx, method, args, result)
@@ -66,24 +66,7 @@ func RetryMiddleware(config *Config, call Call) Call {
 	}
 }
 
-func DownstreamMiddleware(config *Config, call Call) Call {
-	return func(ctx context.Context, method string, args, result interface{}) error {
-		err := call(ctx, method, args, result)
-		if err != nil && config.Downstream != nil {
-			return config.Downstream(ctx, method, args, result, err)
-		}
-		return errors.Cause(err)
-	}
-}
-
-func ConfigMiddleware(config *Config, call Call) Call {
-	return func(ctx context.Context, method string, args, result interface{}) error {
-		*config = *config.Get(method)
-		return call(ctx, method, args, result)
-	}
-}
-
-func DiscoverMiddleware(config *Config, call Call) Call {
+func DiscoverMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		if config.HostPort == "" {
 			config.HostPort = "localhost:8888" // todo zk
