@@ -55,7 +55,7 @@ func Read(config interface{}, resource string) error {
 	for _, file := range files {
 		err = ReadYaml(config, file)
 		if err != nil {
-			log.NewLoggerWithRotate().WithField("file", file).
+			log.New().WithField("file", file).
 				WithField("err", err.Error()).Info("write yaml err")
 		}
 		return nil

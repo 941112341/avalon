@@ -4,35 +4,53 @@ import (
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/pkg/errors"
+	"sort"
 )
 
-type PreHook func(server *iServer) error
+type Lifecycle interface {
+	PreStart(config *ServerConfig) error
+	PreStop(config *ServerConfig) error
+	Order() int
+}
 
-type PostHook func(server *iServer) error
+type Lifecycles []Lifecycle
+
+func (ls Lifecycles) Len() int {
+	return len(ls)
+}
+
+func (ls Lifecycles) Swap(i, j int) {
+	ls[i], ls[j] = ls[j], ls[i]
+}
+
+func (ls Lifecycles) Less(i, j int) bool {
+	return ls[i].Order() < ls[j].Order()
+}
 
 type iServer struct {
 	config    *ServerConfig
 	processor thrift.TProcessor
 
-	preHooks  []PreHook
-	postHooks []PostHook
-	tServer   thrift.TServer
+	tServer thrift.TServer
+	hooks   []Lifecycle
 }
 
 func NewServer(builder thrift.TProcessor) *iServer {
 	return NewServerWithConfig(builder, defaultServerConfig)
 }
 
-func NewServerWithConfig(builder thrift.TProcessor, config *ServerConfig) *iServer {
+func NewServerWithConfig(builder thrift.TProcessor, config *ServerConfig, hooks ...Lifecycle) *iServer {
+	sort.Sort(Lifecycles(hooks))
 	return &iServer{
 		config:    config,
 		processor: builder,
+		hooks:     hooks,
 	}
 }
 
 func (server *iServer) Start() error {
-	for _, hook := range server.preHooks {
-		err := hook(server)
+	for _, hook := range server.hooks {
+		err := hook.PreStart(server.config)
 		if err != nil {
 			return errors.WithMessage(err, inline.VString(hook))
 		}
@@ -56,8 +74,8 @@ func (server *iServer) Start() error {
 func (server *iServer) Stop() error {
 	err := server.tServer.Stop()
 
-	for _, hook := range server.postHooks {
-		err := hook(server)
+	for _, hook := range server.hooks {
+		err := hook.PreStop(server.config)
 		if err != nil {
 			return errors.WithMessage(err, inline.VString(hook))
 		}

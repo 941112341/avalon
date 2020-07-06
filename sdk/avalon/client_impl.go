@@ -30,7 +30,7 @@ func ThriftMiddleware(config *ClientConfig, _ Call) Call {
 		if config.Timeout != time.Duration(0) {
 			err = tSocket.SetTimeout(config.Timeout)
 			if err != nil {
-				log.NewLoggerWithRotate().WithField("err", err.Error()).WithField("warn", config.Timeout).Warningln()
+				log.New().WithField("err", err.Error()).WithField("warn", config.Timeout).Warningln()
 			}
 		}
 		transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
@@ -53,7 +53,7 @@ func MetricsMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		t := time.Now()
 		err := call(ctx, method, args, result)
-		log.NewLoggerWithRotate().WithField("duration", time.Since(t).String()).WithField("err", err).Info("call")
+		log.New().WithField("duration", time.Since(t).String()).WithField("err", err).Info("call")
 		return err
 	}
 }

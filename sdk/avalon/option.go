@@ -8,6 +8,7 @@ type Config struct {
 	Timeout     time.Duration
 	HostPort    string
 	ServiceName string
+	ZkHostPort  string
 }
 
 type ClientConfig struct {

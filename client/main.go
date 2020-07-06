@@ -17,5 +17,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	log.NewLoggerWithRotate().Info(string(resp.Body))
+	log.New().Info(string(resp.Body))
 }

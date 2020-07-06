@@ -9,7 +9,7 @@ import (
 
 var Log *logrus.Logger
 
-func NewLoggerWithRotate() *logrus.Logger {
+func New() *logrus.Logger {
 	if Log != nil {
 		return Log
 	}

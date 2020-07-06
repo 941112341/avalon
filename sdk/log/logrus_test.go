@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewLoggerWithRotate(t *testing.T) {
-	NewLoggerWithRotate().WithFields(logrus.Fields{
+	New().WithFields(logrus.Fields{
 		"hello": "world",
 	}).Error("message")
 }
