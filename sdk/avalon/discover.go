@@ -11,7 +11,7 @@ var DiscoverMap *collect.SyncMap
 var ZkClient *zookeeper.ZkClient
 
 // must after initialClient
-func startDiscover(config zookeeper.ZkConfig) error {
+func InitialDiscover(config zookeeper.ZkConfig) error {
 	if DiscoverMap == nil {
 		DiscoverMap = collect.NewSyncMap()
 		if err := initialZkClient(config); err != nil {

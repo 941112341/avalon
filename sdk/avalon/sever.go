@@ -88,7 +88,7 @@ func Wrap(cfg *ServerConfig, server Server) *Bootstrap {
 		cfg:    cfg,
 		preHooks: []func(cfg *ServerConfig) error{
 			func(cfg *ServerConfig) error {
-				return startDiscover(cfg.ZkConfig)
+				return InitialDiscover(cfg.ZkConfig)
 			},
 		},
 		wrappers: []ServerWrapper{
