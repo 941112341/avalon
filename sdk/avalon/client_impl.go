@@ -56,7 +56,11 @@ func MetricsMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		t := time.Now()
 		err := call(ctx, method, args, result)
-		log.New().WithField("duration", time.Since(t).String()).WithField("err", err).Info("call")
+		log.New().
+			WithField("duration", time.Since(t).String()).
+			WithField("err", err).
+			WithField("hostPort", config.HostPort).
+			Info("call")
 		return err
 	}
 }
@@ -71,9 +75,6 @@ func RetryMiddleware(config *ClientConfig, call Call) Call {
 
 func DiscoverMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
-		if err := startDiscover(config.ZkConfig); err != nil {
-			return errors.Cause(err)
-		}
 		hostPortList := make([]string, 0)
 		prefix := config.ZkConfig.Path + "/" + config.ServiceName
 		DiscoverMap.Range(func(key, value interface{}) {

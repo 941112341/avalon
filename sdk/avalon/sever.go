@@ -57,9 +57,16 @@ type Bootstrap struct {
 	server   Server
 	cfg      *ServerConfig
 	wrappers []ServerWrapper
+	preHooks []func(cfg *ServerConfig) error
 }
 
 func (b *Bootstrap) Start() error {
+	for _, hook := range b.preHooks {
+		err := hook(b.cfg)
+		if err != nil {
+			return errors.Cause(err)
+		}
+	}
 	s := b.server
 	for _, wrapper := range b.wrappers {
 		s = wrapper(b.cfg, s)
@@ -79,6 +86,11 @@ func Wrap(cfg *ServerConfig, server Server) *Bootstrap {
 	return &Bootstrap{
 		server: server,
 		cfg:    cfg,
+		preHooks: []func(cfg *ServerConfig) error{
+			func(cfg *ServerConfig) error {
+				return startDiscover(cfg.ZkConfig)
+			},
+		},
 		wrappers: []ServerWrapper{
 			ServiceRegisterWrapper,
 		},

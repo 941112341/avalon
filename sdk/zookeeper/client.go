@@ -45,11 +45,11 @@ type Listener func(event Event)
 
 type Event struct {
 	Path    string
-	OldData string
-	Data    string
+	OldData string `json:"omitempty"`
+	Data    string `json:"omitempty"`
 	Type    zk.EventType
-	Stat    *zk.Stat
-	Err     error
+	Stat    *zk.Stat `json:"omitempty"`
+	Err     error    `json:"omitempty"`
 	Status  EventStatus
 }
 
@@ -150,9 +150,7 @@ func (c *ZkClient) ListenerTree(path string, maps *collect.SyncMap) {
 	}
 
 	c.WatchTree(path, func(event Event) {
-		if event.Status > Success {
-			log.New().WithField("event", event).Errorln("receive zk err event")
-		}
+		log.New().WithField("event", event).Infoln("receive zk err event")
 		switch event.Type {
 		case zk.EventNodeCreated, zk.EventNodeDataChanged:
 			maps.Put(event.Path, event.Data)

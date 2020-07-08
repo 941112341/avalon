@@ -24,9 +24,7 @@ func (s *server) Stop() error {
 func ServiceRegisterWrapper(cfg *ServerConfig, coreServer Server) Server {
 	return &server{
 		start: func() error {
-			if err := initialZkClient(cfg.ZkConfig); err != nil {
-				return errors.Cause(err)
-			}
+
 			servicePath := cfg.ZkConfig.Path + "/" + cfg.ServiceName
 			exist, _, err := ZkClient.Conn.Exists(servicePath)
 			if err != nil {
