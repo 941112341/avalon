@@ -1,14 +1,11 @@
 package inline
 
 import (
-	"github.com/pkg/errors"
 	"time"
 )
 
+// retry >= 0
 func RetryFun(f func() error, retry int, wait time.Duration, nextTime func(wt time.Duration, retry int) time.Duration) (err error) {
-	if retry < 0 {
-		return errors.New("retry cannot be zero")
-	}
 	for i := 0; i < retry+1; i++ {
 		if err = f(); err == nil {
 			return nil

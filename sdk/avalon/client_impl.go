@@ -102,7 +102,7 @@ func DiscoverMiddleware(config *ClientConfig, call Call) Call {
 func DebugMiddleware(config *ClientConfig, call Call) Call {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		if config.ClientIp == "" {
-			ip, err := inline.GetIp()
+			ip, err := inline.InetAddress()
 			if err != nil {
 				return errors.WithMessage(err, "get ip err")
 			}

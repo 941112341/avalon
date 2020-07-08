@@ -6,39 +6,32 @@ import (
 	"github.com/941112341/avalon/sdk/log"
 	"github.com/pkg/errors"
 	"github.com/samuel/go-zookeeper/zk"
-	"time"
+	"sync"
 )
 
-type EventStatus int
+var ZkClientInstance *ZkClient
+var once sync.Once
 
-const (
-	Success EventStatus = iota
-	GetFail
-	ChildrenFail
-)
-
-type zkClient struct {
-	Conn      *zk.Conn
-	EventChan <-chan zk.Event
+func GetZkClientInstance(cfg *ZkConfig) (*ZkClient, error) {
+	var err error
+	once.Do(func() {
+		ZkClientInstance, err = NewClient(cfg)
+	})
+	return ZkClientInstance, err
 }
 
-func NewClient(hostPorts []string, sessionTimeout time.Duration) (*ZkClient, error) {
-	conn, eventChan, err := zk.Connect(hostPorts, sessionTimeout)
+func NewClient(cfg *ZkConfig) (*ZkClient, error) {
+	conn, eventChan, err := zk.Connect(cfg.HostPorts, cfg.SessionTimeout)
 	if err != nil {
-		return nil, errors.WithMessage(err, inline.JsonString(hostPorts))
+		return nil, errors.WithMessage(err, inline.JsonString(cfg.HostPorts))
 	}
-	cli := zkClient{Conn: conn, EventChan: eventChan}
-	return &ZkClient{zkClient: cli}, nil
-}
-
-func (zkClient *zkClient) Close() {
-	zkClient.Conn.Close()
+	return &ZkClient{Conn: conn, EventChan: eventChan}, nil
 }
 
 type ZkClient struct {
-	zkClient
-
-	isClose bool
+	Conn      *zk.Conn
+	EventChan <-chan zk.Event
+	isClose   bool
 }
 
 type Listener func(event Event)
@@ -50,11 +43,10 @@ type Event struct {
 	Type    zk.EventType
 	Stat    *zk.Stat `json:"omitempty"`
 	Err     error    `json:"omitempty"`
-	Status  EventStatus
 }
 
 func (c *ZkClient) Close() {
-	c.zkClient.Close()
+	c.Conn.Close()
 	c.isClose = true
 }
 
@@ -67,9 +59,8 @@ func (c *ZkClient) watchTree(path string, listener Listener, dataMap *collect.Sy
 	data, stat, ch, err := c.Conn.GetW(path)
 	if err != nil {
 		listener(Event{
-			Path:   path,
-			Err:    err,
-			Status: GetFail,
+			Path: path,
+			Err:  err,
 		})
 		return
 	}
@@ -85,9 +76,8 @@ func (c *ZkClient) watchTree(path string, listener Listener, dataMap *collect.Sy
 	child, _, ch, err := c.Conn.ChildrenW(path)
 	if err != nil {
 		listener(Event{
-			Path:   path,
-			Status: ChildrenFail,
-			Err:    err,
+			Path: path,
+			Err:  err,
 		})
 		return
 	}

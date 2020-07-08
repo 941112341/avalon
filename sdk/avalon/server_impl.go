@@ -38,7 +38,7 @@ func ServiceRegisterWrapper(cfg *ServerConfig, coreServer Server) Server {
 			hostPort := cfg.HostPort
 			idx := strings.LastIndex(hostPort, ":")
 			port := hostPort[idx:]
-			ip, err := inline.GetIp()
+			ip, err := inline.InetAddress()
 			if err != nil {
 				return errors.Cause(err)
 			}
