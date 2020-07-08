@@ -1,13 +1,13 @@
 package inline
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/json-iterator/go"
 )
 
 func JsonString(o interface{}) string {
-	body, _ := json.Marshal(o)
-	return string(body)
+	body, _ := jsoniter.MarshalToString(o)
+	return body
 }
 
 func VString(o interface{}) string {

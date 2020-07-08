@@ -1,65 +1,41 @@
 package avalon
 
 import (
-	"github.com/941112341/avalon/sdk/inline"
+	"github.com/941112341/avalon/sdk/log"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/pkg/errors"
-	"sort"
+	"github.com/sirupsen/logrus"
+	"time"
 )
 
-type Lifecycle interface {
-	PreStart(config *ServerConfig) error
-	PreStop(config *ServerConfig) error
-	Order() int
+type Server interface {
+	Start() error
+	Stop() error
 }
 
-type Lifecycles []Lifecycle
-
-func (ls Lifecycles) Len() int {
-	return len(ls)
-}
-
-func (ls Lifecycles) Swap(i, j int) {
-	ls[i], ls[j] = ls[j], ls[i]
-}
-
-func (ls Lifecycles) Less(i, j int) bool {
-	return ls[i].Order() < ls[j].Order()
-}
-
-type iServer struct {
-	config    *ServerConfig
+type thriftServer struct {
 	processor thrift.TProcessor
 
 	tServer thrift.TServer
-	hooks   []Lifecycle
+	config  *ServerConfig
 }
 
-func NewServer(builder thrift.TProcessor) *iServer {
-	return NewServerWithConfig(builder, defaultServerConfig)
-}
-
-func NewServerWithConfig(builder thrift.TProcessor, config *ServerConfig, hooks ...Lifecycle) *iServer {
-	sort.Sort(Lifecycles(hooks))
-	return &iServer{
+func NewThriftServer(builder thrift.TProcessor, config *ServerConfig) *thriftServer {
+	return &thriftServer{
 		config:    config,
 		processor: builder,
-		hooks:     hooks,
 	}
 }
 
-func (server *iServer) Start() error {
-	for _, hook := range server.hooks {
-		err := hook.PreStart(server.config)
-		if err != nil {
-			return errors.WithMessage(err, inline.VString(hook))
-		}
-	}
+func (server *thriftServer) Start() error {
 
-	serverTransport, err := thrift.NewTServerSocketTimeout(server.config.HostPort, server.config.Timeout)
+	serverTransport, err := thrift.NewTServerSocketTimeout(server.config.HostPort, server.config.Timeout*time.Second)
 	if err != nil {
 		return errors.WithMessage(err, "new socket")
 	}
+	log.New().WithFields(logrus.Fields{
+		"hostPort": server.config.HostPort,
+	}).Infof("server start")
 	transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
 	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
 	tServer := thrift.NewTSimpleServer4(server.processor, serverTransport, transportFactory, protocolFactory)
@@ -71,14 +47,40 @@ func (server *iServer) Start() error {
 	return nil
 }
 
-func (server *iServer) Stop() error {
-	err := server.tServer.Stop()
+func (server *thriftServer) Stop() error {
+	return server.tServer.Stop()
+}
 
-	for _, hook := range server.hooks {
-		err := hook.PreStop(server.config)
-		if err != nil {
-			return errors.WithMessage(err, inline.VString(hook))
-		}
+type ServerWrapper func(cfg *ServerConfig, server Server) Server
+
+type Bootstrap struct {
+	server   Server
+	cfg      *ServerConfig
+	wrappers []ServerWrapper
+}
+
+func (b *Bootstrap) Start() error {
+	s := b.server
+	for _, wrapper := range b.wrappers {
+		s = wrapper(b.cfg, s)
 	}
-	return err
+	return s.Start()
+}
+
+func (b *Bootstrap) Stop() error {
+	s := b.server
+	for _, wrapper := range b.wrappers {
+		s = wrapper(b.cfg, s)
+	}
+	return s.Stop()
+}
+
+func Wrap(cfg *ServerConfig, server Server) *Bootstrap {
+	return &Bootstrap{
+		server: server,
+		cfg:    cfg,
+		wrappers: []ServerWrapper{
+			ServiceRegisterWrapper,
+		},
+	}
 }

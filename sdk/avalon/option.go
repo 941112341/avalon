@@ -1,27 +1,25 @@
 package avalon
 
 import (
+	"github.com/941112341/avalon/sdk/zookeeper"
 	"time"
 )
 
 type Config struct {
-	Timeout     time.Duration
-	HostPort    string
-	ServiceName string
-	ZkHostPort  string
+	Timeout     time.Duration `yaml:"Timeout"`
+	HostPort    string        `yaml:"HostPort"`
+	ServiceName string        `yaml:"ServiceName"`
+
+	zookeeper.ZkConfig `yaml:"ZkConfig"`
 }
 
 type ClientConfig struct {
-	Retry int
-	Wait  time.Duration
-	Config
+	Retry    int           `yaml:"Retry"`
+	Wait     time.Duration `yaml:"Wait"`
+	ClientIp string        `yaml:"ClientIp"`
+	Config   `yaml:"Config"`
 }
 
 type ServerConfig struct {
-	Config
+	Config `yaml:"Config"`
 }
-
-var defaultClientConfig = &ClientConfig{Config: defaultConfig}
-var defaultServerConfig = &ServerConfig{Config: defaultConfig}
-
-var defaultConfig = Config{Timeout: 1 * time.Second, HostPort: "localhost:8888"}

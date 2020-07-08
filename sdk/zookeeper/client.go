@@ -1,6 +1,7 @@
 package zookeeper
 
 import (
+	"github.com/941112341/avalon/sdk/collect"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/941112341/avalon/sdk/log"
 	"github.com/pkg/errors"
@@ -58,11 +59,11 @@ func (c *ZkClient) Close() {
 }
 
 func (c *ZkClient) WatchTree(path string, listener Listener) {
-	c.watchTree(path, listener, &inline.SyncMap{})
+	c.watchTree(path, listener, collect.NewSyncMap())
 }
 
 // 监听节点 todo 重构
-func (c *ZkClient) watchTree(path string, listener Listener, dataMap *inline.SyncMap) {
+func (c *ZkClient) watchTree(path string, listener Listener, dataMap *collect.SyncMap) {
 	data, stat, ch, err := c.Conn.GetW(path)
 	if err != nil {
 		listener(Event{
@@ -79,7 +80,7 @@ func (c *ZkClient) watchTree(path string, listener Listener, dataMap *inline.Syn
 		Type: zk.EventNodeCreated,
 		Stat: stat,
 	})
-	dataMap.Store(path, dataStr)
+	dataMap.Put(path, dataStr)
 
 	child, _, ch, err := c.Conn.ChildrenW(path)
 	if err != nil {
@@ -117,7 +118,7 @@ func (c *ZkClient) watchTree(path string, listener Listener, dataMap *inline.Syn
 							Err:     err,
 						})
 					}
-					dataMap.Store(path, dataStr)
+					dataMap.Put(path, dataStr)
 				case zk.EventNodeDeleted:
 					data, stat, ch, err = c.Conn.GetW(path)
 					listener(Event{
@@ -143,19 +144,20 @@ func (c *ZkClient) watchTree(path string, listener Listener, dataMap *inline.Syn
 	}()
 }
 
-func (c *ZkClient) ListenerTree(path string, maps map[string]string) {
+func (c *ZkClient) ListenerTree(path string, maps *collect.SyncMap) {
 	if maps == nil {
 		return
 	}
+
 	c.WatchTree(path, func(event Event) {
 		if event.Status > Success {
 			log.New().WithField("event", event).Errorln("receive zk err event")
 		}
 		switch event.Type {
 		case zk.EventNodeCreated, zk.EventNodeDataChanged:
-			maps[event.Path] = event.Data
+			maps.Put(event.Path, event.Data)
 		case zk.EventNodeDeleted:
-			delete(maps, event.Path)
+			maps.Delete(event.Path)
 		}
 	})
 }

@@ -2,12 +2,23 @@ package zookeeper
 
 import (
 	"fmt"
+	"github.com/941112341/avalon/sdk/collect"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/941112341/avalon/sdk/log"
 	"github.com/samuel/go-zookeeper/zk"
 	"testing"
 	"time"
 )
+
+var cli *ZkClient
+
+func init() {
+	var err error
+	cli, err = NewClient([]string{"localhost:2181"}, time.Minute)
+	if err != nil {
+		panic(err)
+	}
+}
 
 func TestListener(t *testing.T) {
 	cli, err := NewClient([]string{"localhost:2181"}, time.Second)
@@ -46,10 +57,7 @@ func TestWrite(t *testing.T) {
 }
 
 func TestClient(t *testing.T) {
-	cli, err := NewClient([]string{"localhost:2181"}, time.Minute)
-	if err != nil {
-		panic(err)
-	}
+
 	defer cli.Close()
 
 	cli.WatchTree("/host", func(event Event) {
@@ -57,4 +65,18 @@ func TestClient(t *testing.T) {
 	})
 
 	time.Sleep(10 * time.Minute)
+}
+
+func TestListenerMap(t *testing.T) {
+	defer cli.Close()
+	maps := collect.NewSyncMap()
+	cli.ListenerTree("/host", maps)
+
+	x := time.NewTicker(6 * time.Second)
+	for {
+		select {
+		case <-x.C:
+			fmt.Println(maps.String())
+		}
+	}
 }

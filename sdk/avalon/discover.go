@@ -1,40 +1,34 @@
 package avalon
 
 import (
-	"github.com/941112341/avalon/sdk/inline"
+	"github.com/941112341/avalon/sdk/collect"
+	"github.com/941112341/avalon/sdk/zookeeper"
 	"github.com/pkg/errors"
-	"math/rand"
+	"time"
 )
 
-type Discover interface {
-	Get(serviceName string) (string, error)
-	Put(serviceName, hostPort string)
-}
+var DiscoverMap *collect.SyncMap
+var ZkClient *zookeeper.ZkClient
 
-type RandomDiscover struct {
-	hostMap inline.SaveMapList
-}
-
-func (r *RandomDiscover) Get(serviceName string) (string, error) {
-	v, ok := r.hostMap.Get(serviceName)
-	if !ok {
-		return "", errors.Errorf("serviceName %s not found", serviceName)
+// must after initialClient
+func startDiscover(config zookeeper.ZkConfig) error {
+	if DiscoverMap == nil {
+		DiscoverMap = collect.NewSyncMap()
+		if err := initialZkClient(config); err != nil {
+			return errors.Cause(err)
+		}
+		ZkClient.ListenerTree(config.Path, DiscoverMap)
 	}
-
-	host, ok := v.([]interface{})
-	if !ok {
-		return "", errors.Errorf("serviceName %s, hostMap %s type not match", serviceName, inline.JsonString(v))
-	}
-	idx := rand.Intn(len(host))
-	hostPortString, ok := host[idx].(string)
-	if !ok {
-		return "", errors.Errorf("host=%s, idx=%d is not string", inline.JsonString(host), idx)
-	}
-	return hostPortString, nil
+	return nil
 }
 
-func (r *RandomDiscover) Put(serviceName, hostPort string) {
-	r.hostMap.Append(serviceName, hostPort)
+func initialZkClient(config zookeeper.ZkConfig) error {
+	if ZkClient == nil {
+		cli, err := zookeeper.NewClient(config.HostPorts, config.SessionTimeout*time.Second)
+		if err != nil {
+			return errors.WithMessage(err, "zk connection fail")
+		}
+		ZkClient = cli
+	}
+	return nil
 }
-
-var DiscoverInstance = RandomDiscover{hostMap: inline.SaveMapList{}}

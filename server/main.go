@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/941112341/avalon/sdk/avalon"
+	"github.com/941112341/avalon/sdk/config"
 	"github.com/941112341/avalon/sdk/idl/message"
 )
 
@@ -16,11 +17,15 @@ func (Handler Handler) MessageDispatcher(ctx context.Context, r *message.Message
 }
 
 func main() {
+	cfg := &avalon.ServerConfig{}
+	config.Read(cfg, "../sdk/config/config.server.yaml")
 	processor := message.NewMessageServiceProcessor(&Handler{})
-	server := avalon.NewServer(processor)
-	err := server.Start()
+	server := avalon.NewThriftServer(processor, cfg)
+
+	bootstrap := avalon.Wrap(cfg, server)
+	err := bootstrap.Start()
 	if err != nil {
 		panic(err)
 	}
-	defer server.Stop()
+	defer bootstrap.Stop()
 }
