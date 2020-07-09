@@ -100,7 +100,7 @@ func (s *SyncMap) String() string {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
-	return inline.JsonString(s.m)
+	return inline.ToJsonString(s.m)
 }
 
 func NewSyncMap() *SyncMap {

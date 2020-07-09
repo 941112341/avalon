@@ -39,11 +39,11 @@ func ThriftMiddleware(config *ClientConfig, _ Call) Call {
 		transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
 		transport, err := transportFactory.GetTransport(tSocket)
 		if err != nil {
-			return errors.WithMessage(err, inline.JsonString(config))
+			return errors.WithMessage(err, inline.ToJsonString(config))
 		}
 		err = transport.Open()
 		if err != nil {
-			return errors.WithMessage(err, inline.JsonString(config))
+			return errors.WithMessage(err, inline.ToJsonString(config))
 		}
 		defer transport.Close()
 		protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()

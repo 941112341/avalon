@@ -23,7 +23,7 @@ func GetZkClientInstance(cfg *ZkConfig) (*ZkClient, error) {
 func NewClient(cfg *ZkConfig) (*ZkClient, error) {
 	conn, eventChan, err := zk.Connect(cfg.HostPorts, cfg.SessionTimeout)
 	if err != nil {
-		return nil, errors.WithMessage(err, inline.JsonString(cfg.HostPorts))
+		return nil, errors.WithMessage(err, inline.ToJsonString(cfg.HostPorts))
 	}
 	return &ZkClient{Conn: conn, EventChan: eventChan}, nil
 }
@@ -32,6 +32,7 @@ type ZkClient struct {
 	Conn      *zk.Conn
 	EventChan <-chan zk.Event
 	isClose   bool
+	cfg       *ZkConfig
 }
 
 type Listener func(event Event)
@@ -91,10 +92,10 @@ func (c *ZkClient) watchTree(path string, listener Listener, dataMap *collect.Sy
 			select {
 			case event := <-ch:
 				path := event.Path
-				log.New().Debugf("server receive a event %s \n", inline.JsonString(event))
+				log.New().Debugf("server receive a event %s \n", inline.ToJsonString(event))
 				switch event.Type {
 				//case zk.EventNodeCreated: 不会触发，只用由exist触发
-				//	log.New().Warnf("create event %s\n", inline.JsonString(event))
+				//	log.New().Warnf("create event %s\n", inline.ToJsonString(event))
 				case zk.EventNodeDataChanged:
 					data, stat, ch, err = c.Conn.GetW(path)
 					dataStr := string(data)

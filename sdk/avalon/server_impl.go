@@ -54,7 +54,7 @@ func ServiceRegisterWrapper(cfg *ServerConfig, coreServer Server) Server {
 				log.New().Infof("create service node %s by path %s", completeHostPort, path)
 				_, err = ZkClient.Conn.Create(path, []byte(""), zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
 				if err != nil {
-					return errors.WithMessage(err, inline.JsonString(cfg))
+					return errors.WithMessage(err, inline.ToJsonString(cfg))
 				}
 			} else {
 				go func() {

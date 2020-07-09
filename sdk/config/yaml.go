@@ -26,7 +26,7 @@ func ReadYaml(config interface{}, resource string) error {
 func WriteYaml(config interface{}, resource string) error {
 	file, err := yaml.Marshal(config)
 	if err != nil {
-		return errors.WithMessage(err, inline.JsonString(file))
+		return errors.WithMessage(err, inline.ToJsonString(file))
 	}
 	return ioutil.WriteFile(resource, file, os.ModePerm)
 }
