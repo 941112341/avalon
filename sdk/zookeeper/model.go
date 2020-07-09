@@ -31,7 +31,7 @@ func (n *ZkNode) Copy() *ZkNode {
 
 func (n *ZkNode) Save(client *ZkClient, flag int32) error {
 	ok, stat, err := client.Conn.Exists(n.path)
-	if err != nil {
+	if !ok && err != nil {
 		return errors.WithMessage(err, n.path)
 	}
 	if !ok {
@@ -41,15 +41,20 @@ func (n *ZkNode) Save(client *ZkClient, flag int32) error {
 				"err":  err,
 				"cfg":  client.cfg,
 				"path": n.path,
-			}).Warnln()
+			}).Warnln("create fail")
 		}
-		_, stat, err = client.Conn.Exists(n.path) // collect stat
 	} else {
 		stat, err = client.Conn.Set(n.path, []byte(n.data), stat.Version)
+		if err != nil {
+			log.New().WithFields(logrus.Fields{
+				"err":  err,
+				"cfg":  client.cfg,
+				"path": n.path,
+				"data": n.data,
+			}).Warnln("set fail")
+		}
 	}
-	if err != nil {
-		return err
-	}
+
 	for dir, node := range n.children {
 		if err := node.Save(client, flag); err != nil {
 			return errors.WithMessage(err, dir)
@@ -61,11 +66,15 @@ func (n *ZkNode) Save(client *ZkClient, flag int32) error {
 
 func (n *ZkNode) Delete(client *ZkClient) error {
 	ok, stat, err := client.Conn.Exists(n.path)
-	if err != nil {
-		return errors.WithMessage(err, n.path)
-	}
 	if !ok {
 		return nil
+	}
+	if !ok && err != nil {
+		return errors.WithMessage(err, n.path)
+	}
+	err = n.List(client, false)
+	if err != nil {
+		return errors.WithMessage(err, n.path)
 	}
 	for dir, node := range n.children {
 		if err := node.Delete(client); err != nil {
@@ -87,6 +96,7 @@ func (n *ZkNode) Get(client *ZkClient) error {
 }
 
 func (n *ZkNode) getW(client *ZkClient) (<-chan zk.Event, error) {
+	log.New().WithField("path", n.path).Infof("watch data node")
 	data, _, ch, err := client.Conn.GetW(n.path)
 	if err != nil {
 		return nil, errors.WithMessage(err, n.path)
@@ -102,14 +112,14 @@ func (n *ZkNode) GetWL(client *ZkClient, watchers ...Watcher) error {
 	}, watchers...)
 }
 
-func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) error {
+func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) (err error) {
 	ch, err := loopFunc()
 	if err != nil {
-		return err
+		return
 	}
 	go func() {
-		defer inline.Recover()
-		for err != nil {
+		defer func() { err = inline.RecoverErr() }()
+		for err == nil {
 			select {
 			case event := <-ch:
 				for _, watcher := range watchers {
@@ -120,7 +130,7 @@ func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) er
 		}
 		log.New().WithField("err", err).Errorln("watch err")
 	}()
-	return nil
+	return
 }
 
 // forAll = false only once
@@ -133,6 +143,7 @@ func (n *ZkNode) List(client *ZkClient, forAll bool) error {
 	newChildren := make(map[string]*ZkNode)
 	for _, dir := range dirs {
 		if n.children[dir] != nil {
+			newChildren[dir] = n.children[dir]
 			continue
 		}
 		childNode := &ZkNode{
@@ -155,6 +166,7 @@ func (n *ZkNode) List(client *ZkClient, forAll bool) error {
 
 func (n *ZkNode) ListWL(client *ZkClient, forAll bool, watches ...Watcher) error {
 	return watchLoop(func() (<-chan zk.Event, error) {
+		log.New().WithField("path", n.path).Infof("watch children")
 		dirs, _, ch, err := client.Conn.ChildrenW(n.path)
 		if err != nil {
 			return nil, err
@@ -168,7 +180,7 @@ func (n *ZkNode) ListWL(client *ZkClient, forAll bool, watches ...Watcher) error
 				path:   inline.JoinPath(n.path, dir),
 				parent: n,
 			}
-			if err := childNode.Get(client); err != nil {
+			if err := childNode.GetWL(client); err != nil {
 				return nil, errors.WithMessage(err, childNode.path)
 			}
 			if forAll {
@@ -193,6 +205,9 @@ func (b *ZkNodeBuilder) Data(data string) *ZkNodeBuilder {
 }
 
 func (b *ZkNodeBuilder) Children(dir string, node *ZkNode) *ZkNodeBuilder {
+	if b.node.children == nil {
+		b.node.children = map[string]*ZkNode{}
+	}
 	b.node.children[dir] = node
 	return b
 }

@@ -4,6 +4,6 @@ import "time"
 
 type ZkConfig struct {
 	HostPorts      []string      `yaml:"HostPorts"`
-	SessionTimeout time.Duration `yaml:"SessionTimeout"` // 单位second
+	SessionTimeout time.Duration `yaml:"SessionTimeout"` // second
 	Path           string        `yaml:"path"`
 }

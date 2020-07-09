@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samuel/go-zookeeper/zk"
 	"sync"
+	"time"
 )
 
 var ZkClientInstance *ZkClient
@@ -21,11 +22,11 @@ func GetZkClientInstance(cfg *ZkConfig) (*ZkClient, error) {
 }
 
 func NewClient(cfg *ZkConfig) (*ZkClient, error) {
-	conn, eventChan, err := zk.Connect(cfg.HostPorts, cfg.SessionTimeout)
+	conn, eventChan, err := zk.Connect(cfg.HostPorts, cfg.SessionTimeout*time.Second)
 	if err != nil {
 		return nil, errors.WithMessage(err, inline.ToJsonString(cfg.HostPorts))
 	}
-	return &ZkClient{Conn: conn, EventChan: eventChan}, nil
+	return &ZkClient{Conn: conn, EventChan: eventChan, cfg: cfg}, nil
 }
 
 type ZkClient struct {
