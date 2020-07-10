@@ -21,7 +21,7 @@ func NewClientWithConfig(config *ClientConfig) thrift.TClient {
 	return &iClient{
 		config: config,
 		middleware: []Middleware{
-			RetryMiddleware, DiscoverMiddleware, DebugMiddleware, MetricsMiddleware, ThriftMiddleware,
+			RetryMiddleware, DiscoverMiddleware, FixAddressMiddleware, MetricsMiddleware, ThriftMiddleware,
 		},
 	}
 }

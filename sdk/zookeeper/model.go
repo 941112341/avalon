@@ -6,11 +6,10 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samuel/go-zookeeper/zk"
 	"github.com/sirupsen/logrus"
+	"strings"
 )
 
-type Watcher interface {
-	Watch(event zk.Event)
-}
+type Watcher func(event zk.Event)
 
 // unThreadSave
 type ZkNode struct {
@@ -18,6 +17,52 @@ type ZkNode struct {
 	children map[string]*ZkNode
 	path     string
 	parent   *ZkNode
+}
+
+func (n *ZkNode) GetNode(path string) (*ZkNode, error) {
+	if !strings.HasPrefix(path, n.path) {
+		return nil, errors.New(path + " data not found")
+	}
+	if path == n.path {
+		return n, nil
+	}
+
+	arr := strings.SplitN(path, "/", 3)
+	if len(arr) < 3 {
+		return nil, errors.New(path + " not invalid")
+	}
+	name := arr[1]
+	child, ok := n.children[name]
+	if !ok {
+		return nil, errors.New(path + " data not found")
+	}
+	return child.GetNode(arr[2])
+}
+
+func (n *ZkNode) GetData() string {
+	return n.data
+}
+
+func (n *ZkNode) GetChildrenKey() []string {
+	keys := make([]string, 0)
+	for s, _ := range n.children {
+		keys = append(keys, s)
+	}
+	return keys
+}
+
+func (n *ZkNode) GetChildrenMap(forAll bool) map[string]string {
+	m := make(map[string]string)
+	for _, node := range n.children {
+		if forAll {
+			subMap := node.GetChildrenMap(forAll)
+			for subKey, subData := range subMap {
+				m[subKey] = subData
+			}
+		}
+		m[node.path] = node.data
+	}
+	return m
 }
 
 func (n *ZkNode) Copy() *ZkNode {
@@ -123,7 +168,7 @@ func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) (e
 			select {
 			case event := <-ch:
 				for _, watcher := range watchers {
-					watcher.Watch(event)
+					watcher(event)
 				}
 				ch, err = loopFunc()
 			}

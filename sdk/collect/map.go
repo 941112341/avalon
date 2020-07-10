@@ -27,6 +27,18 @@ func (s *SyncMap) Get(key interface{}) (interface{}, bool) {
 	return v, ok
 }
 
+func (s *SyncMap) GetList(key interface{}) ([]interface{}, bool) {
+	i, ok := s.Get(key)
+	if !ok {
+		return nil, false
+	}
+	list, ok := i.([]interface{})
+	if !ok {
+		return nil, false
+	}
+	return list, true
+}
+
 func (s *SyncMap) Put(key, value interface{}) interface{} {
 	s.lock.Lock()
 	defer s.lock.Unlock()

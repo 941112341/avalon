@@ -20,12 +20,12 @@ func main() {
 	cfg := &avalon.ServerConfig{}
 	config.Read(cfg, "../sdk/config/config.server.yaml")
 	processor := message.NewMessageServiceProcessor(&Handler{})
-	server := avalon.NewThriftServer(processor, cfg)
+	server := avalon.NewThriftServer(processor)
 
-	bootstrap := avalon.Wrap(cfg, server)
-	err := bootstrap.Start()
+	bootstrap := avalon.NewBootstrap(server)
+	err := bootstrap.Start(cfg)
 	if err != nil {
 		panic(err)
 	}
-	defer bootstrap.Stop()
+	defer bootstrap.Stop(cfg)
 }

@@ -3,75 +3,85 @@ package avalon
 import (
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/941112341/avalon/sdk/log"
+	"github.com/941112341/avalon/sdk/zookeeper"
+	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/pkg/errors"
 	"github.com/samuel/go-zookeeper/zk"
+	"github.com/sirupsen/logrus"
 	"strings"
+	"time"
 )
 
-type server struct {
-	start func() error
-	stop  func() error
+type serverImpl struct {
+	start func(cfg *ServerConfig) error
+	stop  func(cfg *ServerConfig) error
 }
 
-func (s *server) Start() error {
-	return s.start()
+func (s *serverImpl) Start(cfg *ServerConfig) error {
+	return s.start(cfg)
 }
 
-func (s *server) Stop() error {
-	return s.stop()
+func (s *serverImpl) Stop(cfg *ServerConfig) error {
+	return s.stop(cfg)
 }
 
-func ServiceRegisterWrapper(cfg *ServerConfig, coreServer Server) Server {
-	return &server{
-		start: func() error {
+type thriftServer struct {
+	processor thrift.TProcessor
+	tServer   thrift.TServer
+}
 
-			servicePath := cfg.ZkConfig.Path + "/" + cfg.ServiceName
-			exist, _, err := ZkClient.Conn.Exists(servicePath)
+func NewThriftServer(builder thrift.TProcessor) *thriftServer {
+	return &thriftServer{
+		processor: builder,
+	}
+}
+
+func (server *thriftServer) Start(cfg *ServerConfig) error {
+	serverTransport, err := thrift.NewTServerSocketTimeout(cfg.HostPort, cfg.Timeout*time.Second)
+	if err != nil {
+		return errors.WithMessage(err, "new socket")
+	}
+	log.New().WithFields(logrus.Fields{
+		"hostPort": cfg.HostPort,
+	}).Infof("server start")
+	transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
+	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
+	tServer := thrift.NewTSimpleServer4(server.processor, serverTransport, transportFactory, protocolFactory)
+	err = tServer.Serve()
+	if err != nil {
+		return errors.WithMessage(err, "server")
+	}
+	server.tServer = tServer
+	return nil
+}
+
+func (server *thriftServer) Stop(config *ServerConfig) error {
+	return server.tServer.Stop()
+}
+
+func ServiceRegisterWrapper(coreServer Server) Server {
+	return &serverImpl{
+		start: func(cfg *ServerConfig) error {
+			zkCli, err := zookeeper.GetZkClientInstance(&cfg.ZkConfig)
 			if err != nil {
-				return errors.Cause(err)
+				return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
 			}
-			if !exist {
-				str, err := ZkClient.Conn.Create(servicePath, []byte(""), 0, zk.WorldACL(zk.PermAll))
-				log.New().WithField("path", str).WithField("err", err).Debugf("create service node\n")
-			}
-
-			hostPort := cfg.HostPort
-			idx := strings.LastIndex(hostPort, ":")
-			port := hostPort[idx:]
 			ip, err := inline.InetAddress()
 			if err != nil {
-				return errors.Cause(err)
+				return err
 			}
-
-			completeHostPort := ip + port
-			path := servicePath + "/" + completeHostPort
-
-			exist, _, ch, err := ZkClient.Conn.ExistsW(path)
+			idx := strings.LastIndex(cfg.HostPort, ":")
+			port := cfg.HostPort[idx:]
+			hostPort := ip + port
+			node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.Path, cfg.ServiceName, hostPort)).Build()
+			err = node.Save(zkCli, zk.FlagEphemeral)
 			if err != nil {
-				return errors.WithMessage(err, "existsW "+path)
+				return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
 			}
-			if !exist {
-				log.New().Infof("create service node %s by path %s", completeHostPort, path)
-				_, err = ZkClient.Conn.Create(path, []byte(""), zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
-				if err != nil {
-					return errors.WithMessage(err, inline.ToJsonString(cfg))
-				}
-			} else {
-				go func() {
-					select {
-					case event := <-ch:
-						if event.Type == zk.EventNodeDeleted {
-							_, err = ZkClient.Conn.Create(path, []byte(""), zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
-							if err != nil {
-								log.New().WithField("err", err).WithField("path", path).Fatalln("reListening fail")
-							}
-						} else {
-							log.New().WithField("event", event).Infoln("receive event")
-						}
-					}
-				}()
-			}
-			return coreServer.Start()
+
+			log.New().WithField("serviceName", cfg.ServiceName).Infoln("register success")
+
+			return coreServer.Start(cfg)
 		},
 		stop: coreServer.Stop,
 	}
