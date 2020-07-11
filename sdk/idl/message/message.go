@@ -488,29 +488,29 @@ type MessageService interface {
 }
 
 type MessageServiceClient struct {
-	C thrift.TClient
+	c thrift.TClient
 }
 
 func NewMessageServiceClientFactory(t thrift.TTransport, f thrift.TProtocolFactory) *MessageServiceClient {
 	return &MessageServiceClient{
-		C: thrift.NewTStandardClient(f.GetProtocol(t), f.GetProtocol(t)),
+		c: thrift.NewTStandardClient(f.GetProtocol(t), f.GetProtocol(t)),
 	}
 }
 
 func NewMessageServiceClientProtocol(t thrift.TTransport, iprot thrift.TProtocol, oprot thrift.TProtocol) *MessageServiceClient {
 	return &MessageServiceClient{
-		C: thrift.NewTStandardClient(iprot, oprot),
+		c: thrift.NewTStandardClient(iprot, oprot),
 	}
 }
 
 func NewMessageServiceClient(c thrift.TClient) *MessageServiceClient {
 	return &MessageServiceClient{
-		C: c,
+		c: c,
 	}
 }
 
 func (p *MessageServiceClient) Client_() thrift.TClient {
-	return p.C
+	return p.c
 }
 
 // Parameters:
@@ -527,7 +527,7 @@ func (p *MessageServiceClient) MessageDispatcher(ctx context.Context, request *M
 
 type MessageServiceProcessor struct {
 	processorMap map[string]thrift.TProcessorFunction
-	handler      MessageService
+	Handler      MessageService
 }
 
 func (p *MessageServiceProcessor) AddToProcessorMap(key string, processor thrift.TProcessorFunction) {
@@ -545,7 +545,7 @@ func (p *MessageServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFun
 
 func NewMessageServiceProcessor(handler MessageService) *MessageServiceProcessor {
 
-	self6 := &MessageServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self6 := &MessageServiceProcessor{Handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
 	self6.processorMap["MessageDispatcher"] = &messageServiceProcessorMessageDispatcher{handler: handler}
 	return self6
 }

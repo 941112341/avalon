@@ -2,7 +2,6 @@ package client
 
 import (
 	"github.com/941112341/avalon/sdk/avalon"
-	"github.com/941112341/avalon/sdk/config"
 	"github.com/941112341/avalon/sdk/idl/message"
 )
 
@@ -11,10 +10,9 @@ var (
 )
 
 func init() {
-	cfg := &avalon.ClientConfig{}
-	err := config.Read(cfg, "../sdk/config/config.client.yaml")
+	client, err := avalon.NewClient()
 	if err != nil {
 		panic(err)
 	}
-	DefaultMessageClient = &message.MessageServiceClient{C: avalon.NewClientWithConfig(cfg)}
+	DefaultMessageClient = message.NewMessageServiceClient(client)
 }

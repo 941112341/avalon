@@ -18,34 +18,34 @@ func init() {
 	syncMap = *collect.NewSyncMap()
 }
 
-func DiscoverMiddleware(cfg *ClientConfig, call Call) Call {
+func DiscoverMiddleware(cfg CallConfig, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
-		if cfg.ServiceName == "" {
+		if cfg.Psm == "" {
 			return errors.New("no service name")
 		}
 
-		if !syncMap.Contains(cfg.ServiceName) {
+		if !syncMap.Contains(cfg.Psm) {
 			lock.Lock()
 			defer lock.Unlock()
-			if !syncMap.Contains(cfg.ServiceName) {
-				zkCli, err := zookeeper.GetZkClientInstance(&cfg.ZkConfig)
+			if !syncMap.Contains(cfg.Psm) {
+				zkCli, err := zookeeper.GetZkClientInstance(cfg.ZkConfig)
 				if err != nil {
 					return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
 				}
-				node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.Path, cfg.ServiceName)).Build()
+				node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.Path, cfg.Psm)).Build()
 				err = node.ListWL(zkCli, true)
 				if err != nil {
 					return err
 				}
-				syncMap.Put(cfg.ServiceName, node)
+				syncMap.Put(cfg.Psm, node)
 			}
 		}
 
-		i, _ := syncMap.Get(cfg.ServiceName)
+		i, _ := syncMap.Get(cfg.Psm)
 		node := i.(*zookeeper.ZkNode)
 		hostPorts := node.GetChildrenKey()
 		if len(hostPorts) == 0 {
-			return errors.New(cfg.ServiceName + " has none server")
+			return errors.New(cfg.Psm + " has none server")
 		}
 		idx := rand.Intn(len(hostPorts))
 

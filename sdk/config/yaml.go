@@ -1,11 +1,10 @@
 package config
 
 import (
-	"github.com/941112341/avalon/sdk/log"
+	"github.com/941112341/avalon/sdk/inline"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"os"
 	"strings"
 )
 
@@ -31,25 +30,18 @@ func extendedYamlNames(filename string) (names []string) {
 		filename = defaultConfig
 	}
 	names = append(names, filename)
-	env := os.Getenv("env")
-	if env != "" {
-		first := filename[:i] + "." + env + filename[i:]
-		names = append([]string{first}, names...)
-	}
+	env := inline.GetEnv("env", "dev")
+	first := filename[:i] + "." + env + filename[i:]
+	names = append([]string{first}, names...)
 	return
 }
 
-func Read(config interface{}, resource string) error {
+func Read(config interface{}, resource string) (err error) {
 	files := extendedYamlNames(resource)
-	if len(files) == 0 {
-		return errors.New(resource + " conf not found")
-	}
-	var err error
 	for _, file := range files {
 		err = read(config, file)
 		if err != nil {
-			log.New().WithField("file", file).
-				WithField("err", err.Error()).Info("write yaml err")
+			inline.Warningln("read file err", inline.NewPair("resource", file), inline.NewPair("err", inline.VString(err)))
 		}
 		return nil
 	}

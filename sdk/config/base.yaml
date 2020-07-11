@@ -1,0 +1,6 @@
+psm: avalon.test.test
+
+service:
+  port: 8888
+
+client:

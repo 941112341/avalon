@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func ThriftMiddleware(cfg *ClientConfig, _ Call) Call {
+func ThriftMiddleware(cfg CallConfig, _ Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		tArgs, ok := args.(thrift.TStruct)
 		if !ok {
@@ -51,7 +51,7 @@ func ThriftMiddleware(cfg *ClientConfig, _ Call) Call {
 	}
 }
 
-func MetricsMiddleware(config *ClientConfig, call Call) Call {
+func MetricsMiddleware(config CallConfig, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		t := time.Now()
 		err := call(ctx, method, args, result)
@@ -64,7 +64,7 @@ func MetricsMiddleware(config *ClientConfig, call Call) Call {
 	}
 }
 
-func RetryMiddleware(cfg *ClientConfig, call Call) Call {
+func RetryMiddleware(cfg CallConfig, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		return inline.Retry(func() error {
 			return call(ctx, method, args, result)
@@ -72,18 +72,15 @@ func RetryMiddleware(cfg *ClientConfig, call Call) Call {
 	}
 }
 
-func FixAddressMiddleware(cfg *ClientConfig, call Call) Call {
+func FixAddressMiddleware(cfg CallConfig, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
-		if cfg.ClientIp == "" {
-			ip, err := inline.InetAddress()
-			if err != nil {
-				return errors.WithMessage(err, "get ip err")
-			}
-			cfg.ClientIp = ip
+		ip, err := inline.InetAddress()
+		if err != nil {
+			return errors.WithMessage(err, "get ip err")
 		}
 
-		if strings.HasPrefix(cfg.HostPort, cfg.ClientIp) {
-			cfg.HostPort = strings.Replace(cfg.HostPort, cfg.ClientIp, "localhost", 1)
+		if strings.HasPrefix(cfg.HostPort, ip) {
+			cfg.HostPort = strings.Replace(cfg.HostPort, ip, "localhost", 1)
 		}
 		return call(ctx, method, args, result)
 	}

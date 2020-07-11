@@ -11,7 +11,7 @@ import (
 var ZkClientInstance *ZkClient
 var once sync.Once
 
-func GetZkClientInstance(cfg *ZkConfig) (*ZkClient, error) {
+func GetZkClientInstance(cfg ZkConfig) (*ZkClient, error) {
 	var err error
 	once.Do(func() {
 		ZkClientInstance, err = NewClient(cfg)
@@ -19,7 +19,7 @@ func GetZkClientInstance(cfg *ZkConfig) (*ZkClient, error) {
 	return ZkClientInstance, err
 }
 
-func NewClient(cfg *ZkConfig) (*ZkClient, error) {
+func NewClient(cfg ZkConfig) (*ZkClient, error) {
 	conn, eventChan, err := zk.Connect(cfg.HostPorts, cfg.SessionTimeout*time.Second)
 	if err != nil {
 		return nil, errors.WithMessage(err, inline.ToJsonString(cfg.HostPorts))
@@ -30,5 +30,5 @@ func NewClient(cfg *ZkConfig) (*ZkClient, error) {
 type ZkClient struct {
 	Conn      *zk.Conn
 	EventChan <-chan zk.Event
-	cfg       *ZkConfig
+	cfg       ZkConfig
 }
