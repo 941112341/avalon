@@ -1,9 +1,0 @@
-Config:
-  Timeout: 1
-  HostPort: "localhost:8890"
-  ServiceName: "jiangshihao"
-  ZkConfig:
-    HostPorts:
-      - "localhost:2181"
-    SessionTimeout: 10
-    Path: "/host"

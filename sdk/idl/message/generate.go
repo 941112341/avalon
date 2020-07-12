@@ -10,17 +10,16 @@ import (
 */
 type Handler struct {
 	handler    MessageService
-	cfg        avalon.CallConfig
+	cfg        avalon.Config
 	middleware []avalon.Middleware
 }
 
 func (h *Handler) MessageDispatcher(ctx context.Context, request *MessageRequest) (r *MessageResponse, err error) {
 	var call avalon.Endpoint = func(ctx context.Context, method string, _, _ interface{}) error {
-		resp, err := h.handler.MessageDispatcher(ctx, request)
+		r, err = h.handler.MessageDispatcher(ctx, request)
 		if err != nil {
 			return err
 		}
-		*r = *resp
 		return nil
 	}
 
@@ -38,10 +37,10 @@ func Run(service MessageService, middleware ...avalon.Middleware) error {
 	}
 	handler := &Handler{
 		handler:    service,
-		cfg:        avalon.NewCallConfig(server.Cfg),
+		cfg:        server.Cfg,
 		middleware: append(server.Middleware, middleware...),
 	}
-	err = server.Register(handler)
+	err = server.Register(NewMessageServiceProcessor(handler))
 	if err != nil {
 		return err
 	}

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func ThriftMiddleware(cfg CallConfig, _ Endpoint) Endpoint {
+func ThriftMiddleware(cfg Config, _ Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		tArgs, ok := args.(thrift.TStruct)
 		if !ok {
@@ -21,18 +21,20 @@ func ThriftMiddleware(cfg CallConfig, _ Endpoint) Endpoint {
 		if !ok {
 			return errors.New(fmt.Sprintf("result %+v is not TStruct", args))
 		}
-		if cfg.HostPort == "" {
+
+		hostPort := GetHostPort(ctx)
+		if hostPort == "" {
 			return errors.New("host port is empty")
 		}
 
-		tSocket, err := thrift.NewTSocket(cfg.HostPort)
+		tSocket, err := thrift.NewTSocket(hostPort)
 		if err != nil {
-			return errors.Wrap(err, cfg.HostPort)
+			return errors.Wrap(err, hostPort)
 		}
-		if cfg.Timeout != time.Duration(0) {
-			err = tSocket.SetTimeout(cfg.Timeout * time.Second)
+		if cfg.Client.Timeout != time.Duration(0) {
+			err = tSocket.SetTimeout(cfg.Client.Timeout * time.Second)
 			if err != nil {
-				log.New().WithField("err", err.Error()).WithField("warn", cfg.Timeout).Warningln()
+				log.New().WithField("err", err.Error()).WithField("warn", cfg.Client.Timeout).Warningln()
 			}
 		}
 		transportFactory := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory())
@@ -51,37 +53,45 @@ func ThriftMiddleware(cfg CallConfig, _ Endpoint) Endpoint {
 	}
 }
 
-func MetricsMiddleware(config CallConfig, call Endpoint) Endpoint {
+func MetricsMiddleware(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		t := time.Now()
 		err := call(ctx, method, args, result)
 		log.New().
 			WithField("duration", time.Since(t).String()).
 			WithField("err", err).
-			WithField("hostPort", config.HostPort).
+			WithField("hostPort", cfg.Client.HostPort).
 			Info("call")
 		return err
 	}
 }
 
-func RetryMiddleware(cfg CallConfig, call Endpoint) Endpoint {
+func RetryMiddleware(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		return inline.Retry(func() error {
 			return call(ctx, method, args, result)
-		}, cfg.Retry, cfg.Wait*time.Millisecond)
+		}, cfg.Client.Retry, cfg.Client.Wait*time.Millisecond)
 	}
 }
 
-func FixAddressMiddleware(cfg CallConfig, call Endpoint) Endpoint {
+func FixAddressMiddleware(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		ip, err := inline.InetAddress()
 		if err != nil {
 			return errors.WithMessage(err, "get ip err")
 		}
-
-		if strings.HasPrefix(cfg.HostPort, ip) {
-			cfg.HostPort = strings.Replace(cfg.HostPort, ip, "localhost", 1)
+		hostPort := GetHostPort(ctx)
+		if strings.HasPrefix(hostPort, ip) {
+			SetHostPort(ctx, strings.Replace(hostPort, ip, "localhost", 1))
 		}
+		return call(ctx, method, args, result)
+	}
+}
+
+func CreateSessionMiddleware(cfg Config, call Endpoint) Endpoint {
+	return func(ctx context.Context, method string, args, result interface{}) error {
+		ctx = WithSession(ctx, &Session{HostPort: cfg.Client.HostPort})
+
 		return call(ctx, method, args, result)
 	}
 }

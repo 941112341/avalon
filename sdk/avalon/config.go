@@ -13,24 +13,47 @@ type Config struct {
 
 	Client struct {
 		Retry    int
-		Wait     time.Duration `default:"100"` // 100ms
+		Wait     time.Duration // 100ms
 		HostPort string
-		Timeout  time.Duration `default:"1"` // 1s
+		Timeout  time.Duration // 1s
 	}
 
 	Server struct {
-		Port int `default:"8888"`
+		Port    int
+		Timeout time.Duration // 1s
 	}
 
 	ZkConfig zookeeper.ZkConfig
 }
 
-var _cfg Config
-var once sync.Once
-
-func (cfg *Config) Initial() {
-	inline.SetDefaultValue(cfg)
+// default config
+var _cfg = Config{
+	Psm: "",
+	Client: struct {
+		Retry    int
+		Wait     time.Duration
+		HostPort string
+		Timeout  time.Duration
+	}{
+		Retry:   0,
+		Wait:    100,
+		Timeout: 1,
+	},
+	Server: struct {
+		Port    int
+		Timeout time.Duration
+	}{
+		Port:    8888,
+		Timeout: 1,
+	},
+	ZkConfig: zookeeper.ZkConfig{
+		SessionTimeout: 30,
+		HostPorts:      []string{"localhost:2181"},
+		Path:           "/host",
+	},
 }
+
+var once sync.Once
 
 func GetConfig() (Config, error) {
 	var err error
@@ -39,7 +62,6 @@ func GetConfig() (Config, error) {
 		if err != nil {
 			return
 		}
-		_cfg.Initial()
 	})
 	return _cfg, err
 }

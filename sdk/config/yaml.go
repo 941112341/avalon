@@ -13,12 +13,12 @@ const defaultConfig = "config.yaml"
 func read(config interface{}, resource string) error {
 	file, err := ioutil.ReadFile(resource)
 	if err != nil {
-		return errors.WithMessage(err, resource)
+		return errors.Wrap(err, resource)
 	}
 
 	err = yaml.Unmarshal(file, config)
 	if err != nil {
-		return errors.WithMessage(err, string(file))
+		return errors.Wrap(err, string(file))
 	}
 	return nil
 }
@@ -40,10 +40,11 @@ func Read(config interface{}, resource string) (err error) {
 	files := extendedYamlNames(resource)
 	for _, file := range files {
 		err = read(config, file)
-		if err != nil {
-			inline.Warningln("read file err", inline.NewPair("resource", file), inline.NewPair("err", inline.VString(err)))
+		if err == nil {
+			return nil
 		}
-		return nil
+		inline.Warningln("read file err", inline.NewPair("resource", file), inline.NewPair("err", inline.String(err)))
+
 	}
 	return errors.Wrap(err, resource)
 }

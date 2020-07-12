@@ -69,39 +69,6 @@ func Convert(typ reflect.Type, param string) (b interface{}, err error) {
 	return
 }
 
-// cfg should be ptr && cfg field should be struct rather than ptr
-func SetDefaultValue(cfg interface{}) {
-	ele := reflect.ValueOf(cfg).Elem()
-	eleType := ele.Type()
-
-	for i := 0; i < eleType.NumField(); i++ {
-		fldVal := ele.Field(i)
-		if fldVal.Kind() == reflect.Ptr && fldVal.Elem().Kind() == reflect.Struct {
-			ptr := reflect.New(fldVal.Elem().Type())
-			fldVal.Set(ptr)
-			SetDefaultValue(fldVal.Interface())
-			continue
-		}
-		if fldVal.Kind() == reflect.Struct {
-			any := fldVal.Interface()
-			SetDefaultValue(&any)
-			continue
-		}
-		if !fldVal.IsZero() {
-			continue
-		}
-		fld := eleType.Field(i)
-		defaultVal, ok := fld.Tag.Lookup("default")
-		if !ok {
-			continue
-		}
-		err := Set(fldVal, defaultVal)
-		if err != nil {
-			Errorln("msg not set", NewPair("name", fld.Name), NewPair("default", defaultVal))
-		}
-	}
-}
-
 func Redirect(value reflect.Value) reflect.Value {
 	for value.Kind() == reflect.Ptr {
 		value = value.Elem()

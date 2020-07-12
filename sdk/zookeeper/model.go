@@ -5,7 +5,6 @@ import (
 	"github.com/941112341/avalon/sdk/log"
 	"github.com/pkg/errors"
 	"github.com/samuel/go-zookeeper/zk"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -37,6 +36,21 @@ func (n *ZkNode) GetNode(path string) (*ZkNode, error) {
 		return nil, errors.New(path + " data not found")
 	}
 	return child.GetNode(arr[2])
+}
+
+// parent only has one child
+func (n *ZkNode) GetParent() *ZkNode {
+	if n.parent != nil {
+		return n.parent
+	}
+	idx := strings.LastIndex(n.path, "/")
+	if idx < 1 {
+		return nil
+	}
+	key := n.path[idx+1:]
+	return &ZkNode{path: n.path[:idx], children: map[string]*ZkNode{
+		key: n,
+	}}
 }
 
 func (n *ZkNode) GetData() string {
@@ -74,30 +88,26 @@ func (n *ZkNode) Copy() *ZkNode {
 	}
 }
 
+func (n *ZkNode) Exist(client *ZkClient) (bool, *zk.Stat, error) {
+	return client.Conn.Exists(n.path)
+}
+
 func (n *ZkNode) Save(client *ZkClient, flag int32) error {
-	ok, stat, err := client.Conn.Exists(n.path)
-	if !ok && err != nil {
-		return errors.WithMessage(err, n.path)
+	ok, stat, err := n.Exist(client)
+	if err != nil {
+		return errors.Wrap(err, "exist")
 	}
 	if !ok {
 		_, err = client.Conn.Create(n.path, []byte(n.data), flag, zk.WorldACL(zk.PermAll))
 		if err != nil {
-			log.New().WithFields(logrus.Fields{
-				"err":  err,
-				"cfg":  client.cfg,
-				"path": n.path,
-			}).Warnln("create fail")
+			if strings.Contains(err.Error(), "zk: node does not exist") {
+				return n.GetParent().Save(client, 0)
+			}
+			return errors.Wrap(err, "create node fail")
 		}
-	} else {
+	} else if n.data != "" {
 		stat, err = client.Conn.Set(n.path, []byte(n.data), stat.Version)
-		if err != nil {
-			log.New().WithFields(logrus.Fields{
-				"err":  err,
-				"cfg":  client.cfg,
-				"path": n.path,
-				"data": n.data,
-			}).Warnln("set fail")
-		}
+		return errors.Wrap(err, "set value fail")
 	}
 
 	for dir, node := range n.children {
@@ -214,7 +224,7 @@ func (n *ZkNode) ListWL(client *ZkClient, forAll bool, watches ...Watcher) error
 		log.New().WithField("path", n.path).Infof("watch children")
 		dirs, _, ch, err := client.Conn.ChildrenW(n.path)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "ChildrenW")
 		}
 		newChildren := make(map[string]*ZkNode)
 		for _, dir := range dirs {
@@ -226,11 +236,11 @@ func (n *ZkNode) ListWL(client *ZkClient, forAll bool, watches ...Watcher) error
 				parent: n,
 			}
 			if err := childNode.GetWL(client); err != nil {
-				return nil, errors.WithMessage(err, childNode.path)
+				return nil, errors.Wrap(err, childNode.path)
 			}
 			if forAll {
 				if err := childNode.ListWL(client, forAll, watches...); err != nil {
-					return nil, errors.WithMessage(err, childNode.path)
+					return nil, errors.Wrap(err, childNode.path)
 				}
 			}
 			newChildren[dir] = childNode

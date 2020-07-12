@@ -18,3 +18,7 @@ func VString(o interface{}) string {
 func JoinPath(paths ...string) string {
 	return strings.Join(paths, "/")
 }
+
+func String(o interface{}) string {
+	return fmt.Sprintf("%s", o)
+}

@@ -17,6 +17,7 @@ func main() {
 }
 
 func c() {
+
 	resp, err := client.DefaultMessageClient.MessageDispatcher(context.Background(), &message.MessageRequest{
 		Header:     nil,
 		Body:       nil,

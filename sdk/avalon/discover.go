@@ -18,8 +18,11 @@ func init() {
 	syncMap = *collect.NewSyncMap()
 }
 
-func DiscoverMiddleware(cfg CallConfig, call Endpoint) Endpoint {
+func DiscoverMiddleware(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
+		if cfg.Client.HostPort != "" { // pass if set hostPort
+			return call(ctx, method, args, result)
+		}
 		if cfg.Psm == "" {
 			return errors.New("no service name")
 		}
@@ -32,7 +35,7 @@ func DiscoverMiddleware(cfg CallConfig, call Endpoint) Endpoint {
 				if err != nil {
 					return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
 				}
-				node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.Path, cfg.Psm)).Build()
+				node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.ZkConfig.Path, cfg.Psm)).Build()
 				err = node.ListWL(zkCli, true)
 				if err != nil {
 					return err
@@ -48,8 +51,10 @@ func DiscoverMiddleware(cfg CallConfig, call Endpoint) Endpoint {
 			return errors.New(cfg.Psm + " has none server")
 		}
 		idx := rand.Intn(len(hostPorts))
+		inline.Infoln("hostPort", inline.NewPair("hostPort", hostPorts[idx]))
 
-		cfg.HostPort = hostPorts[idx]
+		// set session
+		SetHostPort(ctx, hostPorts[idx])
 		return call(ctx, method, args, result)
 	}
 }

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type initial func(cfg CallConfig) error
+type initial func(cfg Config) error
 
 type Bootstrap interface {
 	Start() error
@@ -34,18 +34,23 @@ func (s *IServer) Stop() error {
 
 // now support only tProcessor
 func (s *IServer) Register(handler interface{}) error {
-	cfg := NewCallConfig(s.Cfg)
-	for idx, initial := range s.initials {
-		if err := initial(cfg); err != nil {
-			return errors.WithMessage(err, fmt.Sprintf("index[%d]", idx))
-		}
-	}
-
 	processor, ok := handler.(thrift.TProcessor)
 	if !ok {
 		return fmt.Errorf("handler is not tProcessor %b", handler)
 	}
-	serverTransport, err := thrift.NewTServerSocketTimeout(cfg.HostPort, cfg.Timeout*time.Second)
+
+	for idx, initial := range s.initials {
+		if err := initial(s.Cfg); err != nil {
+			return errors.WithMessage(err, fmt.Sprintf("index[%d]", idx))
+		}
+	}
+
+	hostPort := fmt.Sprintf(":%d", s.Cfg.Server.Port)
+	timeout := time.Second
+	if s.Cfg.Server.Timeout != 0 {
+		timeout = s.Cfg.Server.Timeout * time.Second
+	}
+	serverTransport, err := thrift.NewTServerSocketTimeout(hostPort, timeout)
 	if err != nil {
 		return errors.WithMessage(err, "new socket")
 	}
