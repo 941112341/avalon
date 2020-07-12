@@ -90,7 +90,7 @@ func FixAddressMiddleware(cfg Config, call Endpoint) Endpoint {
 
 func CreateSessionMiddleware(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
-		ctx = WithSession(ctx, &Session{HostPort: cfg.Client.HostPort})
+		ctx = WithSession(ctx, &Session{HostPort: cfg.Client.HostPort, Attachments: map[string]interface{}{}})
 
 		return call(ctx, method, args, result)
 	}

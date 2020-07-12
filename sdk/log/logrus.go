@@ -4,14 +4,17 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"os"
 	"sync"
 	"time"
 )
 
 var Log *logrus.Logger
+var FileLog *logrus.Logger
+
 var once sync.Once
 
-func New() *logrus.Logger {
+func File() *logrus.Logger {
 	if Log != nil {
 		return Log
 	}
@@ -39,6 +42,22 @@ func New() *logrus.Logger {
 			pathMap,
 			&logrus.JSONFormatter{},
 		))
+	})
+
+	return Log
+}
+
+func New() *logrus.Logger {
+	if Log != nil {
+		return Log
+	}
+	once.Do(func() {
+		Log = logrus.New()
+		Log.SetFormatter(&logrus.JSONFormatter{
+			PrettyPrint: true,
+		})
+		logrus.SetLevel(logrus.DebugLevel)
+		logrus.SetOutput(os.Stdout)
 	})
 
 	return Log

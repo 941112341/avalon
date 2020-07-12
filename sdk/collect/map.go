@@ -13,6 +13,14 @@ type Map interface {
 	Range(func(key, value interface{}))
 }
 
+type MapList interface {
+	Map
+	GetList(key interface{}) []interface{}
+	Append(key, value interface{}) bool
+	Remove(value interface{}) bool
+	Len(key interface{}) int
+}
+
 type SyncMap struct {
 	lock sync.RWMutex
 
@@ -27,16 +35,19 @@ func (s *SyncMap) Get(key interface{}) (interface{}, bool) {
 	return v, ok
 }
 
-func (s *SyncMap) GetList(key interface{}) ([]interface{}, bool) {
+func (s *SyncMap) GetList(key interface{}) []interface{} {
+	s.lock.RLock()
+	defer s.lock.RUnlock()
+
 	i, ok := s.Get(key)
 	if !ok {
-		return nil, false
+		return []interface{}{}
 	}
 	list, ok := i.([]interface{})
 	if !ok {
-		return nil, false
+		return nil
 	}
-	return list, true
+	return list
 }
 
 func (s *SyncMap) Put(key, value interface{}) interface{} {
@@ -62,6 +73,26 @@ func (s *SyncMap) Append(key, value interface{}) bool {
 	}
 	s.m[key] = append(list, value)
 	return true
+}
+
+func (s *SyncMap) Remove(value interface{}) (r bool) {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+	for k, v := range s.m {
+		if v == value {
+			delete(s.m, k)
+			r = true
+		}
+	}
+	return
+}
+
+func (s *SyncMap) Len(key interface{}) int {
+	list := s.GetList(key)
+	if list == nil {
+		return -1
+	}
+	return len(list)
 }
 
 func (s *SyncMap) Delete(key interface{}) bool {
