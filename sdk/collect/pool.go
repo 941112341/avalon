@@ -107,6 +107,21 @@ func (p *pool) removeIdleConsumer() {
 	p.consumers = consumers
 }
 
+func NewPool(idleTime, timeout time.Duration, minNum, maxNum, backUp int, factory ConsumerFactory) Pool {
+	return &pool{
+		lock:           sync.Mutex{},
+		id:             inline.RandString(32),
+		idleTime:       idleTime,
+		minConsumerNum: minNum,
+		maxConsumerNum: maxNum,
+		consumers:      []Consumer{},
+		Timeout:        timeout,
+		ch:             make(chan interface{}, backUp),
+		factory:        factory,
+		isShutdown:     false,
+	}
+}
+
 type Consumer interface {
 	Closable
 	IDGetter
