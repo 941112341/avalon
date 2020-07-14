@@ -38,7 +38,9 @@ func NewIDGetter() IDGetter {
 	return &idGetter{id: inline.RandString(32)}
 }
 
-type ConsumerFactory func() (Consumer, error)
+type ConsumerFactory interface {
+	Create() (Consumer, error)
+}
 
 type Pool interface {
 	IDGetter
@@ -158,7 +160,7 @@ func (p *pool) createNewElement() (e *element, err error) {
 	err = p.withLock(func() error {
 
 		var consumer Consumer
-		consumer, err = p.factory()
+		consumer, err = p.factory.Create()
 		if err != nil {
 			p.incr(-1)
 			return err

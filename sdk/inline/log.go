@@ -16,6 +16,18 @@ func NewPair(a string, b interface{}) Pair {
 
 type Pairs []Pair
 
+func NewPairs(args ...interface{}) Pairs {
+	pairs := make(Pairs, 0)
+	for i := 0; i+1 < len(args); i = i + 2 {
+		key, ok := args[i].(string)
+		if !ok {
+			continue
+		}
+		pairs = append(pairs, NewPair(key, args[i+1]))
+	}
+	return pairs
+}
+
 func (p Pairs) Fields() logrus.Fields {
 	fields := logrus.Fields{}
 	for _, pair := range p {
