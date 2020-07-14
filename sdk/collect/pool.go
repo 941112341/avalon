@@ -1,133 +1,247 @@
 package collect
 
 import (
+	"context"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/pkg/errors"
-	"sync"
+	"sync/atomic"
 	"time"
 )
 
+var (
+	ErrShutdown       = errors.New("pool: has shutdown")
+	ErrSizeOutOfLimit = errors.New("pool: out of size")
+)
+
+const (
+	NORMAL   int32 = 0
+	SHUTDOWN int32 = 1
+)
+
+type Introspect interface {
+	String() string
+}
+
 type IDGetter interface {
 	ID() string
+}
+
+type idGetter struct {
+	id string
+}
+
+func (i *idGetter) ID() string {
+	return i.id
+}
+
+func NewIDGetter() IDGetter {
+	return &idGetter{id: inline.RandString(32)}
 }
 
 type ConsumerFactory func() (Consumer, error)
 
 type Pool interface {
 	IDGetter
-	Producer(event interface{}) error
+	Introspect
 	IsShutdown() bool
 	Shutdown() error
+	GetConsumer() (Consumer, error)
+	GetConsumerBlock(timeout time.Duration) (Consumer, error)
+	PutConsumer(consumer Consumer) error
+	DelConsumer(consumer Consumer) error
+	Size() int
 }
 
 // key=serviceName value=chan
 type pool struct {
-	lock sync.Mutex
-	id   string
+	IDGetter
 
 	idleTime       time.Duration
 	minConsumerNum int
 	maxConsumerNum int // for each key
-	consumers      []Consumer
-	Timeout        time.Duration
 
-	ch chan interface{}
-
-	factory ConsumerFactory
-
-	isShutdown bool
+	size       int32
+	consumers  chan *element
+	factory    ConsumerFactory
+	isShutdown int32 // 0 . 1
 }
 
-func (p *pool) ID() string {
-	return p.id
+func (p *pool) Size() int {
+	return int(atomic.LoadInt32(&p.size))
+}
+
+func (p *pool) String() string {
+
+	return inline.ToJsonString(map[string]interface{}{
+		"min":  p.minConsumerNum,
+		"max":  p.maxConsumerNum,
+		"idle": p.idleTime.String(),
+		"size": p.Size(),
+	})
+}
+
+func (p *pool) incr(delta int32) {
+	atomic.AddInt32(&p.size, delta)
+}
+
+func (p *pool) GetConsumer() (Consumer, error) {
+
+	return p.GetConsumerBlock(10 * time.Millisecond)
+}
+
+func (p *pool) MoreThanLimit() bool {
+	return p.Size() > p.maxConsumerNum
+}
+
+func (p *pool) LessThanLimit() bool {
+	return p.Size() < p.minConsumerNum
+}
+
+func (p *pool) GetConsumerBlock(timeout time.Duration) (Consumer, error) {
+	if p.IsShutdown() {
+		return nil, ErrShutdown
+	}
+	if p.LessThanLimit() {
+		return p.createNewElement()
+	}
+	select {
+	case element := <-p.consumers:
+		inline.Infoln("borrow element", inline.NewPair("id", element.ID()))
+		return element, nil
+	case <-time.NewTimer(timeout).C:
+		return p.createNewElement()
+	}
+}
+
+func (p *pool) PutConsumer(consumer Consumer) error {
+	if p.IsShutdown() {
+		return ErrShutdown
+	}
+	element, ok := consumer.(*element)
+	if !ok {
+		element = p.newElement(consumer)
+	}
+	select {
+	case <-time.NewTimer(100 * time.Millisecond).C:
+		p.incr(-1)
+		inline.Warningln("put consumer fail", inline.NewPair("id", element.ID()), inline.NewPair("len", len(p.consumers)))
+		return nil
+	case p.consumers <- element:
+		if !ok {
+			p.incr(1)
+		}
+		inline.Infoln("return consumer success", inline.NewPair("id", element.ID()))
+	}
+	return nil
+}
+
+func (p *pool) DelConsumer(consumer Consumer) error {
+	if p.IsShutdown() {
+		return nil
+	}
+	p.incr(-1)
+	return nil
+}
+
+// incr and lock
+func (p *pool) withLock(f func() error) error {
+
+	for size := p.Size(); size < p.maxConsumerNum; size = p.Size() {
+		if atomic.CompareAndSwapInt32(&p.size, int32(size), int32(size+1)) {
+			return f()
+		}
+	}
+	return ErrSizeOutOfLimit
+}
+
+func (p *pool) createNewElement() (e *element, err error) {
+	err = p.withLock(func() error {
+
+		var consumer Consumer
+		consumer, err = p.factory()
+		if err != nil {
+			p.incr(-1)
+			return err
+		}
+		e = p.newElement(consumer)
+		inline.Infoln("pool create new element", inline.NewPair("id", e.ID()))
+		return nil
+	})
+
+	return
+}
+
+func (p *pool) newElement(consumer Consumer) *element {
+	return &element{
+		IDGetter:    NewIDGetter(),
+		lastUseTime: time.Now(),
+		p:           p,
+		c:           consumer,
+	}
 }
 
 func (p *pool) IsShutdown() bool {
-	return p.isShutdown
-}
-
-func (p *pool) addConsumer() error {
-	if p.maxConsumerNum > len(p.consumers) {
-		consumer, err := p.factory()
-		if err != nil {
-			return errors.Wrap(err, "create consumer fail")
-		}
-		p.lock.Lock()
-		defer p.lock.Unlock()
-		consumer.Consumer(p.ch)
-		p.consumers = append(p.consumers, consumer)
-	}
-	return nil
-}
-
-func (p *pool) Producer(event interface{}) error {
-	if err := p.addConsumer(); err != nil {
-		return errors.Wrap(err, "addConsumer")
-	}
-	select {
-	case p.ch <- event:
-		return nil
-	case <-time.NewTimer(p.Timeout).C:
-		return errors.New("consumer timeout")
-	}
+	return atomic.LoadInt32(&p.isShutdown) == SHUTDOWN
 }
 
 func (p *pool) Shutdown() (err error) {
-	p.isShutdown = true
-	close(p.ch)
-	for _, consumer := range p.consumers {
-		err = consumer.Close()
-		if err != nil {
-			return errors.Wrap(err, "consumer ")
+	atomic.StoreInt32(&p.isShutdown, SHUTDOWN)
+
+	for ok := true; ok && err == nil; {
+		var elem *element
+		elem, ok = <-p.consumers
+		if ok {
+			err = elem.ShutDown()
 		}
 	}
-	p.consumers = []Consumer{}
-	return nil
+	if err != nil {
+		close(p.consumers)
+	}
+	return
 }
 
-func (p *pool) check() {
+func (p *pool) checkLoop() {
 	ticker := time.NewTicker(p.idleTime)
-	for !p.IsShutdown() {
+
+loop:
+	for {
 		select {
 		case <-ticker.C:
-			p.removeIdleConsumer()
+			l := len(p.consumers)
+			for i := 0; i < l; i++ {
+				element, ok := <-p.consumers
+				if !ok {
+					break loop
+				}
+				if element.isIdle(p.idleTime) && !p.LessThanLimit() {
+					err := element.ShutDown()
+					if err != nil {
+						inline.Errorln("shutdown err", inline.NewPair("err", err))
+					}
+				} else {
+					p.consumers <- element
+				}
+			}
 		}
 	}
 }
 
-func (p *pool) removeIdleConsumer() {
-	p.lock.Lock()
-	defer p.lock.Unlock()
-	consumers := make([]Consumer, 0)
-	for _, c := range p.consumers {
-		if time.Now().Sub(c.LastUseTime()) < p.idleTime {
-			consumers = append(consumers, c)
-		}
-	}
-	p.consumers = consumers
-}
-
-func NewPool(idleTime, timeout time.Duration, minNum, maxNum, backUp int, factory ConsumerFactory) Pool {
-	return &pool{
-		lock:           sync.Mutex{},
-		id:             inline.RandString(32),
+func NewPool(idleTime time.Duration, minNum, maxNum int, factory ConsumerFactory) Pool {
+	pool := &pool{
+		IDGetter:       NewIDGetter(),
 		idleTime:       idleTime,
 		minConsumerNum: minNum,
 		maxConsumerNum: maxNum,
-		consumers:      []Consumer{},
-		Timeout:        timeout,
-		ch:             make(chan interface{}, backUp),
+		consumers:      make(chan *element, maxNum),
 		factory:        factory,
-		isShutdown:     false,
 	}
+	go pool.checkLoop()
+	return pool
 }
 
 type Consumer interface {
 	Closable
-	IDGetter
-	Start()
-	Consumer(ch chan interface{})
-	LastUseTime() time.Time
+	Do(ctx context.Context, args ...interface{}) error
 }
 
 type Closable interface {
@@ -135,51 +249,34 @@ type Closable interface {
 }
 
 type element struct {
-	id          string
+	IDGetter
 	lastUseTime time.Time
-	Client      Closable
-	ch          chan interface{}
-	IsClosed    bool
 
-	consumer func(event interface{}) error // err should be close this closable
+	p Pool
+
+	c Consumer
 }
 
-func (e *element) Start() {
-	for !e.IsClosed {
-		select {
-		case event := <-e.ch:
-			err := e.consumer(event)
-			if err != nil {
-				e.Close()
-			}
-		}
-	}
+func (e *element) isIdle(idleTimeout time.Duration) bool {
+	return time.Now().Sub(e.lastUseTime) > idleTimeout
 }
 
-func (e *element) ID() string {
-	return e.id
+func (e *element) Do(ctx context.Context, args ...interface{}) error {
+	e.lastUseTime = time.Now()
+	return e.c.Do(ctx, args)
 }
 
-func (e *element) LastUseTime() time.Time {
-	return e.lastUseTime
-}
-
-func (e *element) Consumer(ch chan interface{}) {
-	e.ch = ch
-}
-
+// fact return to p
 func (e *element) Close() error {
-	e.IsClosed = true
-	return e.Client.Close()
+	return e.p.PutConsumer(e)
 }
 
-func NewConsumer(closable Closable, consumer func(event interface{}) error) Consumer {
-	elem := &element{
-		id:          inline.RandString(32),
-		lastUseTime: time.Now(),
-		Client:      closable,
-		consumer:    consumer,
+func (e *element) ShutDown() error {
+	inline.Infoln("element shutdown", inline.NewPair("id", e.ID()))
+
+	err := e.p.DelConsumer(e)
+	if err != nil {
+		return err
 	}
-	elem.Start()
-	return elem
+	return e.c.Close()
 }

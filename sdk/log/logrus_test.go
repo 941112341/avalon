@@ -8,5 +8,5 @@ import (
 func TestNewLoggerWithRotate(t *testing.T) {
 	New().WithFields(logrus.Fields{
 		"hello": "world",
-	}).Error("message")
+	}).Debugln("message")
 }

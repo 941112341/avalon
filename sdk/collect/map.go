@@ -10,7 +10,12 @@ type Map interface {
 	Get(key interface{}) (interface{}, bool)
 	Delete(key interface{}) bool
 	Contains(key interface{}) bool
-	Range(func(key, value interface{}))
+	Range(func(key, value interface{}) bool)
+}
+
+type LenMap interface {
+	Map
+	Length() int
 }
 
 type MapList interface {
@@ -25,6 +30,10 @@ type SyncMap struct {
 	lock sync.RWMutex
 
 	m map[interface{}]interface{}
+}
+
+func (s *SyncMap) Length() int {
+	return len(s.m)
 }
 
 func (s *SyncMap) Get(key interface{}) (interface{}, bool) {
@@ -115,12 +124,14 @@ func (s *SyncMap) Contains(key interface{}) bool {
 	return ok
 }
 
-func (s *SyncMap) Range(f func(key, value interface{})) {
+func (s *SyncMap) Range(f func(key, value interface{}) bool) {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
 	for k, v := range s.m {
-		f(k, v)
+		if !f(k, v) {
+			break
+		}
 	}
 }
 
