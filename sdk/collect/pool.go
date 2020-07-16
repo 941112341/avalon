@@ -103,12 +103,19 @@ func (p *pool) GetConsumerBlock(timeout time.Duration) (Consumer, error) {
 	if p.IsShutdown() {
 		return nil, ErrShutdown
 	}
+	if len(p.consumers) > 0 {
+		select {
+		case consumer := <-p.consumers:
+			return consumer, nil
+		case <-time.NewTimer(10 * time.Millisecond).C:
+		}
+	}
 	if p.LessThanLimit() {
 		return p.createNewElement()
 	}
 	select {
 	case element := <-p.consumers:
-		inline.Infoln("borrow element", inline.NewPair("id", element.ID()))
+		inline.Debugln("borrow element", inline.NewPair("id", element.ID()))
 		return element, nil
 	case <-time.NewTimer(timeout).C:
 		return p.createNewElement()
@@ -132,7 +139,7 @@ func (p *pool) PutConsumer(consumer Consumer) error {
 		if !ok {
 			p.incr(1)
 		}
-		inline.Infoln("return consumer success", inline.NewPair("id", element.ID()))
+		inline.Debugln("return consumer success", inline.NewPair("id", element.ID()))
 	}
 	return nil
 }
@@ -163,10 +170,10 @@ func (p *pool) createNewElement() (e *element, err error) {
 		consumer, err = p.factory.Create()
 		if err != nil {
 			p.incr(-1)
-			return err
+			return errors.Wrap(err, "consumer factory create err")
 		}
 		e = p.newElement(consumer)
-		inline.Infoln("pool create new element", inline.NewPair("id", e.ID()))
+		inline.Debugln("pool create new element", inline.NewPair("id", e.ID()))
 		return nil
 	})
 
@@ -256,7 +263,8 @@ type element struct {
 
 	p Pool
 
-	c Consumer
+	c        Consumer
+	errTimes int
 }
 
 func (e *element) isIdle(idleTimeout time.Duration) bool {
@@ -265,12 +273,23 @@ func (e *element) isIdle(idleTimeout time.Duration) bool {
 
 func (e *element) Do(ctx context.Context, args ...interface{}) error {
 	e.lastUseTime = time.Now()
-	return e.c.Do(ctx, args)
+	err := e.c.Do(ctx, args...)
+	if err != nil {
+		e.errTimes++
+		if e.errTimes > 3 {
+			e.ShutDown()
+		}
+		return errors.Wrap(err, "do err")
+	}
+	return nil
 }
 
 // fact return to p
 func (e *element) Close() error {
-	return e.p.PutConsumer(e)
+	if e.errTimes <= 3 {
+		return e.p.PutConsumer(e)
+	}
+	return nil
 }
 
 func (e *element) ShutDown() error {

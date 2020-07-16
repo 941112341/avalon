@@ -2,7 +2,6 @@ package avalon
 
 import (
 	"context"
-	"fmt"
 	"github.com/941112341/avalon/sdk/collect"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
@@ -25,8 +24,8 @@ func (c *consumer) Close() error {
 
 func (c *consumer) Do(ctx context.Context, args ...interface{}) error {
 	client := thrift.NewTStandardClient(c.protocalFactory.GetProtocol(c.transport), c.protocalFactory.GetProtocol(c.transport))
-	method := args[1].(string)
-	tArgs, tResult := args[2].(thrift.TStruct), args[3].(thrift.TStruct)
+	method := args[0].(string)
+	tArgs, tResult := args[1].(thrift.TStruct), args[2].(thrift.TStruct)
 
 	return client.Call(ctx, method, tArgs, tResult)
 }
@@ -39,22 +38,16 @@ type factory struct {
 }
 
 func (c *factory) Create() (collect.Consumer, error) {
-	tSocket, err := thrift.NewTSocket(c.hostPort)
+	tSocket, err := thrift.NewTSocketTimeout(c.hostPort, c.timeout*time.Second)
 	if err != nil {
-		return nil, errors.Wrap(err, c.hostPort)
-	}
-	if c.timeout != time.Duration(0) {
-		err = tSocket.SetTimeout(c.timeout)
-		if err != nil {
-			inline.Warningln("set timeout err", inline.NewPairs("err", err, "timeout", c.timeout)...)
-		}
+		return nil, errors.Wrap(err, "new tSocket")
 	}
 	transport, err := c.transportFactory.GetTransport(tSocket)
 	if err != nil {
-		return nil, errors.Wrap(err, c.hostPort)
+		return nil, errors.Wrap(err, "get transport")
 	}
 	if err = transport.Open(); err != nil {
-		return nil, errors.Wrap(err, c.hostPort)
+		return nil, errors.Wrap(err, "transport open")
 	}
 
 	return &consumer{
@@ -98,6 +91,7 @@ func ThriftMiddleware(cfg Config, _ Endpoint) Endpoint {
 		if err != nil {
 			return errors.Wrap(err, "get consumer")
 		}
+		defer consumer.Close()
 		return consumer.Do(ctx, method, args, result)
 	}
 }

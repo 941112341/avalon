@@ -16,7 +16,7 @@ func MetricsMiddleware(cfg Config, call Endpoint) Endpoint {
 		log.New().
 			WithField("duration", time.Since(t).String()).
 			WithField("err", err).
-			WithField("hostPort", cfg.Client.HostPort).
+			WithField("psm", cfg.Psm).
 			Info("call")
 		return err
 	}

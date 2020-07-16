@@ -42,12 +42,18 @@ func File() *logrus.Logger {
 			pathMap,
 			&logrus.JSONFormatter{},
 		))
+
+		logrus.SetLevel(logrus.InfoLevel)
 	})
 
 	return Log
 }
 
 func New() *logrus.Logger {
+	return File()
+}
+
+func Console() *logrus.Logger {
 	if Log != nil {
 		return Log
 	}

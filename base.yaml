@@ -1,7 +1,7 @@
 psm: avalon.test.test
 
 server:
-  port: 8890
+  port: 8888
 
 client:
   retry: 1
