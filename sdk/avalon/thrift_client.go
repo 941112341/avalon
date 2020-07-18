@@ -61,7 +61,7 @@ func newFactory(hostPort string, timeout time.Duration, transportFactory thrift.
 	protocalFactory thrift.TProtocolFactory) collect.ConsumerFactory {
 	return &factory{
 		hostPort:         hostPort,
-		timeout:          timeout,
+		timeout:          timeout * time.Second,
 		transportFactory: transportFactory,
 		protocalFactory:  protocalFactory,
 	}

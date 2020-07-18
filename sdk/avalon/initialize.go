@@ -20,7 +20,7 @@ func RegisterService(cfg Config) error {
 	}
 
 	hostPort := fmt.Sprintf("%s:%d", ip, cfg.Server.Port)
-	node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.ZkConfig.Path, cfg.Psm, hostPort)).Build()
+	node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.ZkConfig.Path, cfg.PSM, hostPort)).Build()
 	err = node.Save(zkCli, zk.FlagEphemeral)
 	if err != nil {
 		return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
@@ -39,6 +39,6 @@ func RegisterService(cfg Config) error {
 	if err != nil {
 		return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
 	}
-	inline.Infoln("register success", inline.NewPair("serviceName", cfg.Psm))
+	inline.Infoln("register success", inline.NewPair("serviceName", cfg.PSM))
 	return nil
 }

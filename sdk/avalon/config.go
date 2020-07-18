@@ -9,39 +9,39 @@ import (
 )
 
 type Config struct {
-	Psm string
+	PSM string `yaml:"psm"`
 
 	Client struct {
-		Retry    int
-		Wait     time.Duration // 100ms
-		HostPort string
-		Timeout  time.Duration // 1s
+		Retry    int           `yaml:"retry"`
+		Wait     time.Duration `yaml:"wait"` // 100ms
+		HostPort string        `yaml:"hostPort"`
+		Timeout  time.Duration `yaml:"timeout"` // 1s
 	}
 
 	Server struct {
-		Port    int
-		Timeout time.Duration // 1s
-	}
+		Port    int           `yaml:"port"`
+		Timeout time.Duration `yaml:"timeout"` // 1s
+	} `yaml:"server"`
 
-	ZkConfig zookeeper.ZkConfig
+	ZkConfig zookeeper.ZkConfig `yaml:"zkConfig"`
 }
 
 // default config
 var _cfg = Config{
-	Psm: "",
+	PSM: "",
 	Client: struct {
-		Retry    int
-		Wait     time.Duration
-		HostPort string
-		Timeout  time.Duration
+		Retry    int           `yaml:"retry"`
+		Wait     time.Duration `yaml:"wait"` // 100ms
+		HostPort string        `yaml:"hostPort"`
+		Timeout  time.Duration `yaml:"timeout"` // 1s
 	}{
 		Retry:   0,
 		Wait:    100,
 		Timeout: 1,
 	},
 	Server: struct {
-		Port    int
-		Timeout time.Duration
+		Port    int           `yaml:"port"`
+		Timeout time.Duration `yaml:"timeout"` // 1s
 	}{
 		Port:    8888,
 		Timeout: 1,

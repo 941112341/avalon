@@ -1,8 +1,15 @@
 psm: avalon.test.test
 
 server:
-  port: 8888
+  port: 8889
 
 client:
   retry: 1
+
+zkConfig:
+  hostPorts:
+    - "192.168.0.109:2181"
+
+
+
 

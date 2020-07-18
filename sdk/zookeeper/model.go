@@ -173,7 +173,11 @@ func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) (e
 		return
 	}
 	go func() {
-		defer func() { err = inline.RecoverErr() }()
+		defer func() {
+			if serr, ok := recover().(error); ok {
+				err = serr
+			}
+		}()
 		for err == nil {
 			select {
 			case event := <-ch:

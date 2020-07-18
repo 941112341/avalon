@@ -22,7 +22,6 @@ type Scope struct {
 const (
 	ScopeKey    = "__SCOPE_KEY__"
 	HostPortKey = "HostPort"
-	PSMKey      = "PSM"
 )
 
 type ScopeType int
@@ -107,7 +106,6 @@ func scopeMiddleware(cfg Config, call Endpoint) Endpoint {
 			inline.Errorln("unmarshal err", inline.NewPairs("err", err.Error())...)
 		}
 		scope.Set(HostPortKey, cfg.Client.HostPort, FromCrossRPC)
-		scope.Set(PSMKey, cfg.Psm, FromCrossRPC)
 
 		ctx = context.WithValue(ctx, ScopeKey, scope)
 		return call(ctx, method, args, result)

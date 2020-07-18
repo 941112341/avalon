@@ -1,60 +1,87 @@
 package inline
 
 import (
-	"errors"
 	"fmt"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/pkg/errors"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
-func SetField(any interface{}, fieldName string, to interface{}) (err error) {
-	i, err := GetFieldAddress(any, fieldName)
+func SetFieldJSON(any interface{}, fieldName string, to interface{}) (err error) {
+	defer func() {
+		if serr, ok := recover().(error); ok {
+			err = serr
+		}
+	}()
+	fld, err := getField(any, fieldName)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "get field")
 	}
-	str, _ := jsoniter.Marshal(to)
-	return jsoniter.Unmarshal(str, i)
+	typ := fld.Type()
+	isPtr := typ.Kind() == reflect.Ptr
+	if isPtr {
+		typ = typ.Elem()
+	}
+	unptr := reflect.New(typ).Interface()
+	data, err := jsoniter.Marshal(to)
+	if err != nil {
+		return errors.WithMessage(err, "marshal to "+ToJsonString(to))
+	}
+	err = jsoniter.Unmarshal(data, &unptr)
+	if err != nil {
+		return errors.Wrap(err, "unmarshal")
+	}
+	if !fld.CanSet() {
+		return errors.New(fieldName + " fld cannot set")
+	}
+	fld.Set(reflect.ValueOf(unptr))
+	return nil
+}
+
+func SetField(any interface{}, fieldName string, to interface{}) (err error) {
+	defer func() {
+		if serr, ok := recover().(error); ok {
+			err = serr
+		}
+	}()
+	fld, err := getField(any, fieldName)
+	if err != nil {
+		return errors.Wrap(err, "get field")
+	}
+	if !fld.CanSet() {
+		return errors.New(fieldName + " fld cannot set")
+	}
+	fld.Set(reflect.ValueOf(to))
+	return
 }
 
 func GetField(any interface{}, fieldName string) (i interface{}, err error) {
-	v := reflect.ValueOf(any)
-	if v.Kind() != reflect.Ptr {
-		return nil, errors.New("any is not ptr")
+	fld, err := getField(any, fieldName)
+	if err != nil {
+		return nil, errors.Wrap(err, "get field")
 	}
-	v = v.Elem()
-	fld := v.FieldByName(fieldName)
-	if !fld.IsValid() {
-		return nil, fmt.Errorf("%s field not found", fieldName)
-	}
-	defer func() {
-		err = RecoverErr()
-	}()
 	i = fld.Interface()
 	return
 }
 
 func GetFieldAddress(any interface{}, fieldName string) (i interface{}, err error) {
-	v := reflect.ValueOf(any)
-	if v.Kind() != reflect.Ptr {
-		return nil, errors.New("any is not ptr")
+
+	fld, err := getField(any, fieldName)
+	if err != nil {
+		return nil, errors.Wrap(err, "get field")
 	}
-	v = v.Elem()
-	fld := v.FieldByName(fieldName)
-	if !fld.IsValid() {
-		return nil, fmt.Errorf("%s field not found", fieldName)
-	}
-	defer func() {
-		err = RecoverErr()
-	}()
+
 	i = fld.Addr().Interface()
 	return
 }
 
 func Set(fld reflect.Value, param string) (err error) {
 	defer func() {
-		err = RecoverErr()
+		if serr, ok := recover().(error); ok {
+			err = serr
+		}
 	}()
 	b, err := Convert(fld.Type(), param)
 	if err != nil {
@@ -62,6 +89,24 @@ func Set(fld reflect.Value, param string) (err error) {
 	}
 	fld.Set(reflect.ValueOf(b))
 	return
+}
+
+func getField(any interface{}, fieldName string) (fld reflect.Value, err error) {
+	defer func() {
+		if serr, ok := recover().(error); ok {
+			err = serr
+		}
+	}()
+	v := reflect.ValueOf(any)
+	if v.Kind() != reflect.Ptr {
+		return reflect.Value{}, errors.New("any is not ptr")
+	}
+	v = v.Elem()
+	fld = v.FieldByName(fieldName)
+	if !fld.IsValid() {
+		return reflect.Value{}, fmt.Errorf("%s field not found", fieldName)
+	}
+	return fld, nil
 }
 
 func Convert(typ reflect.Type, param string) (b interface{}, err error) {
@@ -115,6 +160,7 @@ func Convert(typ reflect.Type, param string) (b interface{}, err error) {
 }
 
 func Redirect(value reflect.Value) reflect.Value {
+
 	for value.Kind() == reflect.Ptr {
 		value = value.Elem()
 	}

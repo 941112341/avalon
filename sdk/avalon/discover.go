@@ -19,7 +19,7 @@ func init() {
 }
 
 func setHostPort(ctx context.Context, hostPort string) {
-	GetScope(ctx).Set(HostPortKey, hostPort, FromCrossRPC)
+	GetScope(ctx).Set(HostPortKey, hostPort, FromSession)
 }
 
 func getHostPort(ctx context.Context) (string, bool) {
@@ -31,32 +31,32 @@ func DiscoverMiddleware(cfg Config, call Endpoint) Endpoint {
 		if cfg.Client.HostPort != "" { // pass if set hostPort
 			return call(ctx, method, args, result)
 		}
-		if cfg.Psm == "" {
+		if cfg.PSM == "" {
 			return errors.New("no service name")
 		}
 
-		if !syncMap.Contains(cfg.Psm) {
+		if !syncMap.Contains(cfg.PSM) {
 			lock.Lock()
 			defer lock.Unlock()
-			if !syncMap.Contains(cfg.Psm) {
+			if !syncMap.Contains(cfg.PSM) {
 				zkCli, err := zookeeper.GetZkClientInstance(cfg.ZkConfig)
 				if err != nil {
 					return errors.WithMessage(err, inline.ToJsonString(cfg.ZkConfig))
 				}
-				node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.ZkConfig.Path, cfg.Psm)).Build()
+				node := zookeeper.NewZkNodeBuilder(inline.JoinPath(cfg.ZkConfig.Path, cfg.PSM)).Build()
 				err = node.ListWL(zkCli, true)
 				if err != nil {
 					return err
 				}
-				syncMap.Put(cfg.Psm, node)
+				syncMap.Put(cfg.PSM, node)
 			}
 		}
 
-		i, _ := syncMap.Get(cfg.Psm)
+		i, _ := syncMap.Get(cfg.PSM)
 		node := i.(*zookeeper.ZkNode)
 		hostPorts := node.GetChildrenKey()
 		if len(hostPorts) == 0 {
-			return errors.New(cfg.Psm + " has none server")
+			return errors.New(cfg.PSM + " has none server")
 		}
 		idx := rand.Intn(len(hostPorts))
 		inline.Infoln("hostPort", inline.NewPair("hostPort", hostPorts[idx]))
