@@ -74,8 +74,8 @@ func NewFactory(hostPort string, timeout time.Duration) collect.ConsumerFactory 
 
 func ThriftMiddleware(cfg Config, _ Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
-		hostPort := GetHostPort(ctx)
-		if hostPort == "" {
+		hostPort, ok := getHostPort(ctx)
+		if !ok {
 			return errors.New("host port is empty")
 		}
 

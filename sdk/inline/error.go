@@ -15,7 +15,7 @@ func Recover() {
 func RecoverErr() error {
 	i := recover()
 	if i == nil {
-		panic("nil recover")
+		return nil
 	}
 	log.New().WithField("recover", ToJsonString(i)).Errorln("panic!!")
 	err, ok := i.(error)

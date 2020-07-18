@@ -25,8 +25,13 @@ func (c *IClient) Call(ctx context.Context, method string, args, result thrift.T
 
 func NewClientWithConfig(cfg Config, middleware ...Middleware) *IClient {
 	meddlers := []Middleware{
-		CreateSessionMiddleware, RetryMiddleware, DiscoverMiddleware, FixAddressMiddleware,
-		MetricsMiddleware, ThriftMiddleware,
+		scopeMiddleware,
+		RetryMiddleware,
+		DiscoverMiddleware,
+		FixAddressMiddleware,
+		MetricsMiddleware,
+		metaMiddlewareClient,
+		ThriftMiddleware,
 	}
 	return &IClient{
 		Cfg:        cfg,

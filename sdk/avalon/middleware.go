@@ -36,18 +36,10 @@ func FixAddressMiddleware(cfg Config, call Endpoint) Endpoint {
 		if err != nil {
 			return errors.WithMessage(err, "get ip err")
 		}
-		hostPort := GetHostPort(ctx)
+		hostPort, _ := getHostPort(ctx)
 		if strings.HasPrefix(hostPort, ip) {
-			SetHostPort(ctx, strings.Replace(hostPort, ip, "localhost", 1))
+			setHostPort(ctx, strings.Replace(hostPort, ip, "localhost", 1))
 		}
-		return call(ctx, method, args, result)
-	}
-}
-
-func CreateSessionMiddleware(cfg Config, call Endpoint) Endpoint {
-	return func(ctx context.Context, method string, args, result interface{}) error {
-		ctx = WithSession(ctx, &Session{HostPort: cfg.Client.HostPort, Attachments: map[string]interface{}{}})
-
 		return call(ctx, method, args, result)
 	}
 }

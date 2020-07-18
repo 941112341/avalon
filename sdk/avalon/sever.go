@@ -67,7 +67,9 @@ func NewServerWithConfig(cfg Config, middleware ...Middleware) *IServer {
 		initials: []initial{
 			RegisterService,
 		},
-		Middleware: middleware,
+		Middleware: append([]Middleware{
+			metaMiddlewareServer,
+		}, middleware...),
 	}
 }
 

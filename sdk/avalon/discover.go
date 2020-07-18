@@ -18,6 +18,14 @@ func init() {
 	syncMap = *collect.NewSyncMap()
 }
 
+func setHostPort(ctx context.Context, hostPort string) {
+	GetScope(ctx).Set(HostPortKey, hostPort, FromCrossRPC)
+}
+
+func getHostPort(ctx context.Context) (string, bool) {
+	return Get(ctx, HostPortKey)
+}
+
 func DiscoverMiddleware(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		if cfg.Client.HostPort != "" { // pass if set hostPort
@@ -54,7 +62,7 @@ func DiscoverMiddleware(cfg Config, call Endpoint) Endpoint {
 		inline.Infoln("hostPort", inline.NewPair("hostPort", hostPorts[idx]))
 
 		// set session
-		SetHostPort(ctx, hostPorts[idx])
+		setHostPort(ctx, hostPorts[idx])
 		return call(ctx, method, args, result)
 	}
 }

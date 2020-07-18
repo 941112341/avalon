@@ -21,3 +21,8 @@ func InetAddress() (string, error) {
 	}
 	return "", errors.New("Can not find the client ip address!")
 }
+
+func GetIP() string {
+	addr, _ := InetAddress()
+	return addr
+}

@@ -2,10 +2,55 @@ package inline
 
 import (
 	"errors"
+	"fmt"
+	jsoniter "github.com/json-iterator/go"
 	"reflect"
 	"strconv"
 	"strings"
 )
+
+func SetField(any interface{}, fieldName string, to interface{}) (err error) {
+	i, err := GetFieldAddress(any, fieldName)
+	if err != nil {
+		return err
+	}
+	str, _ := jsoniter.Marshal(to)
+	return jsoniter.Unmarshal(str, i)
+}
+
+func GetField(any interface{}, fieldName string) (i interface{}, err error) {
+	v := reflect.ValueOf(any)
+	if v.Kind() != reflect.Ptr {
+		return nil, errors.New("any is not ptr")
+	}
+	v = v.Elem()
+	fld := v.FieldByName(fieldName)
+	if !fld.IsValid() {
+		return nil, fmt.Errorf("%s field not found", fieldName)
+	}
+	defer func() {
+		err = RecoverErr()
+	}()
+	i = fld.Interface()
+	return
+}
+
+func GetFieldAddress(any interface{}, fieldName string) (i interface{}, err error) {
+	v := reflect.ValueOf(any)
+	if v.Kind() != reflect.Ptr {
+		return nil, errors.New("any is not ptr")
+	}
+	v = v.Elem()
+	fld := v.FieldByName(fieldName)
+	if !fld.IsValid() {
+		return nil, fmt.Errorf("%s field not found", fieldName)
+	}
+	defer func() {
+		err = RecoverErr()
+	}()
+	i = fld.Addr().Interface()
+	return
+}
 
 func Set(fld reflect.Value, param string) (err error) {
 	defer func() {
