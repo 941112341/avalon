@@ -15,19 +15,43 @@ type Handler struct {
 }
 
 func (h *Handler) MessageDispatcher(ctx context.Context, request *MessageRequest) (r *MessageResponse, err error) {
+	defer func() {
+		if iErr, ok := recover().(error); ok {
+			err = iErr
+		}
+	}()
 	var call avalon.Endpoint = func(ctx context.Context, method string, _, _ interface{}) error {
 		r, err = h.handler.MessageDispatcher(ctx, request)
-		if err != nil {
-			return err
-		}
-		return nil
+		return err
 	}
 
 	for _, middleware := range h.middleware {
 		call = middleware(h.cfg, call)
 	}
 	err = call(ctx, "MessageDispatcher", request, r)
-	return
+	if err != nil {
+		aErr, ok := err.(*avalon.AErr)
+		if ok {
+			r = &MessageResponse{BaseResp: &BaseResp{
+				Code:    aErr.Code,
+				Message: aErr.Error(),
+			}}
+		} else {
+			r = &MessageResponse{BaseResp: &BaseResp{
+				Code:    avalon.UnknownErr,
+				Message: err.Error(),
+			}}
+		}
+	}
+	if r == nil {
+		r = &MessageResponse{BaseResp: &BaseResp{
+			Code: avalon.UnknownErr,
+		}}
+	}
+	if r.BaseResp == nil {
+		r.BaseResp = &BaseResp{}
+	}
+	return r, nil
 }
 
 func Run(service MessageService, middleware ...avalon.Middleware) error {

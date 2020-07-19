@@ -1,3 +1,3 @@
 
-thrift --out message --gen go message.thrift
+thrift --out ./message --gen go message.thrift
 

@@ -1,4 +1,4 @@
-namespace go message
+namespace go base
 
 include "base.thrift"
 
@@ -15,6 +15,8 @@ struct MessageResponse {
     1: map<string, string> header
     2: binary body
     3: i32 status
+
+    255: base.BaseResp baseResp
 }
 
 service messageService {

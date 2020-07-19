@@ -7,3 +7,8 @@ struct Base {
     4: map<string, string> extra
     5: Base base
 }
+
+struct BaseResp {
+    1: i32 code
+    2: string message
+}
