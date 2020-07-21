@@ -1,0 +1,608 @@
+{"err":"../base.dev.yaml: open ../base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../base.dev.yaml","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.test/10.86.124.245:8889","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.test/10.86.124.245:8889","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.test/10.86.124.245:8890","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.test/10.86.124.245:8890","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.test/10.86.124.245:8888","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.test/10.86.124.245:8888","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.166153ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"1.507771ms","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"970.535µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"1.210062ms","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.101093ms","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"1.39572ms","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"5.946µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"182.796µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.242µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"179.79µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.58µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"201.147µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.645µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"237.359µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.1µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"218.531µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.2µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"267.525µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.1µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"171.308µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.838µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"210.72µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.509µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"210.69µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.52µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"209.958µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.44µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"215.12µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.723µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"199.172µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.546µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"157.457µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.526µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"151.686µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.75µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"165.814µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.692µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"137.827µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.271µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"122.317µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.447µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"106.746µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.197µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"112.254µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.423µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"123.994µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.445µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"105.16µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.838µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"122.397µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.649µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"126.819µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.549µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"113.593µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.447µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"124.234µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.736µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"121.584µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.419µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"128.994µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.736µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"123.472µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.621µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"136.643µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.45µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"113.545µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.552µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"129.953µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.062µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"118.356µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.507µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"135.527µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.44µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"107.843µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.735µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"202.481µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.565µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"154.761µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.713µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"160.96µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.602µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"150.246µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.336µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"162.643µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.93µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"231.972µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"3.41µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"162.892µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.754µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"142.67µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.893µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"175.909µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.587µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"147.97µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.636µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"143.402µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.646µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"113.235µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.688µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"129.379µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.571µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"125.521µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.952µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"115.886µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.396µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"116.236µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.43µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"141.158µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.733µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"132.491µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.575µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"132.926µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.511µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"133.173µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.561µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"146.632µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.677µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"140.412µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.919µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"146.415µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.566µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"118.725µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.586µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"128.992µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.37µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"103.572µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.265µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"110.561µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.442µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"124.323µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.629µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"131.643µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.648µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"113.605µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.315µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"139.286µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.572µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"142.975µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.526µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"143.097µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.66µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"128.19µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.672µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"123.808µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.467µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"126.192µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.475µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"101.094µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.505µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"111.97µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.676µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"179.717µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.548µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"132.158µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"21.546µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"141.484µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.442µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"176.715µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.497µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"137.755µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.659µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"125.097µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.404µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"134.691µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.399µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"138.212µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.327µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"126.269µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.409µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"122.07µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.699µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"130.149µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.53µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"139.155µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.461µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"98.283µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.394µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"103.261µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.267µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"119.322µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.276µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"155.725µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.55µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"122.46µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.602µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"140.823µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.301µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"126.681µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.295µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"123.919µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.511µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"143.359µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.484µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"149.972µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.513µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"181.276µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.581µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"134.52µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.628µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"184.504µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.756µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"157.674µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.36µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"133.206µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.601µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"136.353µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.606µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"126.395µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.459µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"115.804µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"13.742µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"172.872µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.864µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"156.233µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.457µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"178.56µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.494µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"1.573997ms","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.672µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"114.141µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.54µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"128.593µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.374µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"112.827µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.622µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"127.898µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.413µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"139.076µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.303µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"157.941µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.788µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"172.46µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.731µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"151.662µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.732µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"406.779µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.68µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"148.452µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.761µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"152.348µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.584µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"127.482µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.805µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"153.573µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.726µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"148.271µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.521µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"127.066µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.437µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"131.446µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.868µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"127.484µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.451µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"126.146µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.596µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"132.312µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.612µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"142.774µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.354µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"180.344µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.706µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"160.093µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.143µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"244.162µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.683µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"190.539µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.025µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"212.737µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.669µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"158.517µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.411µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"181.594µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.418µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"158.659µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.496µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"159.149µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.718µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"153.349µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.394µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"168.979µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.701µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"209.314µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.546µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"159.203µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"2.267µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"176.887µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.719µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"169.888µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.542µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"167.788µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.889µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"172.736µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8890","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.53µs","hostPort":"localhost:8890","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"192.787µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.538µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"185.765µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8888","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.443µs","hostPort":"localhost:8888","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"173.194µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}
+{"hostPort":"10.86.124.245:8889","level":"info","msg":"hostPort","time":"2020-07-16T18:16:31+08:00"}
+{"fields.time":"1.722µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-16T18:16:31+08:00"}
+{"duration":"178.386µs","err":null,"level":"info","msg":"call","psm":"avalon.test.test","time":"2020-07-16T18:16:31+08:00"}
+{"level":"info","msg":"hello world","time":"2020-07-16T18:16:31+08:00"}

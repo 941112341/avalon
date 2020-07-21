@@ -5,7 +5,7 @@ struct Base {
     2: string ip
     3: i64 time
     4: map<string, string> extra
-    5: Base base
+    5: optional Base base
 }
 
 struct BaseResp {

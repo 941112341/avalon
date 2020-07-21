@@ -1,0 +1,7 @@
+{"err":"../base.dev.yaml: open ../base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../base.dev.yaml","time":"2020-07-21T18:13:30+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.test/10.86.124.245:8889","time":"2020-07-21T18:13:30+08:00"}
+{"level":"info","msg":"register success","serviceName":"avalon.test.test","time":"2020-07-21T18:13:30+08:00"}
+{"level":"info","msg":"start server","port":8889,"time":"2020-07-21T18:13:30+08:00"}
+{"level":"info","msg":"message dispatcher","req":"{\"header\":{},\"body\":\"\",\"methodName\":\"\",\"url\":\"xx\",\"base\":{\"psm\":\"avalon.test.test\",\"ip\":\"10.86.124.245\",\"time\":1595326419,\"extra\":{},\"base\":{\"psm\":\"\",\"ip\":\"\",\"time\":0,\"extra\":null,\"base\":null}}}","time":"2020-07-21T18:13:39+08:00"}
+{"level":"info","msg":"message dispatcher","req":"{\"header\":{},\"body\":\"\",\"methodName\":\"\",\"url\":\"xx\",\"base\":{\"psm\":\"avalon.test.test\",\"ip\":\"10.86.124.245\",\"time\":1595326419,\"extra\":{},\"base\":{\"psm\":\"\",\"ip\":\"\",\"time\":0,\"extra\":null,\"base\":null}}}","time":"2020-07-21T18:13:39+08:00"}
+{"level":"info","msg":"message dispatcher","req":"{\"header\":{},\"body\":\"\",\"methodName\":\"\",\"url\":\"xx\",\"base\":{\"psm\":\"avalon.test.test\",\"ip\":\"10.86.124.245\",\"time\":1595326419,\"extra\":{},\"base\":{\"psm\":\"\",\"ip\":\"\",\"time\":0,\"extra\":null,\"base\":null}}}","time":"2020-07-21T18:13:39+08:00"}
