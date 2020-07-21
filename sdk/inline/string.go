@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/json-iterator/go"
 	"strings"
+	"unicode"
 )
 
 func ToJsonString(o interface{}) string {
@@ -21,4 +22,18 @@ func JoinPath(paths ...string) string {
 
 func String(o interface{}) string {
 	return fmt.Sprintf("%s", o)
+}
+
+func Ucfirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
+func Lcfirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }

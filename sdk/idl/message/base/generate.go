@@ -6,12 +6,29 @@ import (
 )
 
 /*
-	this file should use tools generate
+	1.0.0
 */
 type Handler struct {
 	handler    MessageService
 	cfg        avalon.Config
 	middleware []avalon.Middleware
+}
+
+func Run(service MessageService, middleware ...avalon.Middleware) error {
+	server, err := avalon.NewServer(middleware...)
+	if err != nil {
+		return err
+	}
+	handler := &Handler{
+		handler:    service,
+		cfg:        server.Cfg,
+		middleware: append(server.Middleware, middleware...),
+	}
+	err = server.Register(NewMessageServiceProcessor(handler))
+	if err != nil {
+		return err
+	}
+	return server.Start()
 }
 
 func (h *Handler) MessageDispatcher(ctx context.Context, request *MessageRequest) (r *MessageResponse, err error) {
@@ -52,21 +69,4 @@ func (h *Handler) MessageDispatcher(ctx context.Context, request *MessageRequest
 		r.BaseResp = &BaseResp{}
 	}
 	return r, nil
-}
-
-func Run(service MessageService, middleware ...avalon.Middleware) error {
-	server, err := avalon.NewServer(middleware...)
-	if err != nil {
-		return err
-	}
-	handler := &Handler{
-		handler:    service,
-		cfg:        server.Cfg,
-		middleware: append(server.Middleware, middleware...),
-	}
-	err = server.Register(NewMessageServiceProcessor(handler))
-	if err != nil {
-		return err
-	}
-	return server.Start()
 }
