@@ -2,6 +2,7 @@ package tool
 
 import (
 	"bytes"
+	"github.com/941112341/avalon/sdk/inline"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
@@ -13,9 +14,10 @@ const Version = "1.0.0"
 // output absolute
 func build(info IDLInfo, version string) (string, error) {
 	fileTemplate := FileTemplate{
-		Package: info.Namespace,
-		Version: version,
-		IDLName: info.IDLName,
+		Package:     info.Namespace,
+		Version:     version,
+		IDLName:     info.IDLName,
+		ServiceName: inline.Ucfirst(info.ServiceName),
 	}
 
 	t, err := template.New("file").Parse(generateTemplate)

@@ -11,7 +11,7 @@ import (
 
 var (
 	Namespace  = regexp.MustCompile(`namespace[ \t]+go[ \t]+(\w+)`)
-	IDLService = regexp.MustCompile(`service[ \t]+(.*)Service[ \t]+[{]`)
+	IDLService = regexp.MustCompile(`service[ \t]+(\w+)[ \t]+[{]`)
 	Method     = regexp.MustCompile(`(\w+)Response[ \t]+(\w+)\(1:[ \t]*(\w+)Request[ \t]+[\w]+\)`)
 )
 

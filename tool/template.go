@@ -1,9 +1,10 @@
 package tool
 
 type FileTemplate struct {
-	Package string
-	Version string
-	IDLName string
+	Package     string
+	Version     string
+	IDLName     string
+	ServiceName string
 }
 
 const generateTemplate = `
@@ -11,6 +12,7 @@ package {{.Package}}
 
 import (
 	"context"
+	"github.com/941112341/avalon/common/gen/base"
 	"github.com/941112341/avalon/sdk/avalon"
 )
 
@@ -18,13 +20,13 @@ import (
 	{{.Version}}
 */
 type Handler struct {
-	handler    {{.IDLName}}Service
+	handler    {{.ServiceName}}
 	cfg        avalon.Config
 	middleware []avalon.Middleware
 }
 
 
-func Run(service {{.IDLName}}Service, middleware ...avalon.Middleware) error {
+func Run(service {{.ServiceName}}, middleware ...avalon.Middleware) error {
 	server, err := avalon.NewServer(middleware...)
 	if err != nil {
 		return err
@@ -34,7 +36,7 @@ func Run(service {{.IDLName}}Service, middleware ...avalon.Middleware) error {
 		cfg:        server.Cfg,
 		middleware: append(server.Middleware, middleware...),
 	}
-	err = server.Register(New{{.IDLName}}ServiceProcessor(handler))
+	err = server.Register(New{{.ServiceName}}Processor(handler))
 	if err != nil {
 		return err
 	}
@@ -69,24 +71,24 @@ func (h *Handler) {{.MethodName}}(ctx context.Context, request *{{.Request}}) (r
 	if err != nil {
 		aErr, ok := err.(*avalon.AErr)
 		if ok {
-			r = &{{.Response}}{BaseResp: &BaseResp{
+			r = &{{.Response}}{BaseResp: &base.BaseResp{
 				Code:    aErr.Code,
 				Message: aErr.Error(),
 			}}
 		} else {
-			r = &{{.Response}}{BaseResp: &BaseResp{
+			r = &{{.Response}}{BaseResp: &base.BaseResp{
 				Code:    avalon.UnknownErr,
 				Message: err.Error(),
 			}}
 		}
 	}
 	if r == nil {
-		r = &{{.Response}}{BaseResp: &BaseResp{
+		r = &{{.Response}}{BaseResp: &base.BaseResp{
 			Code: avalon.UnknownErr,
 		}}
 	}
 	if r.BaseResp == nil {
-		r.BaseResp = &BaseResp{}
+		r.BaseResp = &base.BaseResp{}
 	}
 	return r, nil
 }
