@@ -1,0 +1,8 @@
+psm: avalon.test.idgenerator
+
+server:
+  port: 8889
+
+zkConfig:
+  hostPorts:
+    - "localhost:2181"

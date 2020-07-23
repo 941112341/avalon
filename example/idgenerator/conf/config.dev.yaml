@@ -1,0 +1,3 @@
+Database:
+  DBRead: "root:root@(localhost:3306)/idgenerator?charset=utf8mb4&parseTime=True&loc=Local"
+  DB: "root:root@(localhost:3306)/idgenerator?charset=utf8mb4&parseTime=True&loc=Local"

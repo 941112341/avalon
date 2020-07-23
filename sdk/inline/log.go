@@ -1,6 +1,7 @@
 package inline
 
 import (
+	"fmt"
 	"github.com/941112341/avalon/sdk/log"
 	"github.com/sirupsen/logrus"
 )
@@ -36,6 +37,31 @@ func (p Pairs) Fields() logrus.Fields {
 	return fields
 }
 
+func (p Pairs) Info(f string, args ...interface{}) {
+	s := fmt.Sprintf(f, args...)
+	Infoln(s, p...)
+}
+
+func (p Pairs) Debug(f string, args ...interface{}) {
+	s := fmt.Sprintf(f, args...)
+	Debugln(s, p...)
+}
+
+func (p Pairs) Warn(f string, args ...interface{}) {
+	s := fmt.Sprintf(f, args...)
+	Warningln(s, p...)
+}
+
+func (p Pairs) Error(f string, args ...interface{}) {
+	s := fmt.Sprintf(f, args...)
+	Errorln(s, p...)
+}
+
+func (p Pairs) Fatal(f string, args ...interface{}) {
+	s := fmt.Sprintf(f, args...)
+	Fatalln(s, p...)
+}
+
 func Errorln(msg string, pairs ...Pair) {
 	log.New().WithFields(Pairs(pairs).Fields()).Errorln(msg)
 }
@@ -54,4 +80,8 @@ func Warningln(msg string, pairs ...Pair) {
 
 func Fatalln(msg string, pairs ...Pair) {
 	log.New().WithFields(Pairs(pairs).Fields()).Fatalln(msg)
+}
+
+func WithFields(args ...interface{}) Pairs {
+	return NewPairs(args)
 }
