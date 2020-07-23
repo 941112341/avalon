@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	_ = registry.Registry("", &genIdsService{})
+	_ = registry.Registry("GenIdsService", &genIdsService{})
 }
 
 type GenIdsService interface {
@@ -17,7 +17,7 @@ type GenIdsService interface {
 }
 
 type genIdsService struct {
-	F model.GeneratorFactory `inject:""`
+	F model.GeneratorFactory `inject:"GeneratorFactory"`
 }
 
 func (g genIdsService) GenIDs(ctx context.Context, request *idgenerator.IDRequest) (r *idgenerator.IDResponse, err error) {

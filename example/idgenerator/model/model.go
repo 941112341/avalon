@@ -19,7 +19,7 @@ type GeneratorFactory interface {
 type factory struct {
 	gen  Generator
 	once sync.Once
-	R    repository.IdGeneratorRepository `inject:""`
+	R    repository.IdGeneratorRepository `inject:"IdGeneratorRepository"`
 }
 
 func (f *factory) Create() (gen Generator, err error) {
@@ -36,5 +36,5 @@ func (f *factory) Create() (gen Generator, err error) {
 }
 
 func init() {
-	_ = registry.Registry("", &factory{})
+	_ = registry.Registry("GeneratorFactory", &factory{})
 }

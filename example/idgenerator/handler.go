@@ -12,7 +12,7 @@ func init() {
 }
 
 type Handler struct {
-	GenIdsService service.GenIdsService `inject:""`
+	GenIdsService service.GenIdsService `inject:"GenIdsService"`
 }
 
 func (h Handler) GenIDs(ctx context.Context, request *idgenerator.IDRequest) (r *idgenerator.IDResponse, err error) {

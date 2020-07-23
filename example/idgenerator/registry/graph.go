@@ -1,6 +1,8 @@
 package registry
 
-import "github.com/facebookgo/inject"
+import (
+	"github.com/facebookgo/inject"
+)
 
 var graph inject.Graph
 
