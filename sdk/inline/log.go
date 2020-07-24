@@ -37,27 +37,27 @@ func (p Pairs) Fields() logrus.Fields {
 	return fields
 }
 
-func (p Pairs) Info(f string, args ...interface{}) {
+func (p Pairs) Infoln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
 	Infoln(s, p...)
 }
 
-func (p Pairs) Debug(f string, args ...interface{}) {
+func (p Pairs) Debugln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
 	Debugln(s, p...)
 }
 
-func (p Pairs) Warn(f string, args ...interface{}) {
+func (p Pairs) Warnln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
 	Warningln(s, p...)
 }
 
-func (p Pairs) Error(f string, args ...interface{}) {
+func (p Pairs) Errorln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
 	Errorln(s, p...)
 }
 
-func (p Pairs) Fatal(f string, args ...interface{}) {
+func (p Pairs) Fatalln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
 	Fatalln(s, p...)
 }

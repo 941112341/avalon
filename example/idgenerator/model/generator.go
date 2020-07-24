@@ -118,7 +118,7 @@ func (i *IdGeneratorModel) Assign(cnt int64, bizId string) ([]int64, error) {
 	if i.canAssign(cnt) {
 		subModel, err := i.subIdGenerator(cnt, bizId)
 		if err != nil {
-			inline.WithFields("method", "assign", "i", inline.ToJsonString(i), "cnt", cnt).Error("subIdGenerator fail")
+			inline.WithFields("method", "assign", "i", inline.ToJsonString(i), "cnt", cnt).Errorln("subIdGenerator fail")
 			return nil, errors.Wrap(err, "sub generator")
 		}
 

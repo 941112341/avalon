@@ -73,12 +73,12 @@ func (h *Handler) {{.MethodName}}(ctx context.Context, request *{{.Request}}) (r
 		if ok {
 			r = &{{.Response}}{BaseResp: &base.BaseResp{
 				Code:    aErr.Code,
-				Message: aErr.Error(),
+				Message: aErr.Errorln(),
 			}}
 		} else {
 			r = &{{.Response}}{BaseResp: &base.BaseResp{
 				Code:    avalon.UnknownErr,
-				Message: err.Error(),
+				Message: err.Errorln(),
 			}}
 		}
 	}
