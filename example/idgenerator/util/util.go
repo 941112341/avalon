@@ -7,5 +7,5 @@ import (
 )
 
 func InitConfig(args ...interface{}) error {
-	return config.Read(&conf.Config, inline.GetEnv("conf", "conf/config.yaml"))
+	return config.Read(&conf.Config, inline.GetEnv("conf", "./conf/config.yaml"))
 }

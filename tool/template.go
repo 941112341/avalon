@@ -33,7 +33,7 @@ func Run(service {{.ServiceName}}, middleware ...avalon.Middleware) error {
 	}
 	handler := &Handler{
 		handler:    service,
-		cfg:        server.Cfg,
+		cfg:        server.builder,
 		middleware: append(server.Middleware, middleware...),
 	}
 	err = server.Register(New{{.ServiceName}}Processor(handler))

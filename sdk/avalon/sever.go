@@ -14,17 +14,23 @@ type Bootstrap interface {
 	Start() error
 	Stop() error
 	Register(handler interface{}) error
+	Config() Config
 }
 
 type IServer struct {
 	server     thrift.TServer
-	Cfg        Config
+	builder    ConfigBuilder
 	initials   []initial
 	Middleware []Middleware
 }
 
+func (s *IServer) Config() Config {
+	return s.builder.Config()
+}
+
 func (s *IServer) Start() error {
-	inline.Infoln("start server", inline.NewPair("port", s.Cfg.Server.Port))
+	cfg := s.builder.Config()
+	inline.Infoln("start server", inline.NewPair("port", cfg.Server.Port))
 	return s.server.Serve()
 }
 
@@ -38,17 +44,17 @@ func (s *IServer) Register(handler interface{}) error {
 	if !ok {
 		return fmt.Errorf("handler is not tProcessor %b", handler)
 	}
-
+	cfg := s.builder.Config()
 	for idx, initial := range s.initials {
-		if err := initial(s.Cfg); err != nil {
+		if err := initial(cfg); err != nil {
 			return errors.WithMessage(err, fmt.Sprintf("index[%d]", idx))
 		}
 	}
 
-	hostPort := fmt.Sprintf(":%d", s.Cfg.Server.Port)
+	hostPort := fmt.Sprintf(":%d", cfg.Server.Port)
 	timeout := time.Second
-	if s.Cfg.Server.Timeout != 0 {
-		timeout = s.Cfg.Server.Timeout * time.Second
+	if cfg.Server.Timeout != 0 {
+		timeout = cfg.Server.Timeout * time.Second
 	}
 	serverTransport, err := thrift.NewTServerSocketTimeout(hostPort, timeout)
 	if err != nil {
@@ -61,9 +67,9 @@ func (s *IServer) Register(handler interface{}) error {
 	return nil
 }
 
-func NewServerWithConfig(cfg Config, middleware ...Middleware) *IServer {
+func NewServerWithConfig(cfg ConfigBuilder, middleware ...Middleware) *IServer {
 	return &IServer{
-		Cfg: cfg,
+		builder: cfg,
 		initials: []initial{
 			RegisterService,
 		},
@@ -74,10 +80,7 @@ func NewServerWithConfig(cfg Config, middleware ...Middleware) *IServer {
 	}
 }
 
-func NewServer(middleware ...Middleware) (*IServer, error) {
-	cfg, err := GetConfig()
-	if err != nil {
-		return nil, err
-	}
-	return NewServerWithConfig(cfg, middleware...), nil
+func NewServer(psm string, middleware ...Middleware) *IServer {
+
+	return NewServerWithConfig(NewConfigBuilder(psm), middleware...)
 }

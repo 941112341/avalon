@@ -9,21 +9,25 @@ type Endpoint func(ctx context.Context, method string, args, result interface{})
 
 type Middleware func(config Config, call Endpoint) Endpoint
 
+type ConfigBuilder interface {
+	Config() Config
+}
+
 type IClient struct {
 	Middleware []Middleware
-	Cfg        Config
+	builder    ConfigBuilder
 }
 
 func (c *IClient) Call(ctx context.Context, method string, args, result thrift.TStruct) error {
 	var call Endpoint
 	for i := len(c.Middleware) - 1; i >= 0; i-- {
-		call = c.Middleware[i](c.Cfg, call)
+		call = c.Middleware[i](c.builder.Config(), call)
 	}
 
 	return call(ctx, method, args, result)
 }
 
-func NewClientWithConfig(cfg Config, middleware ...Middleware) *IClient {
+func NewClientWithConfig(builder ConfigBuilder, middleware ...Middleware) *IClient {
 	meddlers := []Middleware{
 		scopeMiddleware,
 		RetryMiddleware,
@@ -34,15 +38,12 @@ func NewClientWithConfig(cfg Config, middleware ...Middleware) *IClient {
 		ThriftMiddleware,
 	}
 	return &IClient{
-		Cfg:        cfg,
+		builder:    builder,
 		Middleware: append(meddlers, middleware...),
 	}
 }
 
-func NewClient(middleware ...Middleware) (*IClient, error) {
-	cfg, err := GetConfig()
-	if err != nil {
-		return nil, err
-	}
-	return NewClientWithConfig(cfg, middleware...), nil
+func NewClient(psm string, others ...Config) *IClient {
+
+	return NewClientWithConfig(NewConfigBuilder(psm, others...))
 }
