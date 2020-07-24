@@ -4,6 +4,8 @@ import (
 	"github.com/941112341/avalon/example/idgenerator/database"
 	"github.com/941112341/avalon/example/idgenerator/registry"
 	"github.com/941112341/avalon/example/idgenerator/util"
+	"os"
+	"path"
 )
 
 /*
@@ -26,4 +28,16 @@ func InitAll(args ...interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func InitAllForTest(args ...interface{}) error {
+	GOPATH := os.Getenv("GOPATH")
+	dir := "src/github.com/941112341/avalon/example/idgenerator/conf/config.yaml"
+	base := "src/github.com/941112341/avalon/example/idgenerator/base.yaml"
+	conf := path.Join(GOPATH, dir)
+	base = path.Join(GOPATH, base)
+	_ = os.Setenv("conf", conf)
+	_ = os.Setenv("base", base)
+
+	return InitAll(args...)
 }

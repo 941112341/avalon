@@ -7,3 +7,7 @@ type IdGenerator struct {
 	BizID   string
 	Version int
 }
+
+func (IdGenerator) TableName() string {
+	return "id_generator"
+}
