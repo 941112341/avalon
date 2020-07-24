@@ -22,8 +22,13 @@ type IdGeneratorModel struct {
 	lock  sync.Mutex
 }
 
-func (i *IdGeneratorModel) nextMaxId(cnt int64) int64 {
-	return i.Index + cnt - 1
+// get next index , sub generator ids[Index, nextIndex)
+func (i *IdGeneratorModel) nextIndex(cnt int64) int64 {
+	return i.Index + cnt
+}
+
+func (i *IdGeneratorModel) nextMaxID(cnt int64) int64 {
+	return i.MaxID + cnt
 }
 
 func (i *IdGeneratorModel) remain() int64 {
@@ -33,8 +38,8 @@ func (i *IdGeneratorModel) remain() int64 {
 // return nil if cnt out of range
 func (i *IdGeneratorModel) subIds(cnt int64) []int64 {
 	if i.canAssign(cnt) {
-		maxID := i.nextMaxId(cnt)
-		ids := i.IDs[i.Index : maxID+1]
+		maxID := i.nextIndex(cnt)
+		ids := i.IDs[i.Index:maxID]
 		return ids
 	}
 	return nil
@@ -60,13 +65,12 @@ func (i *IdGeneratorModel) subIdGenerator(cnt int64, bizID string) (*IdGenerator
 		return nil, errors.New("cannot assign")
 	}
 
-	maxID := i.nextMaxId(cnt)
 	ids := i.subIds(cnt) // len == cnt
 
 	subModel := &IdGeneratorModel{
 		IdGenerator: repository.IdGenerator{
 			ID:      0,
-			MaxID:   maxID,
+			MaxID:   *inline.LastInt64(ids),
 			Length:  cnt,
 			BizID:   bizID,
 			Version: 0,
@@ -86,7 +90,7 @@ func (i *IdGeneratorModel) canAssign(cnt int64) bool {
 	if cnt > requestLimit || cnt < 0 {
 		return false
 	}
-	return int64(len(i.IDs))-i.Index >= cnt
+	return i.remain() >= cnt
 }
 
 func (i *IdGeneratorModel) valid() error {
@@ -119,15 +123,19 @@ func (i *IdGeneratorModel) Assign(cnt int64, bizId string) ([]int64, error) {
 		}
 
 		if err := subModel.save(); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "save err")
 		}
+		i.Index += cnt
 		return subModel.IDs, nil
 	}
 	modelAfterExtend, err := i.extend()
 	if err != nil {
 		return nil, errors.Wrap(err, "model after extend")
 	}
-	return modelAfterExtend.Assign(cnt, bizId)
+
+	list, err := modelAfterExtend.Assign(cnt, bizId)
+	i.copy(modelAfterExtend)
+	return list, err
 }
 
 func (i *IdGeneratorModel) save() error {
@@ -135,11 +143,14 @@ func (i *IdGeneratorModel) save() error {
 	if err != nil {
 		return errors.Wrap(err, "valid")
 	}
+
+	if i.ID == 0 && i.BizID == repository.BizID {
+		return errors.New("cannot insert 'idgenerator' biz")
+	}
 	return i.repository.Save(i.IdGenerator)
 }
 
 func (i *IdGeneratorModel) extend() (*IdGeneratorModel, error) {
-
 	m, err := i.newModel(extendBase)
 	if err != nil {
 		return nil, errors.Wrap(err, "new model")
@@ -161,11 +172,17 @@ func (i *IdGeneratorModel) merge(n *IdGeneratorModel) *IdGeneratorModel {
 	}, i.repository)
 }
 
+func (i *IdGeneratorModel) copy(desc *IdGeneratorModel) {
+	i.IdGenerator = desc.IdGenerator
+	i.IDs = desc.IDs
+	i.Index = desc.Index
+}
+
 func (i *IdGeneratorModel) newModel(cnt int64) (*IdGeneratorModel, error) {
 
 	subModel := NewGenerator(repository.IdGenerator{
-		ID:      0,
-		MaxID:   i.nextMaxId(cnt),
+		ID:      i.ID,
+		MaxID:   i.nextMaxID(cnt),
 		Length:  cnt,
 		BizID:   i.BizID,
 		Version: i.Version,
@@ -182,16 +199,16 @@ func (i *IdGeneratorModel) newModel(cnt int64) (*IdGeneratorModel, error) {
 				return err
 			}
 			subModel = NewGenerator(repository.IdGenerator{
-				ID:      0,
-				MaxID:   subModel.nextMaxId(cnt),
+				ID:      subModel.ID,
+				MaxID:   subModel.nextMaxID(cnt),
 				Length:  cnt,
 				BizID:   subModel.BizID,
 				Version: subModel.Version,
 			}, subModel.repository)
-		} else {
-			subModel.Version++
+			inline.Infoln("retry cas")
+			return errors.New("cas err")
 		}
-
+		subModel.Version++
 		return nil
 	}, 3, 0)
 
@@ -214,4 +231,12 @@ func NewGenerator(generator repository.IdGenerator, repository repository.IdGene
 		Index:       0,
 		IDs:         inline.BuildIntList(generator.MaxID, generator.Length),
 	}
+}
+
+func NewGeneratorModel(repository repository.IdGeneratorRepository) (*IdGeneratorModel, error) {
+	model, err := NewGeneratorDB(repository)
+	if err != nil {
+		return nil, err
+	}
+	return model.newModel(extendBase)
 }

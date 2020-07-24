@@ -27,7 +27,7 @@ func (f *factory) Create() (gen Generator, err error) {
 		return f.gen, nil
 	}
 	f.once.Do(func() {
-		gen, err = NewGeneratorDB(f.R)
+		gen, err = NewGeneratorModel(f.R)
 		if err != nil {
 			inline.WithFields("err", err).Error("generator err")
 		}
