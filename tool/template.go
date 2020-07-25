@@ -14,6 +14,7 @@ import (
 	"context"
 	"github.com/941112341/avalon/common/gen/base"
 	"github.com/941112341/avalon/sdk/avalon"
+	"github.com/941112341/avalon/sdk/inline"
 )
 
 /*

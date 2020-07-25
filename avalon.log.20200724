@@ -1,0 +1,6 @@
+{"err":"conf/config.dev.yaml: open conf/config.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"conf/config.dev.yaml","time":"2020-07-24T18:36:10+08:00"}
+{"err":"conf/config.yaml: open conf/config.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"conf/config.yaml","time":"2020-07-24T18:36:10+08:00"}
+{"err":"./conf/config.dev.yaml: open ./conf/config.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"./conf/config.dev.yaml","time":"2020-07-24T18:38:28+08:00"}
+{"err":"./conf/config.yaml: open ./conf/config.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"./conf/config.yaml","time":"2020-07-24T18:38:28+08:00"}
+{"err":"./conf/config.dev.yaml: open ./conf/config.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"./conf/config.dev.yaml","time":"2020-07-24T18:41:24+08:00"}
+{"err":"./conf/config.yaml: open ./conf/config.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"./conf/config.yaml","time":"2020-07-24T18:41:24+08:00"}
