@@ -26,17 +26,14 @@ type Handler struct {
 }
 
 
-func Run(service {{.ServiceName}}, middleware ...avalon.Middleware) error {
-	server, err := avalon.NewServer(middleware...)
-	if err != nil {
-		return err
-	}
+func Run(psm string, service {{.ServiceName}}, middleware ...avalon.Middleware) error {
+	server := avalon.NewServer(psm, middleware...)
 	handler := &Handler{
 		handler:    service,
-		cfg:        server.builder,
+		cfg:        server.Config(),
 		middleware: append(server.Middleware, middleware...),
 	}
-	err = server.Register(New{{.ServiceName}}Processor(handler))
+	err := server.Register(New{{.ServiceName}}Processor(handler))
 	if err != nil {
 		return err
 	}
@@ -54,12 +51,13 @@ type MethodTemplate struct {
 const methodTemplate = `
 	
 func (h *Handler) {{.MethodName}}(ctx context.Context, request *{{.Request}}) (r *{{.Response}}, err error) {
-	defer func() {
-		if iErr, ok := recover().(error); ok {
-			err = iErr
-		}
-	}()
-	var call avalon.Endpoint = func(ctx context.Context, method string, _, _ interface{}) error {
+	var call avalon.Endpoint = func(ctx context.Context, method string, _, _ interface{}) (err error) {
+		defer func() {
+			if iErr, ok := recover().(error); ok {
+				inline.WithFields("requestID", avalon.RequestID(ctx), "err", iErr).Errorln("panic !!")
+				err = iErr
+			}
+		}()
 		r, err = h.handler.{{.MethodName}}(ctx, request)
 		return err
 	}
@@ -73,12 +71,12 @@ func (h *Handler) {{.MethodName}}(ctx context.Context, request *{{.Request}}) (r
 		if ok {
 			r = &{{.Response}}{BaseResp: &base.BaseResp{
 				Code:    aErr.Code,
-				Message: aErr.Errorln(),
+				Message: aErr.Error(),
 			}}
 		} else {
 			r = &{{.Response}}{BaseResp: &base.BaseResp{
 				Code:    avalon.UnknownErr,
-				Message: err.Errorln(),
+				Message: err.Error(),
 			}}
 		}
 	}
