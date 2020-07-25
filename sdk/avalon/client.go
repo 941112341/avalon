@@ -20,8 +20,9 @@ type IClient struct {
 
 func (c *IClient) Call(ctx context.Context, method string, args, result thrift.TStruct) error {
 	var call Endpoint
+	config := c.builder.Config()
 	for i := len(c.Middleware) - 1; i >= 0; i-- {
-		call = c.Middleware[i](c.builder.Config(), call)
+		call = c.Middleware[i](config, call)
 	}
 
 	return call(ctx, method, args, result)

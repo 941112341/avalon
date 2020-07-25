@@ -7,8 +7,10 @@ import (
 	"github.com/941112341/avalon/example/idgenerator/service"
 )
 
+var handler Handler
+
 func init() {
-	_ = registry.Registry("", &Handler{})
+	_ = registry.Registry("", &handler)
 }
 
 type Handler struct {

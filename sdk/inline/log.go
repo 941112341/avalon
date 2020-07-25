@@ -83,5 +83,5 @@ func Fatalln(msg string, pairs ...Pair) {
 }
 
 func WithFields(args ...interface{}) Pairs {
-	return NewPairs(args)
+	return NewPairs(args...)
 }

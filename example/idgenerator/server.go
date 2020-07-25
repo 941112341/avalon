@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	err = idgenerator.Run(Handler{})
+	err = idgenerator.Run("avalon.test.idgenerator", &handler)
 	if err != nil {
 		panic(err)
 	}

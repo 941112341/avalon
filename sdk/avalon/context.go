@@ -30,6 +30,14 @@ func SetBase(ctx context.Context, base *Base) context.Context {
 	return context.WithValue(ctx, MetaKey, base)
 }
 
+func RequestID(ctx context.Context) string {
+	base := GetBase(ctx)
+	if base == nil {
+		return "nil"
+	}
+	return base.RequestID
+}
+
 func metaMiddlewareClient(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
 		scope := GetScope(ctx).find(FromCrossRPC)

@@ -1,0 +1,134 @@
+{"event":{"Type":-1,"State":1,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:15:51+08:00"}
+{"event":{"Type":-1,"State":100,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:15:51+08:00"}
+{"event":{"Type":-1,"State":101,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:15:51+08:00"}
+{"err":null,"level":"error","msg":"watch err","time":"2020-07-09T16:15:51+08:00"}
+{"event":{"Type":-1,"State":1,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:16:42+08:00"}
+{"event":{"Type":-1,"State":100,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:16:42+08:00"}
+{"event":{"Type":-1,"State":101,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:16:43+08:00"}
+{"event":{"Type":-1,"State":1,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:17:21+08:00"}
+{"event":{"Type":-1,"State":100,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:17:21+08:00"}
+{"event":{"Type":-1,"State":101,"Path":"","Err":null,"Server":"192.168.0.109:2181"},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:17:21+08:00"}
+{"event":{"Type":3,"State":3,"Path":"/test","Err":null,"Server":""},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:17:32+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:17:32+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:17:50+08:00"}
+{"event":{"Type":3,"State":3,"Path":"/test","Err":null,"Server":""},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:17:50+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:19:03+08:00"}
+{"event":{"Type":3,"State":3,"Path":"/test","Err":null,"Server":""},"level":"info","msg":"cli connect receive","time":"2020-07-09T16:19:03+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:20:54+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:20:54+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:26:23+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:26:23+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:18+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:18+08:00"}
+{"level":"info","msg":"{\"Type\":4,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:25+08:00"}
+{"level":"info","msg":"{\"Type\":4,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:35+08:00"}
+{"level":"info","msg":"{\"Type\":4,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:49+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:59+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:28:59+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:32:33+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:32:33+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T16:35:13+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/ji","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/ji","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/3","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch children","path":"/test/3","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao","time":"2020-07-09T16:35:14+08:00"}
+{"level":"info","msg":"{\"Type\":4,\"State\":3,\"Path\":\"/test/jiangshihao2\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:35:42+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/23","time":"2020-07-09T16:35:43+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/23","time":"2020-07-09T16:35:43+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:35:56+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:35:56+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:35:56+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:39:28+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:39:28+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:39:48+08:00"}
+{"err":"zk: could not connect to a server","level":"error","msg":"watch err","time":"2020-07-09T16:40:03+08:00"}
+{"err":"/test/jiangshihao2/tidy: zk: could not connect to a server","level":"error","msg":"watch err","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/3\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao2\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao2/ji\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/ji","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao2/23\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao2/23\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao2/ji\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/3\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test/jiangshihao2\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"{\"Type\":-2,\"State\":0,\"Path\":\"/test\",\"Err\":{},\"Server\":\"\"}","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/3","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/23","time":"2020-07-09T16:40:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:40:11+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:40:11+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/ji","time":"2020-07-09T16:40:11+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/ji","time":"2020-07-09T16:40:11+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:40:41+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T16:40:41+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:40:41+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/23","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/tidy","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/ji","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test/3","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao","time":"2020-07-09T16:42:21+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/23","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/23","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/tidy","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/ji","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/ji","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/3","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch children","path":"/test/3","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao","time":"2020-07-09T18:17:02+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T18:17:18+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/tidy\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T18:17:18+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/tidy","time":"2020-07-09T18:17:18+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T18:17:18+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T18:28:24+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T18:28:24+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2","time":"2020-07-09T18:28:35+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T18:32:35+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T18:38:02+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T18:38:04+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/3","time":"2020-07-09T18:38:04+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T18:38:04+08:00"}
+{"id":"","level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T18:38:16+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T18:38:16+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","name":"getw","time":"2020-07-09T19:36:11+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","name":"children","time":"2020-07-09T19:36:11+08:00"}
+{"level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test\",\"Err\":null,\"Server\":\"\"}","name":"children","time":"2020-07-09T19:39:18+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T19:43:09+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T19:43:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/3","time":"2020-07-09T19:43:10+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T19:43:10+08:00"}
+{"level":"info","msg":"watch children","path":"/test","time":"2020-07-09T19:43:18+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2","time":"2020-07-09T19:43:18+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2","time":"2020-07-09T19:43:18+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/23","time":"2020-07-09T19:43:18+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/23","time":"2020-07-09T19:43:18+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/tidy","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/tidy","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/ji","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/ji","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/3","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch children","path":"/test/3","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao","time":"2020-07-09T19:43:19+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao","time":"2020-07-09T19:43:27+08:00"}
+{"id":"","level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T19:43:27+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao","time":"2020-07-09T19:43:27+08:00"}
+{"level":"info","msg":"watch data node","path":"/test/jiangshihao2/ji","time":"2020-07-09T19:43:44+08:00"}
+{"id":"","level":"info","msg":"{\"Type\":3,\"State\":3,\"Path\":\"/test/jiangshihao2/ji\",\"Err\":null,\"Server\":\"\"}","time":"2020-07-09T19:43:44+08:00"}
+{"level":"info","msg":"watch children","path":"/test/jiangshihao2/ji","time":"2020-07-09T19:43:44+08:00"}

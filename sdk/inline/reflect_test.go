@@ -1,6 +1,7 @@
 package inline
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -45,4 +46,10 @@ func TestSetField(t *testing.T) {
 		})
 	}
 	fmt.Println(hello)
+}
+
+func TestLog(t *testing.T) {
+	err := errors.New("?")
+
+	WithFields("err", err).Errorln("?")
 }

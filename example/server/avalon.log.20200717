@@ -1,4 +1,0 @@
-{"err":"../base.dev.yaml: open ../base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../base.dev.yaml","time":"2020-07-17T16:27:03+08:00"}
-{"level":"info","msg":"watch data node","path":"/host/avalon.test.test/10.86.124.245:8888","time":"2020-07-17T16:27:03+08:00"}
-{"level":"info","msg":"register success","serviceName":"avalon.test.test","time":"2020-07-17T16:27:03+08:00"}
-{"level":"info","msg":"start server","port":8888,"time":"2020-07-17T16:27:03+08:00"}

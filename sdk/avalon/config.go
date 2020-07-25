@@ -29,7 +29,7 @@ type Config struct {
 
 type DefaultConfigBuilder struct {
 	once sync.Once
-	cfg  Config
+	cfg  *Config
 	psm  string
 }
 
@@ -37,7 +37,7 @@ func (d *DefaultConfigBuilder) Config() Config {
 	cfg := d.cfg
 	var err error
 	d.once.Do(func() {
-		err = config.Read(&cfg, inline.GetEnv("base", "base.yaml"))
+		err = config.Read(cfg, inline.GetEnv("base", "base.yaml"))
 		if err != nil {
 			inline.WithFields("err", err.Error()).Errorln("read fail")
 		}
@@ -77,7 +77,7 @@ func NewConfigBuilder(psm string, others ...Config) *DefaultConfigBuilder {
 	}
 	return &DefaultConfigBuilder{
 		once: sync.Once{},
-		cfg:  cfg,
+		cfg:  &cfg,
 		psm:  psm,
 	}
 }
@@ -87,5 +87,6 @@ func (cfg *Config) newConfigWithPSM(psm string) Config {
 		PSM:      psm,
 		Client:   cfg.Client,
 		ZkConfig: cfg.ZkConfig,
+		Server:   cfg.Server,
 	}
 }
