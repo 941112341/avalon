@@ -44,7 +44,7 @@ func NewClientWithConfig(builder ConfigBuilder, middleware ...Middleware) *IClie
 	}
 }
 
-func NewClient(psm string, others ...Config) *IClient {
+func NewClient(psm string, others ...ConfigSetter) *IClient {
 
 	return NewClientWithConfig(NewConfigBuilder(psm, others...))
 }

@@ -40,39 +40,38 @@ func RequestID(ctx context.Context) string {
 
 func metaMiddlewareClient(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
-		scope := GetScope(ctx).find(FromCrossRPC)
-		preMeta := GetBase(ctx)
-
-		extra := make(map[string]string)
-		scope.cache.Range(func(key, value interface{}) bool {
-			k, v := key.(string), value.(string)
-			if k == HostPortKey {
-				return true
-			}
-			extra[k] = v
-			return true
-		})
-		meta := &Base{
-			IP:    inline.GetIP(),
-			PSM:   cfg.PSM,
-			Time:  time.Now().Unix(),
-			Extra: extra,
-			Base:  preMeta,
-		}
-		if preMeta == nil || preMeta.RequestID == "" {
-			meta.RequestID = inline.RandString(32)
-		} else {
-			meta.RequestID = preMeta.RequestID
-		}
 		r, err := inline.GetField(args, "Request")
-		if err != nil {
-			return errors.Wrap(err, "Get requset fail")
-		}
-		err = inline.SetFieldJSON(r, "Base", meta)
-		if err != nil {
-			return errors.Wrap(err, "set context error")
-		}
+		if err == nil {
+			scope := GetScope(ctx).find(FromCrossRPC)
+			preMeta := GetBase(ctx)
 
+			extra := make(map[string]string)
+			scope.cache.Range(func(key, value interface{}) bool {
+				k, v := key.(string), value.(string)
+				if k == HostPortKey {
+					return true
+				}
+				extra[k] = v
+				return true
+			})
+			meta := &Base{
+				IP:    inline.GetIP(),
+				PSM:   cfg.PSM,
+				Time:  time.Now().Unix(),
+				Extra: extra,
+				Base:  preMeta,
+			}
+			if preMeta == nil || preMeta.RequestID == "" {
+				meta.RequestID = inline.RandString(32)
+			} else {
+				meta.RequestID = preMeta.RequestID
+			}
+
+			err = inline.SetFieldJSON(r, "Base", meta)
+			if err != nil {
+				return errors.Wrap(err, "set context error")
+			}
+		}
 		return call(ctx, method, args, result)
 	}
 }

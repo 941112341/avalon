@@ -4,27 +4,30 @@ import (
 	"github.com/941112341/avalon/sdk/config"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/941112341/avalon/sdk/zookeeper"
-	jsoniter "github.com/json-iterator/go"
 	"sync"
 	"time"
 )
 
+type ClientConfig struct {
+	Retry    int           `yaml:"retry",json:"retry,omitempty"`
+	Wait     time.Duration `yaml:"wait",json:"wait,omitempty"` // 100ms
+	HostPort string        `yaml:"hostPort",json:"hostPort,omitempty"`
+	Timeout  time.Duration `yaml:"timeout",json:"timeout,omitempty"` // 1s
+}
+
+type ServerConfig struct {
+	Port    int           `yaml:"port",json:"port,omitempty"`
+	Timeout time.Duration `yaml:"timeout",json:"timeout,omitempty"` // 1s
+}
+
 type Config struct {
-	PSM string `yaml:"psm"`
+	PSM string `yaml:"psm",json:"psm,omitempty"`
 
-	Client struct {
-		Retry    int           `yaml:"retry"`
-		Wait     time.Duration `yaml:"wait"` // 100ms
-		HostPort string        `yaml:"hostPort"`
-		Timeout  time.Duration `yaml:"timeout"` // 1s
-	}
+	Client ClientConfig `yaml:"client",json:"client,omitempty"`
 
-	Server struct {
-		Port    int           `yaml:"port"`
-		Timeout time.Duration `yaml:"timeout"` // 1s
-	} `yaml:"server"`
+	Server ServerConfig `yaml:"server",json:"server,omitempty"`
 
-	ZkConfig zookeeper.ZkConfig `yaml:"zkConfig"`
+	ZkConfig zookeeper.ZkConfig `yaml:"zkConfig",json:"zkConfig,omitempty"`
 }
 
 type DefaultConfigBuilder struct {
@@ -45,23 +48,15 @@ func (d *DefaultConfigBuilder) Config() Config {
 	return cfg.newConfigWithPSM(d.psm)
 }
 
-func NewConfigBuilder(psm string, others ...Config) *DefaultConfigBuilder {
+func NewConfigBuilder(psm string, others ...ConfigSetter) *DefaultConfigBuilder {
 	cfg := Config{
 		PSM: "",
-		Client: struct {
-			Retry    int           `yaml:"retry"`
-			Wait     time.Duration `yaml:"wait"` // 100ms
-			HostPort string        `yaml:"hostPort"`
-			Timeout  time.Duration `yaml:"timeout"` // 1s
-		}{
+		Client: ClientConfig{
 			Retry:   0,
 			Wait:    100,
 			Timeout: 1,
 		},
-		Server: struct {
-			Port    int           `yaml:"port"`
-			Timeout time.Duration `yaml:"timeout"` // 1s
-		}{
+		Server: ServerConfig{
 			Port:    8888,
 			Timeout: 1,
 		},
@@ -72,8 +67,7 @@ func NewConfigBuilder(psm string, others ...Config) *DefaultConfigBuilder {
 		},
 	}
 	for _, other := range others {
-		str := inline.ToJsonString(other)
-		_ = jsoniter.UnmarshalFromString(str, &cfg)
+		cfg = other(cfg)
 	}
 	return &DefaultConfigBuilder{
 		once: sync.Once{},
@@ -88,5 +82,14 @@ func (cfg *Config) newConfigWithPSM(psm string) Config {
 		Client:   cfg.Client,
 		ZkConfig: cfg.ZkConfig,
 		Server:   cfg.Server,
+	}
+}
+
+type ConfigSetter func(cfg Config) Config
+
+func TimeoutSetter(timeout time.Duration) ConfigSetter {
+	return func(cfg Config) Config {
+		cfg.Client.Timeout = timeout
+		return cfg
 	}
 }
