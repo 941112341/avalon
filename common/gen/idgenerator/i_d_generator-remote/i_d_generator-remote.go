@@ -73,7 +73,7 @@ func main() {
     var err error
     parsedUrl, err = url.Parse(urlString)
     if err != nil {
-      fmt.Fprintln(os.Stderr, "Error parsing URL: ", err)
+      fmt.Fprintln(os.Stderr, "Errorln parsing URL: ", err)
       flag.Usage()
     }
     host = parsedUrl.Host
@@ -81,7 +81,7 @@ func main() {
   } else if useHttp {
     _, err := url.Parse(fmt.Sprint("http://", host, ":", port))
     if err != nil {
-      fmt.Fprintln(os.Stderr, "Error parsing URL: ", err)
+      fmt.Fprintln(os.Stderr, "Errorln parsing URL: ", err)
       flag.Usage()
     }
   }
@@ -115,7 +115,7 @@ func main() {
     }
   }
   if err != nil {
-    fmt.Fprintln(os.Stderr, "Error creating transport", err)
+    fmt.Fprintln(os.Stderr, "Errorln creating transport", err)
     os.Exit(1)
   }
   defer trans.Close()
@@ -142,7 +142,7 @@ func main() {
   oprot := protocolFactory.GetProtocol(trans)
   client := idgenerator.NewIDGeneratorClient(thrift.NewTStandardClient(iprot, oprot))
   if err := trans.Open(); err != nil {
-    fmt.Fprintln(os.Stderr, "Error opening socket to ", host, ":", port, " ", err)
+    fmt.Fprintln(os.Stderr, "Errorln opening socket to ", host, ":", port, " ", err)
     os.Exit(1)
   }
   

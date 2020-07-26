@@ -1,0 +1,128 @@
+{"err":"base.dev.yaml: open base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"base.dev.yaml","time":"2020-07-25T09:24:01+08:00"}
+{"err":"base.yaml: open base.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"base.yaml","time":"2020-07-25T09:24:01+08:00"}
+{"level":"error","msg":"read fail","time":"2020-07-25T09:24:01+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:24:01+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:24:01+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:24:02+08:00"}
+{"err":"base.dev.yaml: open base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"base.dev.yaml","time":"2020-07-25T09:25:15+08:00"}
+{"err":"base.yaml: open base.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"base.yaml","time":"2020-07-25T09:25:15+08:00"}
+{"level":"error","msg":"read fail","time":"2020-07-25T09:25:15+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:25:15+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:27:00+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:27:00+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:27:01+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:27:02+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:27:02+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:27:02+08:00"}
+{"fields.time":"2.575819ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:27:02+08:00"}
+{"duration":"48.753129859s","err":"do err: EOF","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:27:51+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:27:51+08:00"}
+{"fields.time":"3.658µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:27:51+08:00"}
+{"duration":"268.805µs","err":"do err: EOF","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:27:51+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:28:05+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:28:05+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:28:05+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:28:05+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:28:05+08:00"}
+{"fields.time":"3.99111ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:28:05+08:00"}
+{"duration":"5.360342ms","err":"do err: Internal error processing GenIDs: runtime error: invalid memory address or nil pointer dereference","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:28:05+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:28:05+08:00"}
+{"fields.time":"7.291µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:28:05+08:00"}
+{"duration":"416.358µs","err":"do err: Internal error processing GenIDs: runtime error: invalid memory address or nil pointer dereference","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:28:05+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:28:05+08:00"}
+{"fields.time":"7.671µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:28:05+08:00"}
+{"duration":"427.151µs","err":"do err: Internal error processing GenIDs: runtime error: invalid memory address or nil pointer dereference","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:28:05+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:29:16+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:29:16+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:29:16+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:29:16+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:29:16+08:00"}
+{"fields.time":"3.463371ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:29:16+08:00"}
+{"duration":"4.786782ms","err":"do err: Internal error processing GenIDs: runtime error: invalid memory address or nil pointer dereference","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:29:16+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:29:37+08:00"}
+{"fields.time":"28.695µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:29:37+08:00"}
+{"duration":"11.939592ms","err":"do err: write tcp 127.0.0.1:49293-\u003e127.0.0.1:8889: write: broken pipe","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:29:37+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:29:40+08:00"}
+{"fields.time":"23.177µs","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:29:40+08:00"}
+{"duration":"9.677486ms","err":"do err: write tcp 127.0.0.1:49293-\u003e127.0.0.1:8889: write: broken pipe","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:29:40+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:32:37+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:32:37+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:32:37+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:32:37+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:32:37+08:00"}
+{"fields.time":"3.335426ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:32:37+08:00"}
+{"duration":"1m3.341864948s","err":"do err: EOF","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:33:41+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:33:49+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:33:49+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:33:50+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:33:50+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:33:50+08:00"}
+{"fields.time":"2.968225ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:33:50+08:00"}
+{"duration":"24m16.649412299s","err":"do err: EOF","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:58:06+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:58:14+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:58:14+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:58:14+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:58:14+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:58:14+08:00"}
+{"fields.time":"2.279036ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:58:14+08:00"}
+{"duration":"1m9.917882271s","err":"do err: EOF","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:59:24+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T09:59:40+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T09:59:40+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:59:41+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T09:59:41+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T09:59:41+08:00"}
+{"fields.time":"4.620655ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T09:59:41+08:00"}
+{"duration":"6.317243ms","err":"do err: Internal error processing GenIDs: runtime error: invalid memory address or nil pointer dereference","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T09:59:41+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T10:02:46+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T10:02:46+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:02:47+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:02:47+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T10:02:47+08:00"}
+{"fields.time":"2.521743ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T10:02:47+08:00"}
+{"duration":"3.319858ms","err":"do err: Internal error processing GenIDs: runtime error: invalid memory address or nil pointer dereference","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T10:02:47+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T10:08:15+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T10:08:15+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:08:15+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:08:15+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T10:08:15+08:00"}
+{"fields.time":"3.528818ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T10:08:15+08:00"}
+{"duration":"4.777853ms","err":null,"level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T10:08:15+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T10:14:07+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T10:14:07+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:14:08+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:14:08+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T10:14:08+08:00"}
+{"fields.time":"4.071512ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T10:14:08+08:00"}
+{"duration":"109.912638ms","err":null,"level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T10:14:08+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T10:57:24+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T10:57:24+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:57:24+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:57:24+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T10:57:24+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T10:57:24+08:00"}
+{"hostPort":"192.168.0.105:8889","level":"info","msg":"hostPort","time":"2020-07-25T10:57:24+08:00"}
+{"fields.time":"4.927654ms","hostPort":"localhost:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T10:57:24+08:00"}
+{"duration":"5.627487ms","err":"get consumer: consumer factory create err: transport open: dial tcp 127.0.0.1:8889: connect: connection refused","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T10:57:24+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T10:57:50+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T10:57:50+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:57:50+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.105:8889","time":"2020-07-25T10:57:50+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T10:57:50+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T10:57:50+08:00"}
+{"hostPort":"192.168.0.109:8889","level":"info","msg":"hostPort","time":"2020-07-25T10:57:50+08:00"}
+{"fields.time":"18.071973ms","hostPort":"192.168.0.109:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T10:57:50+08:00"}
+{"duration":"18.572162ms","err":"get consumer: consumer factory create err: transport open: dial tcp 192.168.0.109:8889: connect: connection refused","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T10:57:50+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T11:28:25+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T11:28:25+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T11:28:25+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T11:28:25+08:00"}
+{"hostPort":"192.168.0.109:8889","level":"info","msg":"hostPort","time":"2020-07-25T11:28:25+08:00"}
+{"fields.time":"3.482874ms","hostPort":"192.168.0.109:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T11:28:25+08:00"}
+{"duration":"4.078853ms","err":"get consumer: consumer factory create err: transport open: dial tcp 192.168.0.109:8889: connect: connection refused","level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T11:28:25+08:00"}
+{"err":"../../example/idgenerator/base.dev.yaml: open ../../example/idgenerator/base.dev.yaml: no such file or directory","level":"warning","msg":"read file err","resource":"../../example/idgenerator/base.dev.yaml","time":"2020-07-25T11:34:52+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator","time":"2020-07-25T11:34:52+08:00"}
+{"level":"info","msg":"watch data node","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T11:34:52+08:00"}
+{"level":"info","msg":"watch children","path":"/host/avalon.test.idgenerator/192.168.0.109:8889","time":"2020-07-25T11:34:52+08:00"}
+{"hostPort":"192.168.0.109:8889","level":"info","msg":"hostPort","time":"2020-07-25T11:34:52+08:00"}
+{"fields.time":"2.142259ms","hostPort":"192.168.0.109:8889","level":"info","msg":"get consumer spend","time":"2020-07-25T11:34:52+08:00"}
+{"duration":"92.055223ms","err":null,"level":"info","msg":"call","psm":"avalon.test.idgenerator","time":"2020-07-25T11:34:53+08:00"}

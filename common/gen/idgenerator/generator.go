@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/941112341/avalon/common/gen/base"
 	"github.com/941112341/avalon/sdk/avalon"
+	"github.com/941112341/avalon/sdk/inline"
 )
 
 /*
@@ -17,17 +18,14 @@ type Handler struct {
 }
 
 
-func Run(service IDGenerator, middleware ...avalon.Middleware) error {
-	server, err := avalon.NewServer(middleware...)
-	if err != nil {
-		return err
-	}
+func Run(psm string, service IDGenerator, middleware ...avalon.Middleware) error {
+	server := avalon.NewServer(psm, middleware...)
 	handler := &Handler{
 		handler:    service,
-		cfg:        server.Cfg,
+		cfg:        server.Config(),
 		middleware: append(server.Middleware, middleware...),
 	}
-	err = server.Register(NewIDGeneratorProcessor(handler))
+	err := server.Register(NewIDGeneratorProcessor(handler))
 	if err != nil {
 		return err
 	}
@@ -38,12 +36,13 @@ func Run(service IDGenerator, middleware ...avalon.Middleware) error {
 
 	
 func (h *Handler) GenIDs(ctx context.Context, request *IDRequest) (r *IDResponse, err error) {
-	defer func() {
-		if iErr, ok := recover().(error); ok {
-			err = iErr
-		}
-	}()
-	var call avalon.Endpoint = func(ctx context.Context, method string, _, _ interface{}) error {
+	var call avalon.Endpoint = func(ctx context.Context, method string, _, _ interface{}) (err error) {
+		defer func() {
+			if iErr, ok := recover().(error); ok {
+				inline.WithFields("requestID", avalon.RequestID(ctx), "err", iErr).Errorln("panic !!")
+				err = iErr
+			}
+		}()
 		r, err = h.handler.GenIDs(ctx, request)
 		return err
 	}
