@@ -31,6 +31,7 @@ func (f *factory) Create() (gen Generator, err error) {
 		if err != nil {
 			inline.WithFields("err", err).Errorln("generator err")
 		}
+		f.gen = gen
 	})
 	return
 }

@@ -2,6 +2,7 @@ psm: avalon.test.idgenerator
 
 server:
   port: 8889
+  timeout: 20
 
 zkConfig:
   hostPorts:

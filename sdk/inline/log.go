@@ -8,11 +8,11 @@ import (
 
 type Pair struct {
 	Right string
-	Left  interface{}
+	Left  string
 }
 
 func NewPair(a string, b interface{}) Pair {
-	return Pair{a, b}
+	return Pair{a, VString(b)}
 }
 
 type Pairs []Pair
