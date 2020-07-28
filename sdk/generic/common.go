@@ -8,20 +8,20 @@ import (
 	"time"
 )
 
-type lazyField struct {
+type LazyField struct {
 	lazy  func() []*CommonTStruct
-	cache []*CommonTStruct
+	Cache []*CommonTStruct
 }
 
-func (l *lazyField) lazyFields() []*CommonTStruct {
-	if l.cache == nil {
-		l.cache = l.lazy()
+func (l *LazyField) lazyFields() []*CommonTStruct {
+	if l.Cache == nil {
+		l.Cache = l.lazy()
 	}
-	return l.cache
+	return l.Cache
 }
 
-func (l *lazyField) fields() []*CommonTStruct {
-	return l.cache
+func (l *LazyField) fields() []*CommonTStruct {
+	return l.Cache
 }
 
 type CommonTStruct struct {
@@ -36,7 +36,7 @@ type CommonTStruct struct {
 	ArrayStruct    *CommonTStruct `json:",omitempty"` // list
 	MapKeyStruct   *CommonTStruct `json:",omitempty"` // map
 	MapValueStruct *CommonTStruct `json:",omitempty"` // map
-	FieldMap       lazyField      `json:",omitempty"` // struct
+	FieldMap       LazyField      `json:",omitempty"` // struct
 }
 
 func (c *CommonTStruct) findSubField(id int16) *CommonTStruct {
@@ -345,7 +345,7 @@ func (c *CommonTStruct) WithValue(args jsoniter.Any) {
 		if c.JSONPath != "" {
 			any = get
 		}
-		if any.LastError() != nil {
+		if any.GetInterface() == nil {
 			return
 		}
 		fields := c.FieldMap.lazyFields()
