@@ -50,7 +50,8 @@ func File() *logrus.Logger {
 }
 
 func New() *logrus.Logger {
-	return File()
+	return Console()
+	//return File()
 }
 
 func Console() *logrus.Logger {
@@ -62,8 +63,8 @@ func Console() *logrus.Logger {
 		Log.SetFormatter(&logrus.JSONFormatter{
 			PrettyPrint: true,
 		})
-		logrus.SetLevel(logrus.DebugLevel)
-		logrus.SetOutput(os.Stdout)
+		Log.SetLevel(logrus.InfoLevel)
+		Log.SetOutput(os.Stdout)
 	})
 
 	return Log
