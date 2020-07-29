@@ -13,7 +13,11 @@ type LazyField struct {
 	Cache []*CommonTStruct
 }
 
-func (l *LazyField) lazyFields() []*CommonTStruct {
+// all fields
+func (l *LazyField) lazyFields(fromCache bool) []*CommonTStruct {
+	if !fromCache {
+		return l.lazy()
+	}
 	if l.Cache == nil {
 		l.Cache = l.lazy()
 	}
@@ -22,6 +26,20 @@ func (l *LazyField) lazyFields() []*CommonTStruct {
 
 func (l *LazyField) fields() []*CommonTStruct {
 	return l.Cache
+}
+
+// fields in json
+func (l *LazyField) factFields(any jsoniter.Any) []*CommonTStruct {
+	lazyFields := l.lazyFields(true)
+	factFields := make([]*CommonTStruct, 0)
+	for _, field := range lazyFields {
+		path := field.JSONPath
+		if any.Get(path).GetInterface() != nil {
+			factFields = append(factFields, field)
+		}
+	}
+	l.Cache = factFields
+	return factFields
 }
 
 type CommonTStruct struct {
@@ -39,9 +57,10 @@ type CommonTStruct struct {
 	FieldMap       LazyField      `json:",omitempty"` // struct
 }
 
+// in read
 func (c *CommonTStruct) findSubField(id int16) *CommonTStruct {
 
-	fields := c.FieldMap.lazyFields()
+	fields := c.FieldMap.lazyFields(true)
 	for _, tStruct := range fields {
 		if tStruct == nil {
 			continue
@@ -348,7 +367,7 @@ func (c *CommonTStruct) WithValue(args jsoniter.Any) {
 		if any.GetInterface() == nil {
 			return
 		}
-		fields := c.FieldMap.lazyFields()
+		fields := c.FieldMap.factFields(any)
 		for _, tStruct := range fields {
 			tStruct.WithValue(any)
 		}

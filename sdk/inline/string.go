@@ -37,3 +37,9 @@ func Lcfirst(str string) string {
 	}
 	return ""
 }
+
+func IsEmpty(str string) bool {
+	s := strings.Trim(str, " ")
+	s = strings.Trim(str, "\t")
+	return len(s) == 0
+}
