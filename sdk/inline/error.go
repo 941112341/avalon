@@ -9,6 +9,8 @@ type AvalonErrorCode int32
 const (
 	_ AvalonErrorCode = iota
 	Unknown
+	ErrArgs
+	ErrDBCas
 )
 
 func (e AvalonErrorCode) I32() int32 {
@@ -72,8 +74,8 @@ func (c CodeError) Unwrap() error {
 
 func NewError(code AvalonErrorCode, f string, args ...interface{}) AvalonError {
 	return &CodeError{
-		err:  fmt.Errorf(f, args...),
-		code: code,
+		message: fmt.Sprintf(f, args...),
+		code:    code,
 	}
 }
 
@@ -87,10 +89,17 @@ func PrependErrorWithCode(err error, code AvalonErrorCode, f string, args ...int
 	if ok {
 		return aErr.WrapErr(message)
 	}
-	return NewError(code, message)
+	return &CodeError{
+		err:     err,
+		message: message,
+		code:    code,
+	}
 }
 
 func PrependError(err error, message string) error {
+	if aErr, ok := err.(AvalonError); ok {
+		return PrependErrorWithCode(err, aErr.Code(), message)
+	}
 	return PrependErrorWithCode(err, Unknown, message)
 }
 

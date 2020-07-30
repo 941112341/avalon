@@ -2,3 +2,8 @@ http:
   port: 8080
 https:
   port: 443
+Database:
+  #  DBRead: "root:jsh5018771jsh@(192.168.0.109:3306)/idgenerator?charset=utf8mb4&parseTime=True&loc=Local"
+  #  DB: "root:jsh5018771jsh@(192.168.0.109:3306)/idgenerator?charset=utf8mb4&parseTime=True&loc=Local"
+  DBRead: "root:root@(localhost:3306)/gateway?charset=utf8mb4&parseTime=True&loc=Local"
+  DB: "root:root@(localhost:3306)/gateway?charset=utf8mb4&parseTime=True&loc=Local"

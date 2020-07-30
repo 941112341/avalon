@@ -25,5 +25,9 @@ func (g genIdsService) GenIDs(ctx context.Context, request *idgenerator.IDReques
 	if err != nil {
 		return nil, errors.Wrap(err, "get generator error")
 	}
-	return &idgenerator.IDResponse{IDs: generator.GetIds()}, nil
+	ids, err := generator.Assign(int64(request.Count), request.Base.Psm)
+	if err != nil {
+		return nil, err
+	}
+	return &idgenerator.IDResponse{IDs: ids}, nil
 }
