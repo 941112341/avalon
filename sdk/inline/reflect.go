@@ -166,3 +166,19 @@ func Redirect(value reflect.Value) reflect.Value {
 	}
 	return value
 }
+
+func UnionValue(o interface{}) interface{} {
+	typ := reflect.ValueOf(o)
+	switch typ.Kind() {
+	case reflect.Slice, reflect.Array:
+		if typ.Len() > 0 {
+			return typ.Index(0).Interface()
+		}
+	case reflect.Map:
+		if typ.Len() > 0 {
+			key := typ.MapKeys()[0]
+			return typ.MapIndex(key).Interface()
+		}
+	}
+	return nil
+}

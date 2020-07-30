@@ -68,22 +68,22 @@ func (h *Handler) {{.MethodName}}(ctx context.Context, request *{{.Request}}) (r
 	}
 	err = call(ctx, "{{.MethodName}}", request, r)
 	if err != nil {
-		aErr, ok := err.(*avalon.AErr)
+		aErr, ok := err.(inline.AvalonError)
 		if ok {
 			r = &{{.Response}}{BaseResp: &base.BaseResp{
-				Code:    aErr.Code,
+				Code:    int32(aErr.Code()),
 				Message: aErr.Error(),
 			}}
 		} else {
 			r = &{{.Response}}{BaseResp: &base.BaseResp{
-				Code:    avalon.UnknownErr,
+				Code:    int32(inline.Unknown),
 				Message: err.Error(),
 			}}
 		}
 	}
 	if r == nil {
 		r = &{{.Response}}{BaseResp: &base.BaseResp{
-			Code: avalon.UnknownErr,
+			Code: int32(inline.Unknown),
 		}}
 	}
 	if r.BaseResp == nil {

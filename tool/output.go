@@ -9,13 +9,13 @@ import (
 	"text/template"
 )
 
-const Version = "1.0.0"
+const Version = "1.0.1"
 
 // output absolute
-func build(info IDLInfo, version string) (string, error) {
+func build(info IDLInfo) (string, error) {
 	fileTemplate := FileTemplate{
 		Package:     info.Namespace,
-		Version:     version,
+		Version:     Version,
 		IDLName:     info.IDLName,
 		ServiceName: inline.Ucfirst(info.ServiceName),
 	}
@@ -53,7 +53,7 @@ func CreateFile(i, o string) error {
 	if err != nil {
 		return errors.Wrap(err, "scan")
 	}
-	content, err := build(*info, Version)
+	content, err := build(*info)
 	if err != nil {
 		return errors.Wrap(err, "build")
 	}

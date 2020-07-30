@@ -4,12 +4,16 @@ import (
 	"fmt"
 )
 
-type AvalonErrorCode int
+type AvalonErrorCode int32
 
 const (
 	_ AvalonErrorCode = iota
 	Unknown
 )
+
+func (e AvalonErrorCode) I32() int32 {
+	return int32(e)
+}
 
 type AvalonError interface {
 	Error() string
@@ -73,6 +77,10 @@ func NewError(code AvalonErrorCode, f string, args ...interface{}) AvalonError {
 	}
 }
 
+func Error(f string, args ...interface{}) AvalonError {
+	return NewError(Unknown, f, args...)
+}
+
 func PrependErrorWithCode(err error, code AvalonErrorCode, f string, args ...interface{}) error {
 	message := fmt.Sprintf(f, args...)
 	aErr, ok := err.(AvalonError)
@@ -113,4 +121,12 @@ func IsErr(err1, err2 error) bool {
 		}
 	}
 	return false
+}
+
+func IsCode(err error, errCode AvalonErrorCode) bool {
+	aErr, ok := err.(AvalonError)
+	if !ok {
+		return false
+	}
+	return aErr.Code() == errCode
 }

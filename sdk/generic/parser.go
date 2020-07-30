@@ -94,11 +94,9 @@ func NewThriftGroup(maps map[string]string) (*ThriftGroup, error) {
 }
 
 type ThriftFileModel struct {
-	group ThriftGroup
-
 	Namespace string
 	Language  string
-	Include   string
+	Include   []string
 
 	StructMap  map[string]*ThriftStructModel
 	ServiceMap map[string]*ThriftServiceModel
@@ -112,6 +110,15 @@ func (t *ThriftFileModel) Parse(content string) error {
 	}
 	t.Namespace = ss[2]
 	t.Language = ss[1]
+
+	pattern = regexp.MustCompile(`include[ \t]+"(\w+).thrift"`)
+	ss = pattern.FindStringSubmatch(content)
+	if len(ss) > 0 {
+		for i := 0; i+1 < len(ss); i += 2 {
+			include := ss[i+1]
+			t.Include = append(t.Include, include)
+		}
+	}
 
 	pattern = regexp.MustCompile(`struct[ \t]+\w+[ \t]+[{][^}]*[}]`)
 	ss = pattern.FindStringSubmatch(content)
