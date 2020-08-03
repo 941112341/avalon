@@ -21,8 +21,8 @@ type MapperID struct {
 	Domain string
 }
 
-type MappingService interface {
-	GetMapper()
-	AddMapper()
-	DelMapper()
+type MappingsService interface {
+	GetMappers()
+	AddMappers()
+	DelMappers()
 }

@@ -10,25 +10,29 @@ import (
 
 const (
 	ErrRegexMatch inline.AvalonErrorCode = 100 + iota
-	ErrNilPackage
 	ErrNilStruct
-	ErrUnknownType
 )
-
-type Parser interface {
-	Parse(content string) error
-}
 
 type ThriftContext interface {
 	GetStruct(base, structName string) (*ThriftStructModel, bool)
 	GetService(base, serviceName string) (*ThriftServiceModel, bool)
 	GetFile(base string) (*ThriftFileModel, bool)
+	GetMethod(base, service, method string) (*ThriftMethodModel, bool)
 	Ptr(base, structName string) (*ThriftStructModel, error)
 }
 
 type ThriftGroup struct {
 	ContentMap map[string]string
 	ModelMap   map[string]*ThriftFileModel
+}
+
+func (t *ThriftGroup) GetMethod(base, service, method string) (*ThriftMethodModel, bool) {
+	serviceModel, ok := t.GetService(base, service)
+	if !ok {
+		return nil, false
+	}
+	methodModel, ok := serviceModel.MethodMap[method]
+	return methodModel, ok
 }
 
 func (t *ThriftGroup) GetFile(base string) (*ThriftFileModel, bool) {
@@ -57,7 +61,7 @@ func (t *ThriftGroup) Ptr(base, structName string) (*ThriftStructModel, error) {
 }
 
 func (t *ThriftGroup) GetStruct(base, structName string) (*ThriftStructModel, bool) {
-
+	base, structName = strings.Trim(base, " "), strings.Trim(structName, " ")
 	b, ok := t.GetFile(base)
 	if !ok {
 		return nil, false
@@ -84,7 +88,7 @@ func NewThriftGroup(maps map[string]string) (*ThriftGroup, error) {
 		if inline.IsEmpty(content) {
 			continue
 		}
-		fileModel := NewThriftFileModel()
+		fileModel := NewThriftFileModel(base)
 		if err := fileModel.Parse(content); err != nil {
 			return nil, inline.PrependErrorFmt(err, "parse group err")
 		}
@@ -94,6 +98,7 @@ func NewThriftGroup(maps map[string]string) (*ThriftGroup, error) {
 }
 
 type ThriftFileModel struct {
+	Base      string
 	Namespace string
 	Language  string
 	Include   []string
@@ -126,7 +131,7 @@ func (t *ThriftFileModel) Parse(content string) error {
 		if inline.IsEmpty(s) {
 			continue
 		}
-		structModel := NewThriftStructModel()
+		structModel := NewThriftStructModel(t.Base)
 		if err := structModel.Parse(s); err != nil {
 			return inline.PrependErrorFmt(err, "parse struct")
 		}
@@ -139,7 +144,7 @@ func (t *ThriftFileModel) Parse(content string) error {
 		if inline.IsEmpty(s) {
 			continue
 		}
-		serviceModel := NewThriftServiceModel()
+		serviceModel := NewThriftServiceModel(t.Base)
 		if err := serviceModel.Parse(s); err != nil {
 			return inline.PrependErrorFmt(err, "parse service")
 		}
@@ -149,18 +154,19 @@ func (t *ThriftFileModel) Parse(content string) error {
 	return nil
 }
 
-func NewThriftFileModel() *ThriftFileModel {
-	return &ThriftFileModel{ServiceMap: map[string]*ThriftServiceModel{}, StructMap: map[string]*ThriftStructModel{}}
+func NewThriftFileModel(base string) *ThriftFileModel {
+	return &ThriftFileModel{ServiceMap: map[string]*ThriftServiceModel{}, StructMap: map[string]*ThriftStructModel{}, Base: base}
 }
 
 type ThriftStructModel struct {
+	Base       string
 	StructName string
 
 	FieldMap map[int16]*ThriftFieldModel
 }
 
-func NewThriftStructModel() *ThriftStructModel {
-	return &ThriftStructModel{FieldMap: map[int16]*ThriftFieldModel{}}
+func NewThriftStructModel(base string) *ThriftStructModel {
+	return &ThriftStructModel{FieldMap: map[int16]*ThriftFieldModel{}, Base: base}
 }
 
 func (t *ThriftStructModel) Parse(content string) error {
@@ -177,7 +183,7 @@ func (t *ThriftStructModel) Parse(content string) error {
 		if inline.IsEmpty(line) {
 			continue
 		}
-		fieldModel := NewThriftFieldModel()
+		fieldModel := NewThriftFieldModel(t.Base)
 		if err := fieldModel.Parse(line); err != nil {
 			return inline.PrependErrorFmt(err, "parse line %s", line)
 		}
@@ -186,22 +192,26 @@ func (t *ThriftStructModel) Parse(content string) error {
 	return nil
 }
 
-func NewThriftFieldModel() *ThriftFieldModel {
-	return &ThriftFieldModel{}
+func NewThriftFieldModel(base string) *ThriftFieldModel {
+	return &ThriftFieldModel{Base: base}
 }
 
 type ThriftFieldModel struct {
+	Base      string
 	FieldName string
 	Idx       int16
 	//Tag string
-	Type thrift.TType
+	Type     thrift.TType
+	Optional bool
 
-	structTypeName string
+	// thrift
+	StructTypeName string
 }
 
+// 命名变量组会更好
 func (t *ThriftFieldModel) Parse(content string) error {
 	content = strings.Trim(content, " ")
-	pattern := regexp.MustCompile(`(\d+)[ \t]*:[ \t]*(?:optional)?[ \t]*([a-zA-Z.0-9]+)(?:<.*>)?[\t ]+(\w+)`)
+	pattern := regexp.MustCompile(`(\d+)[ \t]*:[ \t]*(optional)?[ \t]*([a-zA-Z.0-9< >,]+)[\t ]+(\w+)`)
 	ss := pattern.FindStringSubmatch(content)
 	if len(ss) < 4 {
 		return inline.NewError(ErrRegexMatch, "parse field %s", content)
@@ -213,48 +223,95 @@ func (t *ThriftFieldModel) Parse(content string) error {
 	}
 	t.Idx = int16(idx)
 
+	isOption := len(ss) == 5
 	types := ss[2]
-	if types == "i8" {
-		t.Type = thrift.I08
-	} else if types == "i16" {
-		t.Type = thrift.I16
-	} else if types == "i32" {
-		t.Type = thrift.I32
-	} else if types == "i64" {
-		t.Type = thrift.I64
-	} else if types == "bool" {
-		t.Type = thrift.BOOL
-	} else if strings.Contains(types, ".") {
-		t.Type = thrift.STRUCT
-	} else if strings.HasPrefix(types, "map") {
-		t.Type = thrift.MAP
-	} else if strings.HasPrefix(types, "list") {
-		t.Type = thrift.LIST
-	} else if strings.HasPrefix(types, "double") {
-		t.Type = thrift.DOUBLE
-	} else if types == "string" {
-		t.Type = thrift.STRING
+	if isOption {
+		types = ss[3]
+	}
+	t.Type = TypesValue(types)
+
+	t.StructTypeName = types
+
+	if isOption {
+		t.FieldName = ss[4]
 	} else {
-		// is struct
-		t.Type = thrift.STRUCT
+		t.FieldName = ss[3]
 	}
 
-	if t.Type == thrift.STRUCT {
-		t.structTypeName = ss[2]
-	}
-
-	t.FieldName = ss[3]
 	return nil
 }
 
+func (t *ThriftFieldModel) Elem() (m *ThriftFieldModel) {
+	if t.Type != thrift.LIST {
+		return
+	}
+	types := inline.Unwrap(`<(.*)>`, t.StructTypeName)
+	ttype := TypesValue(types)
+	return &ThriftFieldModel{
+		Base:           t.Base,
+		Type:           ttype,
+		Optional:       false,
+		StructTypeName: types,
+	}
+}
+
+func (t *ThriftFieldModel) KVElem() (m, n *ThriftFieldModel) {
+	if t.Type != thrift.MAP {
+		return
+	}
+	types := inline.Unwraps(`<(.*),(.*)>`, t.StructTypeName)
+	ktypeString, vtypeString := types[0], types[1]
+	ktype, vtype := TypesValue(ktypeString), TypesValue(vtypeString)
+	return &ThriftFieldModel{
+			Base:           t.Base,
+			Type:           ktype,
+			Optional:       false,
+			StructTypeName: ktypeString,
+		}, &ThriftFieldModel{
+			Base:           t.Base,
+			Type:           vtype,
+			Optional:       false,
+			StructTypeName: vtypeString,
+		}
+}
+
+func TypesValue(types string) thrift.TType {
+	types = strings.Trim(types, " ")
+	var tt thrift.TType
+	if types == "i8" {
+		tt = thrift.I08
+	} else if types == "i16" {
+		tt = thrift.I16
+	} else if types == "i32" {
+		tt = thrift.I32
+	} else if types == "i64" {
+		tt = thrift.I64
+	} else if types == "bool" {
+		tt = thrift.BOOL
+	} else if strings.HasPrefix(types, "map") {
+		tt = thrift.MAP
+	} else if types == "double" {
+		tt = thrift.LIST
+	} else if strings.HasPrefix(types, "double") {
+		tt = thrift.DOUBLE
+	} else if types == "string" {
+		tt = thrift.STRING
+	} else {
+		// is struct
+		tt = thrift.STRUCT
+	}
+	return tt
+}
+
 type ThriftServiceModel struct {
+	Base        string
 	ServiceName string
 
 	MethodMap map[string]*ThriftMethodModel
 }
 
-func NewThriftServiceModel() *ThriftServiceModel {
-	return &ThriftServiceModel{MethodMap: map[string]*ThriftMethodModel{}}
+func NewThriftServiceModel(base string) *ThriftServiceModel {
+	return &ThriftServiceModel{MethodMap: map[string]*ThriftMethodModel{}, Base: base}
 }
 
 func (t *ThriftServiceModel) Parse(content string) error {

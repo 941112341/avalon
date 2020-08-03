@@ -34,7 +34,7 @@ type CodeError struct {
 func (c CodeError) Error() string {
 	msg := c.message
 	if c.code != Unknown {
-		msg = fmt.Sprintf("%s:%s", c.code, msg)
+		msg = fmt.Sprintf("%d:%s", c.code, msg)
 	}
 	if c.err == nil {
 		return msg

@@ -40,8 +40,8 @@ func (fp *fieldProperty) convert() *CommonTStruct {
 		return nil
 	}
 	cts := &CommonTStruct{}
-	cts.FieldName = fp.thriftName
-	cts.StructName = fp.fieldName
+	cts.ThriftName = fp.thriftName
+	cts.TypeName = fp.fieldName
 	cts.Type = convert(fp.kind)
 	cts.ID = fp.index
 	cts.JSONPath = fp.jsonName
@@ -186,8 +186,8 @@ func (s *ThriftParser) doParseRequest(sp *structProperty) (*CommonTStruct, error
 
 	request := &CommonTStruct{
 		ID:         1,
-		StructName: sp.structName,
-		FieldName:  string(sp.thriftName),
+		TypeName:   sp.structName,
+		ThriftName: string(sp.thriftName),
 		JSONPath:   string(sp.thriftName),
 		Type:       thrift.STRUCT,
 		FieldMap: LazyField{
@@ -197,8 +197,8 @@ func (s *ThriftParser) doParseRequest(sp *structProperty) (*CommonTStruct, error
 		},
 	}
 	args := &CommonTStruct{
-		StructName: fmt.Sprintf("%s_args", s.MethodName),
-		Type:       thrift.STRUCT,
+		TypeName: fmt.Sprintf("%s_args", s.MethodName),
+		Type:     thrift.STRUCT,
 		FieldMap: LazyField{
 			lazy: func() []*CommonTStruct {
 				return []*CommonTStruct{
@@ -214,8 +214,8 @@ func (s *ThriftParser) doParseResponse(sp *structProperty) (*CommonTStruct, erro
 
 	response := &CommonTStruct{
 		ID:         0,
-		StructName: sp.structName,
-		FieldName:  string(sp.thriftName),
+		TypeName:   sp.structName,
+		ThriftName: string(sp.thriftName),
 		JSONPath:   string(sp.thriftName),
 		Type:       thrift.STRUCT,
 		FieldMap: LazyField{
@@ -226,8 +226,8 @@ func (s *ThriftParser) doParseResponse(sp *structProperty) (*CommonTStruct, erro
 	}
 
 	result := &CommonTStruct{
-		StructName: fmt.Sprintf("%s_result", s.MethodName),
-		Type:       thrift.STRUCT,
+		TypeName: fmt.Sprintf("%s_result", s.MethodName),
+		Type:     thrift.STRUCT,
 		FieldMap: LazyField{
 			lazy: func() []*CommonTStruct {
 				return []*CommonTStruct{

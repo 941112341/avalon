@@ -44,8 +44,8 @@ func (l *LazyField) factFields(any jsoniter.Any) []*CommonTStruct {
 
 type CommonTStruct struct {
 	ID         int16
-	StructName string // 类型名，用于写入struct,只有结构体有
-	FieldName  string // thrift 上的name，用于写入field, 一般是小写
+	TypeName   string // 类型名，用于写入struct,只有结构体有
+	ThriftName string // thrift 上的name，用于写入field, 一般是小写
 	JSONPath   string // 用于json解析
 
 	Type  thrift.TType
@@ -80,7 +80,7 @@ func (c *CommonTStruct) Write(p thrift.TProtocol) error {
 
 	switch c.Type {
 	case thrift.STRUCT:
-		if err := p.WriteStructBegin(c.StructName); err != nil {
+		if err := p.WriteStructBegin(c.TypeName); err != nil {
 			return fmt.Errorf("%T write struct begin error: %s", c, err)
 		}
 		fieldMap := c.FieldMap.fields()
@@ -92,7 +92,7 @@ func (c *CommonTStruct) Write(p thrift.TProtocol) error {
 			if tStruct.Type == thrift.STRUCT && len(fieldMap) == 0 {
 				continue
 			}
-			if err := p.WriteFieldBegin(tStruct.FieldName, tStruct.Type, tStruct.ID); err != nil {
+			if err := p.WriteFieldBegin(tStruct.ThriftName, tStruct.Type, tStruct.ID); err != nil {
 				return fmt.Errorf("%T write field begin error %d:groupName: %s", tStruct, tStruct.ID, err)
 			}
 
@@ -102,7 +102,7 @@ func (c *CommonTStruct) Write(p thrift.TProtocol) error {
 			if err := p.WriteFieldEnd(); err != nil {
 				return fmt.Errorf("%T write field end error %d:groupName: %s", tStruct, tStruct.ID, err)
 			}
-			inline.WithFields("fieldName", tStruct.FieldName, "type", tStruct.Type, "id", tStruct.ID).Debugln("write field success")
+			inline.WithFields("fieldName", tStruct.ThriftName, "type", tStruct.Type, "id", tStruct.ID).Debugln("write field success")
 		}
 		if err := p.WriteFieldStop(); err != nil {
 			return fmt.Errorf("write field stop error: %s", err)
@@ -372,6 +372,6 @@ func (c *CommonTStruct) WithValue(args jsoniter.Any) {
 			tStruct.WithValue(any)
 		}
 	default:
-		inline.WithFields("fieldName", c.FieldName).Debugln("unsupport type")
+		inline.WithFields("fieldName", c.ThriftName).Debugln("unsupport type")
 	}
 }

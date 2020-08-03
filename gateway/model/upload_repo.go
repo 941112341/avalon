@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/941112341/avalon/common/client"
 	"github.com/941112341/avalon/gateway/database"
 	"github.com/941112341/avalon/gateway/registry"
 	"github.com/941112341/avalon/sdk/inline"
@@ -21,6 +22,9 @@ type uploadRepository struct {
 }
 
 func (uploadRepository) Insert(idlFile *IDLFile) error {
+	if idlFile.ID == 0 {
+		idlFile.ID = client.GenID()
+	}
 	return database.DB.Save(idlFile).Error
 }
 

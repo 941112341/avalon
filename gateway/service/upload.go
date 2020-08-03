@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"github.com/941112341/avalon/common/client"
 	"github.com/941112341/avalon/gateway/model"
 	"github.com/941112341/avalon/gateway/registry"
 	"github.com/941112341/avalon/sdk/inline"
@@ -15,14 +14,14 @@ type uploaderService struct {
 }
 
 func (u *uploaderService) Upload(request *IDLFileVo) error {
-	m := newModel(u.Repo, request)
-	if err := m.Upload(); err != nil {
+	m := newModel(request)
+	if err := m.Upload(u.Repo); err != nil {
 		return inline.PrependErrorFmt(err, "upload %s", inline.ToJsonString(request))
 	}
 	return nil
 }
 
-func newModel(repo model.UploadRepository, request *IDLFileVo) *model.IDLFile {
+func newModel(request *IDLFileVo) *model.IDLFile {
 	m := &model.IDLFile{
 		IDLFileID: model.IDLFileID{
 			PSM:  request.PSM,
@@ -33,14 +32,13 @@ func newModel(repo model.UploadRepository, request *IDLFileVo) *model.IDLFile {
 		Deleted: inline.BoolPtr(false),
 		Created: time.Now(),
 		Updated: time.Now(),
-		Repo:    repo,
 	}
 	return m
 }
 
 func (u *uploaderService) Get(request *IDLFileVo) (*IDLFileVo, error) {
-	m := newModel(u.Repo, request)
-	file, err := m.Get()
+	m := newModel(request)
+	file, err := m.Get(u.Repo)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "get fail %s", inline.ToJsonString(request))
 	}

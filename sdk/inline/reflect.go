@@ -182,3 +182,7 @@ func UnionValue(o interface{}) interface{} {
 	}
 	return nil
 }
+
+func IsType(o interface{}, kind reflect.Kind) bool {
+	return reflect.TypeOf(o).Kind() == kind
+}
