@@ -42,17 +42,17 @@ func (fp *fieldProperty) convert() *CommonTStruct {
 	cts := &CommonTStruct{}
 	cts.ThriftName = fp.thriftName
 	cts.TypeName = fp.fieldName
-	cts.Type = convert(fp.kind)
+	cts.Type = Kind2thrift(fp.kind)
 	cts.ID = fp.index
 	cts.JSONPath = fp.jsonName
 
 	switch fp.kind {
 	case reflect.Array, reflect.Slice:
-		acts := &CommonTStruct{Type: convert(fp.elemKind)}
+		acts := &CommonTStruct{Type: Kind2thrift(fp.elemKind)}
 		cts.ArrayStruct = acts
 	case reflect.Map:
-		cts.MapKeyStruct = &CommonTStruct{Type: convert(fp.keyKind)}
-		cts.MapValueStruct = &CommonTStruct{Type: convert(fp.valueKind)}
+		cts.MapKeyStruct = &CommonTStruct{Type: Kind2thrift(fp.keyKind)}
+		cts.MapValueStruct = &CommonTStruct{Type: Kind2thrift(fp.valueKind)}
 	case reflect.Struct:
 		cts.FieldMap = LazyField{
 			lazy: func() []*CommonTStruct {
@@ -239,7 +239,16 @@ func (s *ThriftParser) doParseResponse(sp *structProperty) (*CommonTStruct, erro
 	return result, nil
 }
 
-func convert(kind reflect.Kind) (ttype thrift.TType) {
+func Type2thrift(field reflect.Type) thrift.TType {
+	switch kind := field.Kind(); kind {
+	case reflect.Ptr:
+		return Kind2thrift(field.Elem().Kind())
+	default:
+		return Kind2thrift(kind)
+	}
+}
+
+func Kind2thrift(kind reflect.Kind) (ttype thrift.TType) {
 	switch kind {
 	case reflect.String:
 		ttype = thrift.STRING

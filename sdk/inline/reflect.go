@@ -159,7 +159,7 @@ func Convert(typ reflect.Type, param string) (b interface{}, err error) {
 	return
 }
 
-func Redirect(value reflect.Value) reflect.Value {
+func Redirect(value reflect.Type) reflect.Type {
 
 	for value.Kind() == reflect.Ptr {
 		value = value.Elem()

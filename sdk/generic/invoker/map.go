@@ -1,7 +1,6 @@
 package invoker
 
 import (
-	"github.com/941112341/avalon/sdk/generic"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	jsoniter "github.com/json-iterator/go"
@@ -9,18 +8,15 @@ import (
 )
 
 type MapArgs struct {
-	ID         int16
-	thriftName string
-	jsonPath   string
-	KeyArgs    Args
-	ValueArgs  Args
-	optional   bool
+	ArgsMeta
 
-	data map[interface{}]interface{}
+	KeyArgs   Args
+	ValueArgs Args
+	data      map[interface{}]interface{}
 }
 
-func (m *MapArgs) JSONPath() string {
-	return m.jsonPath
+func (m *MapArgs) Meta() ArgsMeta {
+	return m.ArgsMeta
 }
 
 func (m *MapArgs) Data() interface{} {
@@ -30,7 +26,7 @@ func (m *MapArgs) Data() interface{} {
 func (m *MapArgs) Write(p thrift.TProtocol) error {
 	ks, vs := m.KeyArgs, m.ValueArgs
 	vmap := m.data
-	if err := p.WriteMapBegin(ks.GetType(), vs.GetType(), len(vmap)); err != nil {
+	if err := p.WriteMapBegin(ks.Meta().Type(), vs.Meta().Type(), len(vmap)); err != nil {
 		return err
 	}
 	for key, value := range vmap {
@@ -91,7 +87,7 @@ func (m *MapArgs) BindValue(o interface{}) error {
 	switch any := o.(type) {
 	case jsoniter.Any:
 		if any.LastError() != nil {
-			if !m.optional {
+			if !m.Optional() {
 				m.data = map[interface{}]interface{}{}
 			}
 			return nil
@@ -119,27 +115,16 @@ func (m *MapArgs) BindValue(o interface{}) error {
 }
 
 func (m *MapArgs) IsSkip() bool {
-	return m.optional && m.data == nil
-}
-
-func (m *MapArgs) Index() int16 {
-	return m.ID
-}
-
-func (m *MapArgs) ThriftName() string {
-	return m.thriftName
+	return m.Optional() && m.data == nil
 }
 
 type MapParser struct {
-	ctx   generic.ThriftContext
-	model generic.ThriftFieldModel
+	ArgsMetaParser
 }
 
 func (m *MapParser) Parse() (Args, error) {
-	model := m.model
-	ctx := m.ctx
-	kmodel, vmodel := model.KVElem()
-	kParser, vParser := NewParser(ctx, *kmodel), NewParser(ctx, *vmodel)
+
+	kParser, vParser := m.KVParsers()
 	keyArgs, err := kParser.Parse()
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "parse key")
@@ -150,18 +135,14 @@ func (m *MapParser) Parse() (Args, error) {
 	}
 
 	return &MapArgs{
-		ID:         model.Idx,
-		thriftName: model.FieldName,
-		jsonPath:   model.FieldName,
-		KeyArgs:    keyArgs,
-		ValueArgs:  valueArgs,
-		optional:   model.Optional,
+		KeyArgs:   keyArgs,
+		ValueArgs: valueArgs,
+		ArgsMeta:  m.ArgsMeta(),
 	}, nil
 }
 
-func NewMapParser(ctx generic.ThriftContext, model generic.ThriftFieldModel) *MapParser {
+func NewMapParser(parser ArgsMetaParser) *MapParser {
 	return &MapParser{
-		ctx:   ctx,
-		model: model,
+		parser,
 	}
 }

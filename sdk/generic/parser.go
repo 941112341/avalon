@@ -193,11 +193,35 @@ type ThriftFieldModel struct {
 	FieldName string
 	Idx       int16
 	//Tag string
-	Type     thrift.TType
-	Optional bool
+	TType       thrift.TType
+	OptionalVar bool
 
 	// thrift
 	StructTypeName string
+}
+
+func (t *ThriftFieldModel) TypeName() string {
+	return t.StructTypeName
+}
+
+func (t *ThriftFieldModel) ID() int16 {
+	return t.Idx
+}
+
+func (t *ThriftFieldModel) JsonPath() string {
+	return t.FieldName
+}
+
+func (t *ThriftFieldModel) ThriftName() string {
+	return t.FieldName
+}
+
+func (t *ThriftFieldModel) Type() thrift.TType {
+	return t.TType
+}
+
+func (t *ThriftFieldModel) Optional() bool {
+	return t.OptionalVar
 }
 
 type regexpTemplate struct {
@@ -222,49 +246,49 @@ func (t *ThriftFieldModel) Parse(content string) error {
 	}
 	t.Idx = int16(id)
 	if template.Optional != "" {
-		t.Optional = true
+		t.OptionalVar = true
 	}
 	t.StructTypeName = template.TypeName
 	t.FieldName = template.Name
-	t.Type = TypesValue(t.StructTypeName)
+	t.TType = String2Thrift(t.StructTypeName)
 	return nil
 }
 
 func (t *ThriftFieldModel) Elem() (m *ThriftFieldModel) {
-	if t.Type != thrift.LIST {
+	if t.TType != thrift.LIST {
 		return
 	}
 	types := inline.Unwrap(`<(.*)>`, t.StructTypeName)
-	ttype := TypesValue(types)
+	ttype := String2Thrift(types)
 	return &ThriftFieldModel{
 		Base:           t.Base,
-		Type:           ttype,
-		Optional:       false,
+		TType:          ttype,
+		OptionalVar:    false,
 		StructTypeName: types,
 	}
 }
 
 func (t *ThriftFieldModel) KVElem() (m, n *ThriftFieldModel) {
-	if t.Type != thrift.MAP {
+	if t.TType != thrift.MAP {
 		return
 	}
 	types := inline.Unwraps(`<(.*),(.*)>`, t.StructTypeName)
 	ktypeString, vtypeString := types[0], types[1]
-	ktype, vtype := TypesValue(ktypeString), TypesValue(vtypeString)
+	ktype, vtype := String2Thrift(ktypeString), String2Thrift(vtypeString)
 	return &ThriftFieldModel{
 			Base:           t.Base,
-			Type:           ktype,
-			Optional:       false,
+			TType:          ktype,
+			OptionalVar:    false,
 			StructTypeName: ktypeString,
 		}, &ThriftFieldModel{
 			Base:           t.Base,
-			Type:           vtype,
-			Optional:       false,
+			TType:          vtype,
+			OptionalVar:    false,
 			StructTypeName: vtypeString,
 		}
 }
 
-func TypesValue(types string) thrift.TType {
+func String2Thrift(types string) thrift.TType {
 	types = strings.Trim(types, " ")
 	var tt thrift.TType
 	if types == "i8" {

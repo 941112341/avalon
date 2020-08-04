@@ -7,6 +7,8 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/json-iterator/go"
 	"reflect"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -14,32 +16,27 @@ const (
 )
 
 type BaseArgs struct {
+	ArgsMeta
 	data interface{}
+}
 
-	optional   bool
-	ttype      thrift.TType
-	jsonPath   string
-	id         int16
-	thriftName string
+func (b *BaseArgs) Meta() ArgsMeta {
+	return b.ArgsMeta
 }
 
 func (b *BaseArgs) Data() interface{} {
 	return b.data
 }
 
-func (b *BaseArgs) JSONPath() string {
-	return b.jsonPath
-}
-
 func (b *BaseArgs) Write(p thrift.TProtocol) error {
-	switch b.GetType() {
+	switch b.Type() {
 	case thrift.STRING:
 		str, ok := b.data.(string)
 		if !ok {
 			return fmt.Errorf("b.data %+v is not string", b.data)
 		}
 		if err := p.WriteString(str); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.DOUBLE:
 		str, ok := b.data.(float64)
@@ -47,7 +44,7 @@ func (b *BaseArgs) Write(p thrift.TProtocol) error {
 			return fmt.Errorf("b.data %+v is not double", b.data)
 		}
 		if err := p.WriteDouble(str); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.BOOL:
 		v, ok := b.data.(bool)
@@ -55,7 +52,7 @@ func (b *BaseArgs) Write(p thrift.TProtocol) error {
 			return fmt.Errorf("b.data %+v is not bool", b.data)
 		}
 		if err := p.WriteBool(v); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.BYTE:
 		v, ok := b.data.(int8)
@@ -63,7 +60,7 @@ func (b *BaseArgs) Write(p thrift.TProtocol) error {
 			return fmt.Errorf("b.data %+v is not  byte", b.data)
 		}
 		if err := p.WriteByte(v); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.I16:
 		v, ok := b.data.(int16)
@@ -71,7 +68,7 @@ func (b *BaseArgs) Write(p thrift.TProtocol) error {
 			return fmt.Errorf("b.data %+v is not i16", b.data)
 		}
 		if err := p.WriteI16(v); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.I32:
 		v, ok := b.data.(int32)
@@ -79,7 +76,7 @@ func (b *BaseArgs) Write(p thrift.TProtocol) error {
 			return fmt.Errorf("b.data %+v is not i32", b.data)
 		}
 		if err := p.WriteI32(v); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.I64:
 		v, ok := b.data.(int64)
@@ -87,16 +84,16 @@ func (b *BaseArgs) Write(p thrift.TProtocol) error {
 			return fmt.Errorf("b.data %+v is not i64", b.data)
 		}
 		if err := p.WriteI64(v); err != nil {
-			return fmt.Errorf("%T (%d) field write error: %s", b, b.Index(), err)
+			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	default:
-		return inline.NewError(ErrUnsupportType, "write unknown type %s", b.GetType())
+		return inline.NewError(ErrUnsupportType, "write unknown type %s", b.Type())
 	}
 	return nil
 }
 
 func (b *BaseArgs) Read(p thrift.TProtocol) error {
-	switch b.GetType() {
+	switch b.Type() {
 	case thrift.STOP: // do nothing
 	case thrift.STRING:
 		if v, err := p.ReadString(); err != nil {
@@ -141,13 +138,9 @@ func (b *BaseArgs) Read(p thrift.TProtocol) error {
 			b.data = v
 		}
 	default:
-		return inline.NewError(ErrUnsupportType, "read unknown type %s", b.GetType())
+		return inline.NewError(ErrUnsupportType, "read unknown type %s", b.Type())
 	}
 	return nil
-}
-
-func (b *BaseArgs) GetType() thrift.TType {
-	return b.ttype
 }
 
 func (b *BaseArgs) BindValue(o interface{}) error {
@@ -155,13 +148,13 @@ func (b *BaseArgs) BindValue(o interface{}) error {
 	case jsoniter.Any:
 
 		if err := any.LastError(); err != nil {
-			if !b.optional {
+			if !b.Optional() {
 				return inline.Error("bind data is nil %+v", b)
 			}
 			return nil
 		}
 		var data interface{}
-		switch b.GetType() {
+		switch b.Type() {
 		case thrift.BOOL:
 			data = any.ToBool()
 		case thrift.I08:
@@ -182,51 +175,51 @@ func (b *BaseArgs) BindValue(o interface{}) error {
 		}
 		b.data = data
 	case int8:
-		if b.GetType() == thrift.I08 {
+		if b.Type() == thrift.I08 {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = int8(0)
 		}
 	case int16:
-		if b.GetType() == thrift.I16 {
+		if b.Type() == thrift.I16 {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = int16(0)
 		}
 	case int32:
-		if b.GetType() == thrift.I32 {
+		if b.Type() == thrift.I32 {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = int32(0)
 		}
 	case int64:
-		if b.GetType() == thrift.I64 {
+		if b.Type() == thrift.I64 {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = int64(0)
 		}
 	case bool:
-		if b.GetType() == thrift.BOOL {
+		if b.Type() == thrift.BOOL {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = false
 		}
 	case float32:
-		if b.GetType() == thrift.DOUBLE {
+		if b.Type() == thrift.DOUBLE {
 			b.data = float64(any)
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = float64(0)
 		}
 	case float64:
-		if b.GetType() == thrift.DOUBLE {
+		if b.Type() == thrift.DOUBLE {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = float64(0)
 		}
 	case string:
-		if b.GetType() == thrift.STRING {
+		if b.Type() == thrift.STRING {
 			b.data = any
-		} else if !b.optional {
+		} else if !b.Optional() {
 			b.data = ""
 		}
 	default: // 一般为nil/ptr
@@ -243,32 +236,103 @@ func (b *BaseArgs) BindValue(o interface{}) error {
 }
 
 func (b *BaseArgs) IsSkip() bool {
-	return b.optional && b.data == nil
-}
-
-func (b *BaseArgs) Index() int16 {
-	return b.id
-}
-
-func (b *BaseArgs) ThriftName() string {
-	return b.thriftName
+	return b.Optional() && b.data == nil
 }
 
 type BaseParser struct {
-	model generic.ThriftFieldModel
+	ArgsMetaParser
 }
 
 func (b *BaseParser) Parse() (Args, error) {
-
 	return &BaseArgs{
-		optional:   b.model.Optional,
-		ttype:      b.model.Type,
-		jsonPath:   b.model.FieldName,
-		id:         b.model.Idx,
-		thriftName: b.model.FieldName,
+		ArgsMeta: b.ArgsMeta(),
 	}, nil
 }
 
-func NewBaseParser(model generic.ThriftFieldModel) *BaseParser {
-	return &BaseParser{model: model}
+func NewBaseParser(parser ArgsMetaParser) *BaseParser {
+	return &BaseParser{parser}
+}
+
+type BaseReflectParser struct {
+	Field reflect.StructField
+}
+
+func (b *BaseReflectParser) Parse() (Args, error) {
+	return nil, nil
+
+}
+
+type CommonModel struct {
+	field      reflect.StructField
+	optional   bool
+	typeName   string
+	jsonPath   string
+	thriftName string
+	idx        int16
+	ttype      thrift.TType
+}
+
+func (m *CommonModel) ID() int16 {
+	return m.idx
+}
+
+func (m *CommonModel) Type() thrift.TType {
+	return m.ttype
+}
+
+func (m *CommonModel) Optional() bool {
+	return m.optional
+}
+
+func (m *CommonModel) TypeName() string {
+	return m.typeName
+}
+
+func (m *CommonModel) JsonPath() string {
+	return m.jsonPath
+}
+
+func (m *CommonModel) ThriftName() string {
+	return m.thriftName
+}
+
+func (m *CommonModel) Elem() *CommonModel {
+	if m.ttype != thrift.LIST {
+		return nil
+	}
+	goType := m.field.Type.Elem()
+	return &CommonModel{ttype: generic.Type2thrift(goType), typeName: goType.Name()}
+}
+
+func (m *CommonModel) KVElem() (*CommonModel, *CommonModel) {
+	if m.ttype != thrift.MAP {
+		return nil, nil
+	}
+
+	types := m.field.Type
+	keyType, valueType := types.Key(), types.Elem()
+	return &CommonModel{ttype: generic.Type2thrift(keyType), typeName: keyType.Name()},
+		&CommonModel{ttype: generic.Type2thrift(valueType), typeName: valueType.Name()}
+}
+
+func NewModel(field reflect.StructField) (*CommonModel, error) {
+	ttype := field.Type
+	tag := field.Tag
+	thriftTag := strings.Split(tag.Get("thrift"), ",")
+	idx, err := strconv.ParseInt(thriftTag[1], 10, 16)
+	if err != nil {
+		return nil, inline.PrependErrorFmt(err, "tag %+v", tag)
+	}
+	jsonTag := strings.Split(tag.Get("json"), ",")
+	optional := len(jsonTag) > 1
+	jsonPath := jsonTag[0]
+	return &CommonModel{
+		field:      field,
+		optional:   optional,
+		typeName:   ttype.Name(),
+		jsonPath:   jsonPath,
+		thriftName: thriftTag[1],
+		idx:        int16(idx),
+		ttype:      generic.Type2thrift(ttype),
+	}, nil
 }

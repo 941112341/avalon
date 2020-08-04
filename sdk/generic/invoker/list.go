@@ -2,7 +2,6 @@ package invoker
 
 import (
 	"fmt"
-	"github.com/941112341/avalon/sdk/generic"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/json-iterator/go"
@@ -10,17 +9,14 @@ import (
 )
 
 type ListArgs struct {
-	ID         int16
-	thriftName string
-	jsonPath   string
-	SubArgs    Args
-	optional   bool
+	ArgsMeta
 
-	data []interface{}
+	SubArgs Args
+	data    []interface{}
 }
 
-func (l *ListArgs) JSONPath() string {
-	return l.jsonPath
+func (l *ListArgs) Meta() ArgsMeta {
+	return l.ArgsMeta
 }
 
 func (l *ListArgs) Data() interface{} {
@@ -29,7 +25,7 @@ func (l *ListArgs) Data() interface{} {
 
 func (l *ListArgs) Write(p thrift.TProtocol) error {
 	subArgs := l.SubArgs
-	if err := p.WriteListBegin(subArgs.GetType(), len(l.data)); err != nil {
+	if err := p.WriteListBegin(subArgs.Meta().Type(), len(l.data)); err != nil {
 		return err
 	}
 
@@ -84,7 +80,7 @@ func (l *ListArgs) BindValue(o interface{}) error {
 	switch any := o.(type) {
 	case jsoniter.Any:
 		if err := any.LastError(); err != nil {
-			if !l.optional {
+			if !l.Optional() {
 				l.data = []interface{}{}
 			}
 			return nil
@@ -121,41 +117,27 @@ func (l *ListArgs) BindValue(o interface{}) error {
 }
 
 func (l *ListArgs) IsSkip() bool {
-	return l.optional && l.data == nil
-}
-
-func (l *ListArgs) Index() int16 {
-	return l.ID
-}
-
-func (l *ListArgs) ThriftName() string {
-	return l.thriftName
+	return l.Optional() && l.data == nil
 }
 
 type ListParser struct {
-	ctx   generic.ThriftContext
-	model generic.ThriftFieldModel
+	ArgsMetaParser
 }
 
 func (l *ListParser) Parse() (Args, error) {
-	model := l.model
-	ctx := l.ctx
-	elem := model.Elem()
-	subParser := NewParser(ctx, *elem)
 
+	subParser := l.ElemParsers()
 	subArg, err := subParser.Parse()
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "parse err %+v", subParser)
 	}
 	return &ListArgs{
-		ID:         model.Idx,
-		thriftName: model.FieldName,
-		jsonPath:   model.FieldName,
-		SubArgs:    subArg,
-		optional:   model.Optional,
+
+		SubArgs:  subArg,
+		ArgsMeta: l.ArgsMeta(),
 	}, nil
 }
 
-func NewListParser(ctx generic.ThriftContext, model generic.ThriftFieldModel) *ListParser {
-	return &ListParser{ctx: ctx, model: model}
+func NewListParser(parser ArgsMetaParser) *ListParser {
+	return &ListParser{parser}
 }

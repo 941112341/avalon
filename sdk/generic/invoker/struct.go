@@ -2,45 +2,33 @@ package invoker
 
 import (
 	"fmt"
-	"github.com/941112341/avalon/sdk/generic"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/json-iterator/go"
 )
 
 type StructArgs struct {
-	TypeName   string
-	jsonPath   string
-	thriftName string
-	LazyFields LazyCacheArgs `json:",omitempty"` // struct
-	optional   bool
-	ID         int16
+	ArgsMeta
+
 	skip       bool
+	LazyFields LazyCacheArgs `json:",omitempty"` // struct
 }
 
-func (s *StructArgs) Index() int16 {
-	return s.ID
-}
-
-func (s *StructArgs) ThriftName() string {
-	return s.thriftName
-}
-
-func (s *StructArgs) JSONPath() string {
-	return s.jsonPath
+func (s *StructArgs) Meta() ArgsMeta {
+	return s.ArgsMeta
 }
 
 func (s *StructArgs) Data() interface{} {
 	m := make(map[string]interface{})
 	for _, args := range s.LazyFields.fields() {
-		m[args.JSONPath()] = args.Data()
+		m[args.Meta().JsonPath()] = args.Data()
 	}
 	return m
 }
 
 func (s *StructArgs) findSubArg(idx int16) (Args, bool) {
 	for _, args := range s.LazyFields.fields() {
-		if args.Index() == idx {
+		if args.Meta().ID() == idx {
 			return args, true
 		}
 	}
@@ -48,32 +36,33 @@ func (s *StructArgs) findSubArg(idx int16) (Args, bool) {
 }
 
 func (s *StructArgs) IsSkip() bool {
-	return s.optional && s.skip
+	return s.Optional() && s.skip
 }
 
 func (s *StructArgs) Write(p thrift.TProtocol) error {
-	if s.IsSkip() {
-		return nil
-	}
 
-	if err := p.WriteStructBegin(s.TypeName); err != nil {
+	if err := p.WriteStructBegin(s.TypeName()); err != nil {
 		return fmt.Errorf("%T write struct begin error: %s", s, err)
 	}
+
 	fields := s.LazyFields.fields()
+	if s.skip { // 空循环
+		fields = nil
+	}
 	for _, arg := range fields {
 		if arg.IsSkip() {
 			continue
 		}
 
-		if err := p.WriteFieldBegin(arg.ThriftName(), arg.GetType(), arg.Index()); err != nil {
-			return fmt.Errorf("%T write field begin error %d:groupName: %s", arg, arg.Index(), err)
+		if err := p.WriteFieldBegin(arg.Meta().ThriftName(), arg.Meta().Type(), arg.Meta().ID()); err != nil {
+			return fmt.Errorf("%T write field begin error %d:groupName: %s", arg, arg.Meta().ID(), err)
 		}
 
 		if err := arg.Write(p); err != nil {
 			return inline.PrependErrorFmt(err, "write arg %+v", arg)
 		}
 		if err := p.WriteFieldEnd(); err != nil {
-			return fmt.Errorf("%T write field end error %d:groupName: %s", arg, arg.Index(), err)
+			return fmt.Errorf("%T write field end error %d:groupName: %s", arg, arg.Meta().ID(), err)
 		}
 	}
 	if err := p.WriteFieldStop(); err != nil {
@@ -126,7 +115,7 @@ func (s *StructArgs) BindValue(o interface{}) error {
 	switch any := o.(type) {
 	case jsoniter.Any:
 		if err := any.LastError(); err != nil {
-			if !s.optional {
+			if !s.Optional() {
 				inline.WithFields("err", err).Errorln("bind err")
 			}
 			s.skip = true
@@ -134,7 +123,7 @@ func (s *StructArgs) BindValue(o interface{}) error {
 		}
 		args := s.LazyFields.fields()
 		for _, arg := range args {
-			path := arg.JSONPath()
+			path := arg.Meta().JsonPath()
 			subAny := any.Get(path)
 			if err := arg.BindValue(subAny); err != nil {
 				return inline.PrependErrorFmt(err, "bind value err %s", path)
@@ -163,48 +152,24 @@ func (l *LazyCacheArgs) fields() []Args {
 type LazyArgs func() []Args
 
 type StructParser struct {
-	ctx generic.ThriftContext
-
-	model generic.ThriftFieldModel
+	ArgsMetaParser
 }
 
 func (s *StructParser) Parse() (Args, error) {
-	model := s.model
-	ctx := s.ctx
-
-	structModel, err := ctx.Ptr(model.Base, model.StructTypeName)
-	if err != nil {
-		return nil, inline.PrependErrorFmt(err, "struct type name %s", model.StructTypeName)
-	}
 
 	return &StructArgs{
-		TypeName:   structModel.StructName,
-		jsonPath:   model.FieldName,
-		thriftName: model.FieldName,
 		LazyFields: LazyCacheArgs{
 			LazyArgs: func() []Args {
-				args := make([]Args, 0)
-				for _, fieldModel := range structModel.FieldMap {
-					parser := NewParser(ctx, *fieldModel)
-					subArgs, err := parser.Parse()
-					if err != nil {
-						inline.WithFields("parser", parser).Errorln("parse fail err %s", err)
-						continue
-					}
-					args = append(args, subArgs)
-				}
-				return args
+				return s.FieldsParsers()
 			},
 		},
-		optional: model.Optional,
-		ID:       model.Idx,
+		ArgsMeta: s.ArgsMeta(),
 		skip:     false,
 	}, nil
 }
 
-func NewStructParser(ctx generic.ThriftContext, model generic.ThriftFieldModel) *StructParser {
+func NewStructParser(parser ArgsMetaParser) *StructParser {
 	return &StructParser{
-		ctx:   ctx,
-		model: model,
+		parser,
 	}
 }
