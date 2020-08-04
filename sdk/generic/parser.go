@@ -3,6 +3,7 @@ package generic
 import (
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
+	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,13 +23,19 @@ type ThriftContext interface {
 }
 
 type ThriftGroup struct {
-	ContentMap map[string]string
-	ModelMap   map[string]*ThriftFileModel
+	ModelMap map[string]*ThriftFileModel
 }
 
 func (t *ThriftGroup) GetMethod(base, service, method string) (*ThriftMethodModel, bool) {
 	serviceModel, ok := t.GetService(base, service)
 	if !ok {
+		for _, model := range t.ModelMap {
+			for _, serviceModel := range model.ServiceMap {
+				if methodModel, ok := serviceModel.MethodMap[method]; ok {
+					return methodModel, true
+				}
+			}
+		}
 		return nil, false
 	}
 	methodModel, ok := serviceModel.MethodMap[method]
@@ -64,6 +71,11 @@ func (t *ThriftGroup) GetStruct(base, structName string) (*ThriftStructModel, bo
 	base, structName = strings.Trim(base, " "), strings.Trim(structName, " ")
 	b, ok := t.GetFile(base)
 	if !ok {
+		for _, model := range t.ModelMap {
+			if structModel, ok := model.StructMap[structName]; ok {
+				return structModel, ok
+			}
+		}
 		return nil, false
 	}
 	m, ok := b.StructMap[structName]
@@ -73,6 +85,11 @@ func (t *ThriftGroup) GetStruct(base, structName string) (*ThriftStructModel, bo
 func (t *ThriftGroup) GetService(base, serviceName string) (*ThriftServiceModel, bool) {
 	b, ok := t.GetFile(base)
 	if !ok {
+		for _, model := range t.ModelMap {
+			if serviceModel, ok := model.ServiceMap[serviceName]; ok {
+				return serviceModel, ok
+			}
+		}
 		return nil, false
 	}
 	m, ok := b.ServiceMap[serviceName]
@@ -81,8 +98,7 @@ func (t *ThriftGroup) GetService(base, serviceName string) (*ThriftServiceModel,
 
 func NewThriftGroup(maps map[string]string) (*ThriftGroup, error) {
 	ctx := &ThriftGroup{
-		ContentMap: maps,
-		ModelMap:   map[string]*ThriftFileModel{},
+		ModelMap: map[string]*ThriftFileModel{},
 	}
 	for base, content := range maps {
 		if inline.IsEmpty(content) {
@@ -95,6 +111,30 @@ func NewThriftGroup(maps map[string]string) (*ThriftGroup, error) {
 		ctx.ModelMap[base] = fileModel
 	}
 	return ctx, nil
+}
+
+func NewThriftGroupBase(base []string) (*ThriftGroup, error) {
+
+	maps := make(map[string]string)
+	for _, s := range base {
+		file := s
+		suffix := ".thrift"
+		if !strings.HasSuffix(s, suffix) {
+			file = s + suffix
+		}
+		data, err := ioutil.ReadFile(file)
+		if err != nil {
+			return nil, inline.PrependErrorFmt(err, "file %s", file)
+		}
+		content := string(data)
+		maps[inline.FileName(file)] = content
+	}
+
+	grp, err := NewThriftGroup(maps)
+	if err != nil {
+		return nil, inline.PrependErrorFmt(err, "new group")
+	}
+	return grp, nil
 }
 
 type ThriftFileModel struct {
@@ -234,7 +274,7 @@ type regexpTemplate struct {
 // 命名变量组会更好
 func (t *ThriftFieldModel) Parse(content string) error {
 	content = strings.Trim(content, " ")
-	pattern := regexp.MustCompile(`(?P<Index>\d+)[ \t]*:[ \t]*(?P<optional>optional)?[ \t]*(?P<TypeName>[\w.]+|list<[\w .]+>|map<[\w .,]+>)[\t ]+(?P<Name>\w+)`)
+	pattern := regexp.MustCompile(`(?P<Index>\d+)[ \t]*:[ \t]*(?P<optional>optional|required)?[ \t]*(?P<TypeName>[\w.]+|list<.+>|map<.+>)[\t ]+(?P<Name>\w+)`)
 	template := regexpTemplate{}
 	err := inline.SubNameMatchStruct(pattern, content, &template)
 	if err != nil {
@@ -245,7 +285,7 @@ func (t *ThriftFieldModel) Parse(content string) error {
 		return inline.PrependErrorFmt(err, "parse int err")
 	}
 	t.Idx = int16(id)
-	if template.Optional != "" {
+	if template.Optional == "optional" {
 		t.OptionalVar = true
 	}
 	t.StructTypeName = template.TypeName

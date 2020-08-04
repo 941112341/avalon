@@ -20,7 +20,7 @@ func (s *StructArgs) Meta() ArgsMeta {
 
 func (s *StructArgs) Data() interface{} {
 	m := make(map[string]interface{})
-	for _, args := range s.LazyFields.fields() {
+	for _, args := range s.LazyFields.caches {
 		m[args.Meta().JsonPath()] = args.Data()
 	}
 	return m
@@ -130,7 +130,7 @@ func (s *StructArgs) BindValue(o interface{}) error {
 			}
 		}
 	default:
-		return inline.NewError(ErrUnsupportType, "unknown type of o %+v", o)
+		//inline.WithFields("path", s.JsonPath()).Infoln("bind value %s", inline.ToJsonString(o))
 	}
 
 	return nil

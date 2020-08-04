@@ -90,8 +90,14 @@ func SubNameMatchStruct(r *regexp.Regexp, s string, any interface{}) error {
 	return Copy(result, any)
 }
 
-func JSONAny(any string) jsoniter.Any {
-	return jsoniter.ParseString(jsoniter.ConfigDefault, any).ReadAny()
+func JSONAny(any interface{}) jsoniter.Any {
+	switch any.(type) {
+	case string:
+		return jsoniter.ParseString(jsoniter.ConfigDefault, any.(string)).ReadAny()
+	default:
+		data, _ := jsoniter.MarshalToString(any)
+		return jsoniter.ParseString(jsoniter.ConfigDefault, data).ReadAny()
+	}
 }
 
 func Unwrap(r, content string) (s string) {

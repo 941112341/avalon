@@ -89,6 +89,14 @@ func (a *argsMeta) Type() thrift.TType {
 	return a.ttype
 }
 
+func FileInvoker(base []string, method string) (Invoker, error) {
+	grp, err := generic.NewThriftGroupBase(base)
+	if err != nil {
+		return nil, inline.PrependErrorFmt(err, "base %+v", base)
+	}
+	return CreateInvoker(grp, "", "", method)
+}
+
 func CreateInvoker(ctx generic.ThriftContext, base, service, method string) (Invoker, error) {
 	model, ok := ctx.GetMethod(base, service, method)
 	if !ok {

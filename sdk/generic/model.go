@@ -6,10 +6,10 @@ import (
 	"reflect"
 )
 
-func Type2thrift(field reflect.Type) thrift.TType {
-	switch kind := field.Kind(); kind {
+func Type2thrift(typ reflect.Type) thrift.TType {
+	switch kind := typ.Kind(); kind {
 	case reflect.Ptr:
-		return Kind2thrift(field.Elem().Kind())
+		return Kind2thrift(typ.Elem().Kind())
 	default:
 		return Kind2thrift(kind)
 	}

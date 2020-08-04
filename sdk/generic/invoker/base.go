@@ -31,58 +31,38 @@ func (b *BaseArgs) Data() interface{} {
 func (b *BaseArgs) Write(p thrift.TProtocol) error {
 	switch b.Type() {
 	case thrift.STRING:
-		str, ok := b.data.(string)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not string", b.data)
-		}
+		str, _ := b.data.(string)
 		if err := p.WriteString(str); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.DOUBLE:
-		str, ok := b.data.(float64)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not double", b.data)
-		}
+		str, _ := b.data.(float64)
 		if err := p.WriteDouble(str); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.BOOL:
-		v, ok := b.data.(bool)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not bool", b.data)
-		}
+		v, _ := b.data.(bool)
+
 		if err := p.WriteBool(v); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.BYTE:
-		v, ok := b.data.(int8)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not  byte", b.data)
-		}
+		v, _ := b.data.(int8)
 		if err := p.WriteByte(v); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.I16:
-		v, ok := b.data.(int16)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not i16", b.data)
-		}
+		v, _ := b.data.(int16)
 		if err := p.WriteI16(v); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.I32:
-		v, ok := b.data.(int32)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not i32", b.data)
-		}
+		v, _ := b.data.(int32)
 		if err := p.WriteI32(v); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
 	case thrift.I64:
-		v, ok := b.data.(int64)
-		if !ok {
-			return fmt.Errorf("b.data %+v is not i64", b.data)
-		}
+		v, _ := b.data.(int64)
 		if err := p.WriteI64(v); err != nil {
 			return fmt.Errorf("%T (%d) field write error: %s", b, b.ID(), err)
 		}
@@ -149,7 +129,9 @@ func (b *BaseArgs) BindValue(o interface{}) error {
 
 		if err := any.LastError(); err != nil {
 			if !b.Optional() {
-				return inline.Error("bind data is nil %+v", b)
+				inline.WithFields("path", b.JsonPath(), "typeName", b.TypeName()).Infoln("skip field")
+				//return inline.Error("bind data is nil %+v", b)
+				return nil
 			}
 			return nil
 		}
@@ -263,7 +245,7 @@ func (b *BaseReflectParser) Parse() (Args, error) {
 }
 
 type CommonModel struct {
-	field      reflect.StructField
+	goType     reflect.Type
 	optional   bool
 	typeName   string
 	jsonPath   string
@@ -300,8 +282,8 @@ func (m *CommonModel) Elem() *CommonModel {
 	if m.ttype != thrift.LIST {
 		return nil
 	}
-	goType := m.field.Type.Elem()
-	return &CommonModel{ttype: generic.Type2thrift(goType), typeName: goType.Name()}
+	goType := m.goType.Elem()
+	return &CommonModel{ttype: generic.Type2thrift(goType), typeName: goType.Name(), goType: goType}
 }
 
 func (m *CommonModel) KVElem() (*CommonModel, *CommonModel) {
@@ -309,10 +291,10 @@ func (m *CommonModel) KVElem() (*CommonModel, *CommonModel) {
 		return nil, nil
 	}
 
-	types := m.field.Type
+	types := inline.Redirect(m.goType)
 	keyType, valueType := types.Key(), types.Elem()
-	return &CommonModel{ttype: generic.Type2thrift(keyType), typeName: keyType.Name()},
-		&CommonModel{ttype: generic.Type2thrift(valueType), typeName: valueType.Name()}
+	return &CommonModel{ttype: generic.Type2thrift(keyType), typeName: keyType.Name(), goType: keyType},
+		&CommonModel{ttype: generic.Type2thrift(valueType), typeName: valueType.Name(), goType: valueType}
 }
 
 func NewModel(field reflect.StructField) (*CommonModel, error) {
@@ -327,7 +309,7 @@ func NewModel(field reflect.StructField) (*CommonModel, error) {
 	optional := len(jsonTag) > 1
 	jsonPath := jsonTag[0]
 	return &CommonModel{
-		field:      field,
+		goType:     ttype,
 		optional:   optional,
 		typeName:   ttype.Name(),
 		jsonPath:   jsonPath,

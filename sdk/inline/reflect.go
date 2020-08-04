@@ -159,12 +159,15 @@ func Convert(typ reflect.Type, param string) (b interface{}, err error) {
 	return
 }
 
-func Redirect(value reflect.Type) reflect.Type {
-
-	for value.Kind() == reflect.Ptr {
-		value = value.Elem()
+func Redirect(typ reflect.Type) reflect.Type {
+	if typ == nil {
+		return nil
 	}
-	return value
+
+	for typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+	return typ
 }
 
 func UnionValue(o interface{}) interface{} {

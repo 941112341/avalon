@@ -89,7 +89,8 @@ type ReflectArgsMetaParser struct {
 }
 
 func (r *ReflectArgsMetaParser) FieldsParsers() []Args {
-	parentType := inline.Redirect(r.Field.Type)
+	model := r.getModel()
+	parentType := inline.Redirect(model.goType)
 	args := make([]Args, 0)
 	for i := 0; i < parentType.NumField(); i++ {
 		field := parentType.Field(i)
