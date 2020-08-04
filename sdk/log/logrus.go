@@ -19,7 +19,7 @@ func File() *logrus.Logger {
 		return Log
 	}
 	once.Do(func() {
-		path := "./avalon.log"
+		path := "/tmp/avalon.log"
 		writer, _ := rotatelogs.New(
 			path+".%Y%m%d",
 			//path+".%Y%m%d%H%M",
@@ -50,8 +50,8 @@ func File() *logrus.Logger {
 }
 
 func New() *logrus.Logger {
-	return Console()
-	//return File()
+	//return Console()
+	return File()
 }
 
 func Console() *logrus.Logger {

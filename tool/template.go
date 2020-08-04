@@ -89,6 +89,7 @@ func (h *Handler) {{.MethodName}}(ctx context.Context, request *{{.Request}}) (r
 	if r.BaseResp == nil {
 		r.BaseResp = &base.BaseResp{}
 	}
+	inline.WithFields("request", inline.ToJsonString(request), "response", inline.ToJsonString(r), "method", "{{.MethodName}}").Infoln("success")
 	return r, nil
 }
 `

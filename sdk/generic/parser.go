@@ -117,35 +117,27 @@ func (t *ThriftFileModel) Parse(content string) error {
 	t.Language = ss[1]
 
 	pattern = regexp.MustCompile(`include[ \t]+"(\w+).thrift"`)
-	ss = pattern.FindStringSubmatch(content)
-	if len(ss) > 0 {
-		for i := 0; i+1 < len(ss); i += 2 {
-			include := ss[i+1]
-			t.Include = append(t.Include, include)
-		}
+	sss := pattern.FindAllStringSubmatch(content, -1)
+	for _, ss := range sss {
+		t.Include = append(t.Include, ss[1])
 	}
 
 	pattern = regexp.MustCompile(`struct[ \t]+\w+[ \t]+[{][^}]*[}]`)
-	ss = pattern.FindStringSubmatch(content)
-	for _, s := range ss {
-		if inline.IsEmpty(s) {
-			continue
-		}
+	sss = pattern.FindAllStringSubmatch(content, -1)
+	for _, ss := range sss {
 		structModel := NewThriftStructModel(t.Base)
-		if err := structModel.Parse(s); err != nil {
+		if err := structModel.Parse(ss[0]); err != nil {
 			return inline.PrependErrorFmt(err, "parse struct")
 		}
 		t.StructMap[structModel.StructName] = structModel
 	}
 
 	pattern = regexp.MustCompile(`service[ \t]+\w+[ \t]+[{][^}]*[}]`)
-	ss = pattern.FindStringSubmatch(content)
-	for _, s := range ss {
-		if inline.IsEmpty(s) {
-			continue
-		}
+	sss = pattern.FindAllStringSubmatch(content, -1)
+	for _, ss := range sss {
+
 		serviceModel := NewThriftServiceModel(t.Base)
-		if err := serviceModel.Parse(s); err != nil {
+		if err := serviceModel.Parse(ss[0]); err != nil {
 			return inline.PrependErrorFmt(err, "parse service")
 		}
 		t.ServiceMap[serviceModel.ServiceName] = serviceModel
@@ -208,36 +200,33 @@ type ThriftFieldModel struct {
 	StructTypeName string
 }
 
+type regexpTemplate struct {
+	Index    string
+	Optional string
+	TypeName string
+	Name     string
+}
+
 // 命名变量组会更好
 func (t *ThriftFieldModel) Parse(content string) error {
 	content = strings.Trim(content, " ")
-	pattern := regexp.MustCompile(`(\d+)[ \t]*:[ \t]*(optional)?[ \t]*([a-zA-Z.0-9< >,]+)[\t ]+(\w+)`)
-	ss := pattern.FindStringSubmatch(content)
-	if len(ss) < 4 {
-		return inline.NewError(ErrRegexMatch, "parse field %s", content)
-	}
-	iString := ss[1]
-	idx, err := strconv.ParseInt(iString, 10, 16)
+	pattern := regexp.MustCompile(`(?P<Index>\d+)[ \t]*:[ \t]*(?P<optional>optional)?[ \t]*(?P<TypeName>[\w.]+|list<[\w .]+>|map<[\w .,]+>)[\t ]+(?P<Name>\w+)`)
+	template := regexpTemplate{}
+	err := inline.SubNameMatchStruct(pattern, content, &template)
 	if err != nil {
-		return inline.PrependErrorFmt(err, "idx: %s", iString)
+		return inline.PrependErrorFmt(err, "match err %s", content)
 	}
-	t.Idx = int16(idx)
-
-	isOption := len(ss) == 5
-	types := ss[2]
-	if isOption {
-		types = ss[3]
+	id, err := strconv.ParseInt(template.Index, 10, 16)
+	if err != nil {
+		return inline.PrependErrorFmt(err, "parse int err")
 	}
-	t.Type = TypesValue(types)
-
-	t.StructTypeName = types
-
-	if isOption {
-		t.FieldName = ss[4]
-	} else {
-		t.FieldName = ss[3]
+	t.Idx = int16(id)
+	if template.Optional != "" {
+		t.Optional = true
 	}
-
+	t.StructTypeName = template.TypeName
+	t.FieldName = template.Name
+	t.Type = TypesValue(t.StructTypeName)
 	return nil
 }
 
@@ -291,9 +280,9 @@ func TypesValue(types string) thrift.TType {
 	} else if strings.HasPrefix(types, "map") {
 		tt = thrift.MAP
 	} else if types == "double" {
-		tt = thrift.LIST
-	} else if strings.HasPrefix(types, "double") {
 		tt = thrift.DOUBLE
+	} else if strings.HasPrefix(types, "list") {
+		tt = thrift.LIST
 	} else if types == "string" {
 		tt = thrift.STRING
 	} else {

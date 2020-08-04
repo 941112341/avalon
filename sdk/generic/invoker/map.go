@@ -9,12 +9,12 @@ import (
 )
 
 type MapArgs struct {
-	ID int16
+	ID         int16
 	thriftName string
-	jsonPath string
-	KeyArgs Args
-	ValueArgs Args
-	optional bool
+	jsonPath   string
+	KeyArgs    Args
+	ValueArgs  Args
+	optional   bool
 
 	data map[interface{}]interface{}
 }
@@ -91,6 +91,9 @@ func (m *MapArgs) BindValue(o interface{}) error {
 	switch any := o.(type) {
 	case jsoniter.Any:
 		if any.LastError() != nil {
+			if !m.optional {
+				m.data = map[interface{}]interface{}{}
+			}
 			return nil
 		}
 		maps := make(map[interface{}]interface{})
@@ -128,7 +131,7 @@ func (m *MapArgs) ThriftName() string {
 }
 
 type MapParser struct {
-	ctx generic.ThriftContext
+	ctx   generic.ThriftContext
 	model generic.ThriftFieldModel
 }
 

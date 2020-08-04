@@ -9,13 +9,12 @@ import (
 	"reflect"
 )
 
-
 type ListArgs struct {
-	ID int16
+	ID         int16
 	thriftName string
-	jsonPath string
-	SubArgs Args
-	optional bool
+	jsonPath   string
+	SubArgs    Args
+	optional   bool
 
 	data []interface{}
 }
@@ -85,6 +84,9 @@ func (l *ListArgs) BindValue(o interface{}) error {
 	switch any := o.(type) {
 	case jsoniter.Any:
 		if err := any.LastError(); err != nil {
+			if !l.optional {
+				l.data = []interface{}{}
+			}
 			return nil
 		}
 		l.data = []interface{}{}
@@ -131,7 +133,7 @@ func (l *ListArgs) ThriftName() string {
 }
 
 type ListParser struct {
-	ctx generic.ThriftContext
+	ctx   generic.ThriftContext
 	model generic.ThriftFieldModel
 }
 

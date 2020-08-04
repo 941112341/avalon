@@ -17,7 +17,7 @@ func SetFieldJSON(any interface{}, fieldName string, to interface{}) (err error)
 	}()
 	fld, err := getField(any, fieldName)
 	if err != nil {
-		return errors.Wrap(err, "get field")
+		return PrependErrorFmt(err, "set field json %s", fieldName)
 	}
 	typ := fld.Type()
 	isPtr := typ.Kind() == reflect.Ptr
@@ -48,7 +48,7 @@ func SetField(any interface{}, fieldName string, to interface{}) (err error) {
 	}()
 	fld, err := getField(any, fieldName)
 	if err != nil {
-		return errors.Wrap(err, "get field")
+		return PrependErrorFmt(err, "SetField get field %s", fieldName)
 	}
 	if !fld.CanSet() {
 		return errors.New(fieldName + " fld cannot set")
@@ -60,7 +60,7 @@ func SetField(any interface{}, fieldName string, to interface{}) (err error) {
 func GetField(any interface{}, fieldName string) (i interface{}, err error) {
 	fld, err := getField(any, fieldName)
 	if err != nil {
-		return nil, errors.Wrap(err, "get field")
+		return nil, PrependErrorFmt(err, "GetField %s", fieldName)
 	}
 	i = fld.Interface()
 	return
@@ -70,7 +70,7 @@ func GetFieldAddress(any interface{}, fieldName string) (i interface{}, err erro
 
 	fld, err := getField(any, fieldName)
 	if err != nil {
-		return nil, errors.Wrap(err, "get field")
+		return nil, errors.Wrap(err, "GetFieldAddress")
 	}
 
 	i = fld.Addr().Interface()

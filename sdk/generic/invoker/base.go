@@ -16,10 +16,10 @@ const (
 type BaseArgs struct {
 	data interface{}
 
-	optional bool
-	ttype thrift.TType
-	jsonPath string
-	id int16
+	optional   bool
+	ttype      thrift.TType
+	jsonPath   string
+	id         int16
 	thriftName string
 }
 
@@ -153,11 +153,12 @@ func (b *BaseArgs) GetType() thrift.TType {
 func (b *BaseArgs) BindValue(o interface{}) error {
 	switch any := o.(type) {
 	case jsoniter.Any:
-		if b.optional && any.GetInterface() == nil {
-			return nil
-		}
+
 		if err := any.LastError(); err != nil {
-			return inline.PrependErrorFmt(err, "json err")
+			if !b.optional {
+				return inline.Error("bind data is nil %+v", b)
+			}
+			return nil
 		}
 		var data interface{}
 		switch b.GetType() {
@@ -252,7 +253,6 @@ func (b *BaseArgs) Index() int16 {
 func (b *BaseArgs) ThriftName() string {
 	return b.thriftName
 }
-
 
 type BaseParser struct {
 	model generic.ThriftFieldModel

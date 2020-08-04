@@ -16,7 +16,6 @@ type StructArgs struct {
 	optional   bool
 	ID         int16
 	skip       bool
-
 }
 
 func (s *StructArgs) Index() int16 {
@@ -69,6 +68,13 @@ func (s *StructArgs) Write(p thrift.TProtocol) error {
 		if err := p.WriteFieldBegin(arg.ThriftName(), arg.GetType(), arg.Index()); err != nil {
 			return fmt.Errorf("%T write field begin error %d:groupName: %s", arg, arg.Index(), err)
 		}
+
+		if err := arg.Write(p); err != nil {
+			return inline.PrependErrorFmt(err, "write arg %+v", arg)
+		}
+		if err := p.WriteFieldEnd(); err != nil {
+			return fmt.Errorf("%T write field end error %d:groupName: %s", arg, arg.Index(), err)
+		}
 	}
 	if err := p.WriteFieldStop(); err != nil {
 		return fmt.Errorf("write field stop error: %s", err)
@@ -116,21 +122,20 @@ func (s *StructArgs) GetType() thrift.TType {
 }
 
 func (s *StructArgs) BindValue(o interface{}) error {
+
 	switch any := o.(type) {
 	case jsoniter.Any:
 		if err := any.LastError(); err != nil {
+			if !s.optional {
+				inline.WithFields("err", err).Errorln("bind err")
+			}
 			s.skip = true
-			inline.WithFields("err", err).Errorln("bind err")
 			return nil
 		}
 		args := s.LazyFields.fields()
 		for _, arg := range args {
 			path := arg.JSONPath()
 			subAny := any.Get(path)
-			if err := subAny.LastError(); err != nil {
-				inline.WithFields("jsonpath", path).Infoln("skip json path")
-				continue
-			}
 			if err := arg.BindValue(subAny); err != nil {
 				return inline.PrependErrorFmt(err, "bind value err %s", path)
 			}
@@ -166,9 +171,11 @@ type StructParser struct {
 func (s *StructParser) Parse() (Args, error) {
 	model := s.model
 	ctx := s.ctx
-	
+
 	structModel, err := ctx.Ptr(model.Base, model.StructTypeName)
-	if err != nil {return nil, inline.PrependErrorFmt(err, "struct type name %s", model.StructTypeName)}
+	if err != nil {
+		return nil, inline.PrependErrorFmt(err, "struct type name %s", model.StructTypeName)
+	}
 
 	return &StructArgs{
 		TypeName:   structModel.StructName,
@@ -189,17 +196,15 @@ func (s *StructParser) Parse() (Args, error) {
 				return args
 			},
 		},
-		optional:   model.Optional,
-		ID:         model.Idx,
-		skip:       false,
+		optional: model.Optional,
+		ID:       model.Idx,
+		skip:     false,
 	}, nil
 }
 
 func NewStructParser(ctx generic.ThriftContext, model generic.ThriftFieldModel) *StructParser {
 	return &StructParser{
-		ctx:         ctx,
-		model: 		model,
+		ctx:   ctx,
+		model: model,
 	}
 }
-
-

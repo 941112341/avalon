@@ -1,4 +1,6 @@
 git.apache.org/thrift.git v0.13.0/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqblrnkyeyg=
+github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a h1:x7njcjkiZrxUxJSeL7qtw4n0PUOgOcnij/dHyzMBvdo=
+github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a/go.mod h1:unvxDmUHhY11p3iDOWgFOYSjbI5mLLAIBCAq/xAwHYM=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/andybalholm/cascadia v1.1.0/go.mod h1:GsXiBklL0woXo1j/WYWtSYYC4ouU9PqHO0sqidkEA4Y=
 github.com/apache/thrift v0.13.0 h1:5hryIiq9gtn+MiLVn0wP37kb/uTeRZgN08WoCsAhIhI=

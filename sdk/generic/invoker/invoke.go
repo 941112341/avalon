@@ -3,7 +3,6 @@ package invoker
 import (
 	"context"
 	"fmt"
-	"github.com/941112341/avalon/gateway/model"
 	"github.com/941112341/avalon/sdk/generic"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
@@ -13,14 +12,13 @@ type Invoker interface {
 	Invoke(ctx context.Context, client thrift.TClient, data interface{}) (interface{}, error)
 }
 
-type invoker struct {
-	Method string
-	Request Args
+type IInvoker struct {
+	Method   string
+	Request  Args
 	Response Args
-
 }
 
-func (i *invoker) Invoke(ctx context.Context, client thrift.TClient, data interface{}) (interface{}, error) {
+func (i *IInvoker) Invoke(ctx context.Context, client thrift.TClient, data interface{}) (interface{}, error) {
 	err := i.Request.BindValue(data)
 	if err != nil {
 		return nil, err
@@ -33,7 +31,7 @@ func (i *invoker) Invoke(ctx context.Context, client thrift.TClient, data interf
 }
 
 func NewInvoker(method string, request, response Args) Invoker {
-	return &invoker{
+	return &IInvoker{
 		Method:   method,
 		Request:  request,
 		Response: response,
@@ -50,7 +48,6 @@ type Args interface {
 	IsSkip() bool
 }
 
-
 type SubArgs interface {
 	thrift.TStruct
 	GetType() thrift.TType
@@ -62,16 +59,16 @@ func CreateInvoker(ctx generic.ThriftContext, base, service, method string) (Inv
 		return nil, inline.Error("base %s, service %s, method %s not found", base, service, method)
 	}
 	request := StructArgs{
-		TypeName:   fmt.Sprintf("%s_arg", method),
+		TypeName: fmt.Sprintf("%s_arg", method),
 		LazyFields: LazyCacheArgs{
 			LazyArgs: func() []Args {
 				parser := NewParser(ctx, generic.ThriftFieldModel{
 					Base:           base,
 					FieldName:      "request",
-					Idx:            0,
+					Idx:            1,
 					Type:           thrift.STRUCT,
 					Optional:       false,
-					StructTypeName:  model.Request,
+					StructTypeName: model.Request,
 				})
 				arg, err := parser.Parse()
 				if err != nil {
@@ -81,11 +78,11 @@ func CreateInvoker(ctx generic.ThriftContext, base, service, method string) (Inv
 				return []Args{arg}
 			},
 		},
-		ID:         0,
+		ID: 0,
 	}
 
 	response := StructArgs{
-		TypeName:   fmt.Sprintf("%s_result", method),
+		TypeName: fmt.Sprintf("%s_result", method),
 		LazyFields: LazyCacheArgs{
 			LazyArgs: func() []Args {
 				parser := NewParser(ctx, generic.ThriftFieldModel{
@@ -94,7 +91,7 @@ func CreateInvoker(ctx generic.ThriftContext, base, service, method string) (Inv
 					Idx:            0,
 					Type:           thrift.STRUCT,
 					Optional:       false,
-					StructTypeName:  model.Response,
+					StructTypeName: model.Response,
 				})
 				arg, err := parser.Parse()
 				if err != nil {
@@ -104,7 +101,7 @@ func CreateInvoker(ctx generic.ThriftContext, base, service, method string) (Inv
 				return []Args{arg}
 			},
 		},
-		ID:         0,
+		ID: 0,
 	}
 
 	return NewInvoker(method, &request, &response), nil

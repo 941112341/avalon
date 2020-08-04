@@ -78,9 +78,10 @@ func metaMiddlewareClient(cfg Config, call Endpoint) Endpoint {
 
 func metaMiddlewareServer(cfg Config, call Endpoint) Endpoint {
 	return func(ctx context.Context, method string, args, result interface{}) error {
+		inline.WithFields("request", inline.ToJsonString(args)).Infoln("receive raw request")
 		i, err := inline.GetField(args, "Base")
 		if err != nil {
-			return err
+			return inline.PrependErrorFmt(err, "args %+v", args)
 		}
 
 		var base Base
