@@ -1,4 +1,4 @@
-package model
+package repository
 
 import (
 	"github.com/941112341/avalon/common/client"

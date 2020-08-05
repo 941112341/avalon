@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"github.com/941112341/avalon/gateway/model"
 	"github.com/941112341/avalon/gateway/registry"
+	"github.com/941112341/avalon/gateway/repository"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/patrickmn/go-cache"
 	"time"
 )
 
 type uploaderService struct {
-	Repo model.UploadRepository `inject:"UploadRepository"`
+	Repo repository.UploadRepository `inject:"UploadRepository"`
 }
 
 func (u *uploaderService) Upload(request *IDLFileVo) error {

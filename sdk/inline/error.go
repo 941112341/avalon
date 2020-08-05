@@ -2,6 +2,7 @@ package inline
 
 import (
 	"fmt"
+	"runtime"
 )
 
 type AvalonErrorCode int32
@@ -21,25 +22,27 @@ type AvalonError interface {
 	Error() string
 	RawError() error
 	Code() AvalonErrorCode
-	WrapErr(message string, codes ...AvalonErrorCode) AvalonError
-	Unwrap() error
 }
 
 type CodeError struct {
 	err     error
 	message string
 	code    AvalonErrorCode
+	stack   string
 }
 
 func (c CodeError) Error() string {
 	msg := c.message
 	if c.code != Unknown {
-		msg = fmt.Sprintf("%d:%s", c.code, msg)
+		msg = fmt.Sprintf("(%d):%s", c.code, msg)
+	}
+	if c.stack != "" {
+		msg = fmt.Sprintf("%s:%s", c.stack, c.message)
 	}
 	if c.err == nil {
 		return msg
 	}
-	return msg + fmt.Sprintf("[%s]", c.err.Error())
+	return fmt.Sprintf("%s\n%s", msg, c.err.Error())
 }
 
 func (c CodeError) RawError() error {
@@ -51,60 +54,39 @@ func (c CodeError) RawError() error {
 }
 
 func (c CodeError) Code() AvalonErrorCode {
+	if c.code == 0 {
+		aErr, ok := c.err.(AvalonError)
+		if ok {
+			return aErr.Code()
+		}
+	}
 	return c.code
-}
-
-func (c CodeError) WrapErr(message string, codes ...AvalonErrorCode) AvalonError {
-	parentCode := c.code
-	if len(codes) != 0 {
-		parentCode = codes[0]
-	} else {
-		c.code = Unknown // 避免重复打印无意义code
-	}
-	return &CodeError{
-		err:     c,
-		message: message,
-		code:    parentCode,
-	}
-}
-
-func (c CodeError) Unwrap() error {
-	return c.err
 }
 
 func NewError(code AvalonErrorCode, f string, args ...interface{}) AvalonError {
 	return &CodeError{
 		message: fmt.Sprintf(f, args...),
 		code:    code,
+		stack:   RecordStack(),
 	}
 }
 
 func Error(f string, args ...interface{}) AvalonError {
-	return NewError(Unknown, f, args...)
-}
-
-func PrependErrorWithCode(err error, code AvalonErrorCode, f string, args ...interface{}) error {
-	message := fmt.Sprintf(f, args...)
-	aErr, ok := err.(AvalonError)
-	if ok {
-		return aErr.WrapErr(message)
-	}
 	return &CodeError{
-		err:     err,
-		message: message,
-		code:    code,
+		err:     nil,
+		message: fmt.Sprintf(f, args...),
+		code:    0,
+		stack:   RecordStack(),
 	}
-}
-
-func PrependError(err error, message string) error {
-	if aErr, ok := err.(AvalonError); ok {
-		return PrependErrorWithCode(err, aErr.Code(), message)
-	}
-	return PrependErrorWithCode(err, Unknown, message)
 }
 
 func PrependErrorFmt(err error, f string, args ...interface{}) error {
-	return PrependError(err, fmt.Sprintf(f, args...))
+	return &CodeError{
+		err:     err,
+		message: fmt.Sprintf(f, args...),
+		code:    0,
+		stack:   RecordStack(),
+	}
 }
 
 // compare
@@ -138,4 +120,29 @@ func IsCode(err error, errCode AvalonErrorCode) bool {
 		return false
 	}
 	return aErr.Code() == errCode
+}
+
+type Stack struct {
+	File     string
+	FuncName string
+	Line     int
+	Ok       bool
+}
+
+func GetStack(index int) *Stack {
+	pc, file, line, ok := runtime.Caller(index)
+	return &Stack{
+		File:     file,
+		FuncName: runtime.FuncForPC(pc).Name(),
+		Line:     line,
+		Ok:       ok,
+	}
+}
+
+func RecordStack() string {
+	stack := GetStack(1)
+	if !stack.Ok {
+		return ""
+	}
+	return fmt.Sprintf("[%s:%d:%s]", stack.File, stack.Line, stack.FuncName)
 }

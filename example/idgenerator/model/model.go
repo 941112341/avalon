@@ -9,7 +9,6 @@ import (
 
 type Generator interface {
 	Assign(cnt int64, bizId string) ([]int64, error)
-	GetIds() []int64
 }
 
 type GeneratorFactory interface {

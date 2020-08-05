@@ -1,7 +1,8 @@
-package model
+package repository
 
 import (
 	"github.com/941112341/avalon/gateway/database"
+	"github.com/941112341/avalon/gateway/model"
 	"github.com/941112341/avalon/gateway/registry"
 	"github.com/t-tiger/gorm-bulk-insert/v2"
 )
@@ -25,7 +26,7 @@ func (mapperRepository) AllMapper() (*MapperList, error) {
 	if err := database.DBRead.Model(&Mapper{}).Where("deleted = 0").Find(&mappers).Error; err != nil {
 		return nil, err
 	}
-	return &MapperList{Mappers: mappers, Absolute: map[string]*Mapper{}}, nil
+	return &MapperList{Mappers: mappers, model.Absolute: map[string]*Mapper{}}, nil
 }
 
 func (mapperRepository) AddMapper(mapperList *MapperList) error {
