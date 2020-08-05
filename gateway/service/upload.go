@@ -14,7 +14,7 @@ type uploaderService struct {
 	Repo repository.UploadRepository `inject:"UploadRepository"`
 }
 
-func (u *uploaderService) Upload(request *IDLFileVo) error {
+func (u *uploaderService) Upload(request *UploadVoVo) error {
 	m := newModel(request)
 	if err := m.Upload(u.Repo); err != nil {
 		return inline.PrependErrorFmt(err, "upload %s", inline.ToJsonString(request))
@@ -22,9 +22,9 @@ func (u *uploaderService) Upload(request *IDLFileVo) error {
 	return nil
 }
 
-func newModel(request *IDLFileVo) *model.IDLFile {
-	m := &model.IDLFile{
-		IDLFileID: model.IDLFileID{
+func newModel(request *UploadVoVo) *model.UploadVo {
+	m := &model.UploadVo{
+		UploadVoID: model.UploadVoID{
 			PSM:  request.PSM,
 			Base: request.Filename,
 		},
@@ -37,14 +37,14 @@ func newModel(request *IDLFileVo) *model.IDLFile {
 	return m
 }
 
-func (u *uploaderService) Get(request *IDLFileVo) (*IDLFileVo, error) {
+func (u *uploaderService) Get(request *UploadVoVo) (*UploadVoVo, error) {
 	m := newModel(request)
 	file, err := m.Get(u.Repo)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "get fail %s", inline.ToJsonString(request))
 	}
 
-	return &IDLFileVo{
+	return &UploadVoVo{
 		PSM:      file.PSM,
 		Filename: file.Base,
 		Body:     file.Content,
@@ -56,29 +56,29 @@ type CacheUploader struct {
 	Proxy UploadService `inject:"UploadService"`
 }
 
-func UnionKey(request *IDLFileVo) string {
+func UnionKey(request *UploadVoVo) string {
 	return fmt.Sprintf("%s_%s", request.Filename, request.PSM)
 }
 
-func (c *CacheUploader) Upload(request *IDLFileVo) error {
+func (c *CacheUploader) Upload(request *UploadVoVo) error {
 	key := UnionKey(request)
 	defer c.cache.Delete(key)
 	return c.Proxy.Upload(request)
 }
 
-func (c *CacheUploader) Get(request *IDLFileVo) (*IDLFileVo, error) {
+func (c *CacheUploader) Get(request *UploadVoVo) (*UploadVoVo, error) {
 	key := UnionKey(request)
 	i, _ := c.cache.Get(key)
-	cacheObj, ok := i.(*IDLFileVo)
+	cacheObj, ok := i.(*UploadVoVo)
 	if ok {
 		return cacheObj, nil
 	}
-	idlFile, err := c.Proxy.Get(request)
+	UploadVo, err := c.Proxy.Get(request)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "Get upload err: request %s", inline.ToJsonString(request))
 	}
-	c.cache.Set(key, idlFile, time.Hour)
-	return idlFile, nil
+	c.cache.Set(key, UploadVo, time.Hour)
+	return UploadVo, nil
 }
 
 func init() {

@@ -1,8 +1,9 @@
-package gorm
+package mygorm
 
 import (
 	"github.com/941112341/avalon/common/client"
 	"github.com/941112341/avalon/sdk/inline"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -13,7 +14,7 @@ type Model struct {
 	Updated time.Time
 }
 
-func (m *Model) BeforeCreate() error {
+func (m *Model) BeforeCreate(*gorm.Scope) error {
 	if m.ID == 0 {
 		m.ID = client.GenID()
 	}
@@ -29,7 +30,7 @@ func (m *Model) BeforeCreate() error {
 	return nil
 }
 
-func (m *Model) BeforeUpdate() error {
+func (m *Model) BeforeUpdate(*gorm.Scope) error {
 	if m.Updated.IsZero() {
 		m.Updated = time.Now()
 	}

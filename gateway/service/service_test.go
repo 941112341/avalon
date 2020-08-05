@@ -25,7 +25,7 @@ func TestUpload(t *testing.T) {
 		panic(err)
 	}
 
-	err = service.Uploader.Upload(&IDLFileVo{
+	err = service.Uploader.Upload(&UploadVoVo{
 		PSM:      "a.b.c",
 		Filename: "test",
 		Body:     "hello world",
@@ -34,7 +34,7 @@ func TestUpload(t *testing.T) {
 		panic(err)
 	}
 
-	err = service.Uploader.Upload(&IDLFileVo{
+	err = service.Uploader.Upload(&UploadVoVo{
 		PSM:      "a.b.c",
 		Filename: "test",
 		Body:     "hello world 3333",
@@ -50,7 +50,7 @@ func TestGet(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	vo, err := service.Uploader.Get(&IDLFileVo{
+	vo, err := service.Uploader.Get(&UploadVoVo{
 		PSM:      "a.b.c",
 		Filename: "test",
 		Body:     "",

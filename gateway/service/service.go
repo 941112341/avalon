@@ -5,15 +5,15 @@ type Gateway interface {
 	Transfer() // 转发
 }
 
-type IDLFileVo struct {
+type UploadVoVo struct {
 	PSM      string
 	Filename string
 	Body     string
 }
 
 type UploadService interface {
-	Upload(request *IDLFileVo) error
-	Get(request *IDLFileVo) (*IDLFileVo, error)
+	Upload(request *UploadVoVo) error
+	Get(request *UploadVoVo) (*UploadVoVo, error)
 }
 
 type MapperID struct {
