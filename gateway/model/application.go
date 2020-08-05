@@ -9,8 +9,3 @@ type ApplicationKey interface {
 type Application interface {
 	Invoker(ctx context.Context, request *HttpRequest) (*HttpResponse, error)
 }
-
-type Converter interface {
-	ConvertRequest(request *HttpRequest) (interface{}, error)
-	ConvertResponse(data interface{}) (*HttpResponse, error)
-}
