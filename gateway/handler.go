@@ -33,6 +33,7 @@ func (r *Response) write(writer http.ResponseWriter, err error) error {
 			Code:    500,
 			Message: err.Error(),
 		}
+		inline.WithFields("err", err).Errorln("err happen")
 	}
 
 	_, err = writer.Write(inline.ToJsonBytes(r))
@@ -46,10 +47,14 @@ func init() {
 }
 
 type DefaultHandler struct {
-	Gateway model.Gateway `inject:"Gateway"`
+	Gateway model.Gateway     `inject:"Gateway"`
+	Auth    model.AuthManager `inject:"Auth"`
 }
 
 func (d *DefaultHandler) Upload(request *http.Request) (*Response, error) {
+	if err := d.Auth.CanAccess("Upload", request); err != nil {
+		return nil, err
+	}
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return nil, err
@@ -72,6 +77,9 @@ func (d *DefaultHandler) Test() (*Response, error) {
 }
 
 func (d *DefaultHandler) Registry(request *http.Request) (*Response, error) {
+	if err := d.Auth.CanAccess("Upload", request); err != nil {
+		return nil, err
+	}
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return nil, err
@@ -90,6 +98,9 @@ func (d *DefaultHandler) Registry(request *http.Request) (*Response, error) {
 }
 
 func (d *DefaultHandler) Transfer(request *http.Request) (*Response, error) {
+	if err := d.Auth.CanAccess("Upload", request); err != nil {
+		return nil, err
+	}
 	response, err := d.Gateway.Transfer(context.Background(), request)
 	if err != nil {
 		return nil, err

@@ -133,3 +133,41 @@ func TestFindGroup(t *testing.T) {
 	}
 	fmt.Println(inline.ToJsonString(vo))
 }
+
+func TestBatchInsert(t *testing.T) {
+	err := initial.InitAllForTest()
+	if err != nil {
+		panic(err)
+	}
+
+	repo := uploadRepository{}
+
+	err = repo.BatchInsert([]*UploadVo{
+		{
+			Model: mygorm.Model{},
+			UploadUnionKey: UploadUnionKey{
+				UploadGroupKey: UploadGroupKey{
+					PSM:     "base",
+					Version: "SscaguqptTXUwWslxVqRvhNQqUDTwFFw",
+				},
+				Base: "base",
+			},
+			Content: "xxxxx",
+		},
+		{
+			Model: mygorm.Model{},
+			UploadUnionKey: UploadUnionKey{
+				UploadGroupKey: UploadGroupKey{
+					PSM:     "base",
+					Version: "SscaguqptTXUwWslxVqRvhNQqUDTwFFw",
+				},
+				Base: "base",
+			},
+			Content: "xxxxx",
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+}

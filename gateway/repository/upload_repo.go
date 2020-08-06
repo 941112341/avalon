@@ -1,10 +1,12 @@
 package repository
 
 import (
+	"errors"
+	"fmt"
 	"github.com/941112341/avalon/gateway/database"
 	"github.com/941112341/avalon/gateway/registry"
 	"github.com/941112341/avalon/sdk/inline"
-	gormbulk "github.com/t-tiger/gorm-bulk-insert/v2"
+	"strings"
 )
 
 func init() {
@@ -25,15 +27,42 @@ func (r uploadRepository) BatchInsert(vos []*UploadVo) error {
 	if len(vos) == 0 {
 		return nil
 	}
-	iface := make([]interface{}, 0)
-	for _, vo := range vos {
+	if len(vos) > 100 {
+		return errors.New("beyond 100")
+	}
+	unions := make([]string, 0)
+	union := ` select ?, ?, ?, ?, ?, ?, ? `
+	ifaces := make([]interface{}, 0)
+	for i, vo := range vos {
+		//if err := vo.valid(); err != nil {
+		//	return inline.PrependErrorFmt(err, "valid fail")
+		//}
+		if i == 0 {
+			union = ` select ? as id, ? as psm, ? as content, ? as base, ? as created, ? as updated, ? as version `
+		}
 		if err := vo.BeforeCreate(nil); err != nil {
 			return inline.PrependErrorFmt(err, "vo %+v", vo)
 		}
-		iface = append(iface, *vo)
+		ifaces = append(ifaces, vo.ID, vo.PSM, vo.Content, vo.Base, vo.Created, vo.Updated, vo.Version)
+		unions = append(unions, union)
 	}
+	unionCompleted := strings.Join(unions, " union all ")
 
-	return gormbulk.BulkInsert(database.DB, iface, 1000)
+	raw := `
+	insert into upload (id, psm, content, base, created, updated, version)
+select b.* from upload  right join (
+   	%s
+    ) as b
+on false = true
+where not exists(
+        select 1 from upload where deleted = 0 and version=? and psm = ?
+    )
+
+`
+	rawCompleted := fmt.Sprintf(raw, unionCompleted)
+	ifaces = append(ifaces, vos[0].Version, vos[0].PSM)
+	inline.WithFields("raw", rawCompleted).Infoln("raw sql")
+	return database.DB.Exec(rawCompleted, ifaces...).Error
 }
 
 func (r uploadRepository) FindGroup(id *UploadGroupKey) ([]*UploadVo, error) {

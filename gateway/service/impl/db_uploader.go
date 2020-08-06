@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	_ = registry.Registry("UploaderService", &DBUploaderService{})
+	_ = registry.Registry("UploadService", &DBUploaderService{})
 }
 
 type DBUploaderService struct {

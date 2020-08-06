@@ -140,7 +140,7 @@ func GetStack(index int) *Stack {
 }
 
 func RecordStack() string {
-	stack := GetStack(1)
+	stack := GetStack(3)
 	if !stack.Ok {
 		return ""
 	}
