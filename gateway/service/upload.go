@@ -1,20 +1,17 @@
 package service
 
 import (
-	"github.com/941112341/avalon/gateway/registry"
 	"github.com/941112341/avalon/gateway/repository"
 )
 
 type UploadService interface {
 	GroupContent(key repository.UploadGroupKey) (map[string]string, error)
+	SaveGroupContent(request *SaveGroupContentRequest) error
 }
 
-var UploadBuilder = &UploadServiceBuilder{}
+type SaveGroupContentRequest struct {
+	PSM     string
+	Version string
 
-func init() {
-	_ = registry.Registry("", UploadBuilder)
-}
-
-type UploadServiceBuilder struct {
-	UploadService UploadService `inject:"UploadService"`
+	Data map[string]string
 }

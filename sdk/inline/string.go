@@ -13,6 +13,11 @@ func ToJsonString(o interface{}) string {
 	return body
 }
 
+func ToJsonBytes(o interface{}) []byte {
+	body, _ := jsoniter.Marshal(o)
+	return body
+}
+
 func VString(o interface{}) string {
 	return fmt.Sprintf("%+v", o)
 }
@@ -68,7 +73,7 @@ func ParseFromTemplate(template, fact string, result map[string]string) (map[str
 func SubNameMatchMap(r *regexp.Regexp, s string) map[string]string {
 	matches := r.FindStringSubmatch(s)
 	if len(matches) == 0 {
-		return nil
+		return map[string]string{}
 	}
 	result := make(map[string]string)
 	for i, name := range r.SubexpNames() {
@@ -121,4 +126,31 @@ func Unwraps(r, content string) (ss []string) {
 		return
 	}
 	return ss[1:]
+}
+
+func TemplateExtract(template, content string) (map[string]string, error) {
+	pattern := regexp.MustCompile(`[{][^}]+?[}]`)
+	template = pattern.ReplaceAllStringFunc(template, func(s string) string {
+		s = s[1 : len(s)-1]
+		return fmt.Sprintf(`(?P<%s>[\w/]+)`, s)
+	})
+
+	pattern, err := regexp.Compile(template)
+	if err != nil {
+		return nil, PrependErrorFmt(err, "compile %s err", template)
+	}
+
+	maps := SubNameMatchMap(pattern, content)
+	return maps, nil
+}
+
+func MustString(o interface{}) string {
+	switch typ := o.(type) {
+	case string:
+		return typ
+	case *string:
+		return *typ
+	default:
+		return ToJsonString(o)
+	}
 }

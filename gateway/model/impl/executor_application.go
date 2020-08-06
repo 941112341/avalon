@@ -9,17 +9,36 @@ import (
 	"github.com/941112341/avalon/sdk/generic"
 	"github.com/941112341/avalon/sdk/generic/invoker"
 	"github.com/941112341/avalon/sdk/inline"
+	"net/http"
 )
+
+type ExecutorFactory struct {
+	ExecutorData
+	MapperArgs map[string]interface{}
+}
+
+func (e *ExecutorFactory) GetApplication() model.Application {
+	return &Executor{
+		converter: &BaseConverter{
+			mapperArgs: e.MapperArgs,
+		},
+		ExecutorData: e.ExecutorData,
+	}
+}
+
+type ExecutorData struct {
+	psm     string
+	version string
+	method  string
+	base    string
+}
 
 type Executor struct {
 	converter model.Converter
-	psm       string
-	version   string
-	method    string
-	base      string
+	ExecutorData
 }
 
-func (e *Executor) Invoker(ctx context.Context, request *model.HttpRequest) (*model.HttpResponse, error) {
+func (e *Executor) Invoker(ctx context.Context, request *http.Request) (*model.HttpResponse, error) {
 	value, err := e.converter.ConvertRequest(request)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "convert request %+v", request)
@@ -27,7 +46,7 @@ func (e *Executor) Invoker(ctx context.Context, request *model.HttpRequest) (*mo
 
 	data := inline.ToJsonString(value)
 
-	idlMap, err := service.UploadBuilder.UploadService.GroupContent(repository.UploadGroupKey{
+	idlMap, err := service.ServiceContainer.UploadService.GroupContent(repository.UploadGroupKey{
 		PSM:     e.psm,
 		Version: e.version,
 	})

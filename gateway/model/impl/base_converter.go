@@ -5,6 +5,8 @@ import (
 	"github.com/941112341/avalon/gateway/model"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/json-iterator/go"
+	"io/ioutil"
+	"net/http"
 )
 
 const MapperKey = "mapper"
@@ -18,9 +20,15 @@ type BaseConverter struct {
 	mapperArgs map[string]interface{}
 }
 
-func (b *BaseConverter) ConvertRequest(request *model.HttpRequest) (interface{}, error) {
+func (b *BaseConverter) ConvertRequest(request *http.Request) (interface{}, error) {
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer request.Body.Close()
+
 	raw := make(map[string]interface{})
-	err := jsoniter.UnmarshalFromString(request.Body, &raw)
+	err = jsoniter.Unmarshal(body, &raw)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "unmarshal body %s", request.Body)
 	}

@@ -1,8 +1,9 @@
 package model
 
+import "net/http"
+
 type MapperRules interface {
-	GetApplication(request *HttpRequest) (*Application, error)
-	AddRule(rule MapperRule) error
+	GetApplication(request *http.Request) (Application, error)
 	Len() int
 	Swap(i, j int)
 	Less(i, j int) bool
@@ -11,11 +12,7 @@ type MapperRules interface {
 type MapperRule interface {
 	GetType() MapperRuleType
 	Order() int
-	Match(request *HttpRequest) (ApplicationKey, bool)
+	Match(request *http.Request) (ApplicationKey, bool)
 }
 
 type MapperRuleType int32
-
-const (
-	Absolute MapperRuleType = iota
-)

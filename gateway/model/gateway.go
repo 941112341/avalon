@@ -1,17 +1,18 @@
 package model
 
+import (
+	"context"
+	"github.com/941112341/avalon/gateway/service"
+	"net/http"
+)
+
 type Gateway interface {
-	getMapperRules() (MapperRules, error)
+	GetMapperRules() (MapperRules, error)
+	ClearRules()
+	Transfer(ctx context.Context, request *http.Request) (*HttpResponse, error)
 
-	Registry()
-	Transfer(request HttpRequest) (*HttpResponse, error)
-}
-
-type HttpRequest struct {
-	Headers    map[string]string
-	Body       string
-	URL        string
-	HTTPMethod string
+	AddMapper(ctx context.Context, request *service.MapperData) error
+	AddUploader(ctx context.Context, request *service.SaveGroupContentRequest) error
 }
 
 type HttpResponse struct {

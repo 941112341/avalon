@@ -1,6 +1,9 @@
 package inline
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestUnwrap(t *testing.T) {
 	type args struct {
@@ -26,4 +29,14 @@ func TestUnwrap(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestTemplateExtract(t *testing.T) {
+
+	maps, err := TemplateExtract("/{api}i/webhook/{hook}", "/api/webhook/idgenerator")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(ToJsonString(maps))
 }
