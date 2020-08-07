@@ -129,6 +129,8 @@ func (s *StructArgs) BindValue(o interface{}) error {
 				return inline.PrependErrorFmt(err, "bind value err %s", path)
 			}
 		}
+	case string:
+		return s.BindValue(inline.JSONAny(any))
 	default:
 		//inline.WithFields("path", s.JsonPath()).Infoln("bind value %s", inline.ToJsonString(o))
 	}

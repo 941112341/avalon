@@ -38,7 +38,15 @@ type Executor struct {
 	ExecutorData
 }
 
-func (e *Executor) Invoker(ctx context.Context, request *http.Request) (*model.HttpResponse, error) {
+func (e *Executor) Invoker(ctx context.Context, request *http.Request) (resp *model.HttpResponse, err error) {
+	defer func() {
+		r, ok := recover().(error)
+		if ok {
+			err = r
+			inline.WithFields("recover", r).Errorln("panic !!")
+		}
+	}()
+
 	value, err := e.converter.ConvertRequest(request)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "convert request %+v", request)

@@ -2,7 +2,9 @@ package inline
 
 import (
 	"fmt"
+	"os"
 	"runtime"
+	"strings"
 )
 
 type AvalonErrorCode int32
@@ -67,7 +69,7 @@ func NewError(code AvalonErrorCode, f string, args ...interface{}) AvalonError {
 	return &CodeError{
 		message: fmt.Sprintf(f, args...),
 		code:    code,
-		stack:   RecordStack(),
+		stack:   RecordStack(2),
 	}
 }
 
@@ -76,7 +78,7 @@ func Error(f string, args ...interface{}) AvalonError {
 		err:     nil,
 		message: fmt.Sprintf(f, args...),
 		code:    0,
-		stack:   RecordStack(),
+		stack:   RecordStack(2),
 	}
 }
 
@@ -85,7 +87,7 @@ func PrependErrorFmt(err error, f string, args ...interface{}) error {
 		err:     err,
 		message: fmt.Sprintf(f, args...),
 		code:    0,
-		stack:   RecordStack(),
+		stack:   RecordStack(2),
 	}
 }
 
@@ -122,27 +124,39 @@ func IsCode(err error, errCode AvalonErrorCode) bool {
 	return aErr.Code() == errCode
 }
 
+var GOPATH string
+
+func init() {
+	GOPATH = os.Getenv("GOPATH")
+}
+
 type Stack struct {
 	File     string
 	FuncName string
 	Line     int
 	Ok       bool
+	Index    int
 }
 
-func GetStack(index int) *Stack {
-	pc, file, line, ok := runtime.Caller(index)
-	return &Stack{
-		File:     file,
-		FuncName: runtime.FuncForPC(pc).Name(),
-		Line:     line,
-		Ok:       ok,
+func (s Stack) ToString() string {
+	if !s.Ok {
+		return fmt.Sprintf("[index %d not ok]", s.Index)
 	}
+	return fmt.Sprintf("[%s:%d]", s.File, s.Line)
 }
 
-func RecordStack() string {
-	stack := GetStack(3)
-	if !stack.Ok {
-		return ""
+// 0代表当前line
+func RecordStack(index int) string {
+
+	// 忽略此层方法
+	_, file, line, ok := runtime.Caller(index + 1)
+	file = strings.TrimPrefix(file, GOPATH)
+	stack := &Stack{
+		File: file,
+		//FuncName: runtime.FuncForPC(pc).Name(),
+		Line:  line,
+		Ok:    ok,
+		Index: index,
 	}
-	return fmt.Sprintf("[%s:%d:%s]", stack.File, stack.Line, stack.FuncName)
+	return stack.ToString()
 }

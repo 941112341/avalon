@@ -23,7 +23,7 @@ type mapperRepository struct {
 func (mapperRepository) AllMapper() (MapperList, error) {
 	mappers := make(MapperList, 0)
 
-	if err := database.DBRead.Model(&MapperVo{}).Where("deleted = 0").Find(&mappers).Error; err != nil {
+	if err := database.DBRead.Model(&MapperVo{}).Where("deleted = 0").Order("type asc").Order("updated desc").Find(&mappers).Error; err != nil {
 		return nil, err
 	}
 	return mappers, nil

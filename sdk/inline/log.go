@@ -12,7 +12,7 @@ type Pair struct {
 }
 
 func NewPair(a string, b interface{}) Pair {
-	return Pair{a, VString(b)}
+	return Pair{Left: a, Right: VString(b)}
 }
 
 type Pairs []Pair
@@ -32,7 +32,7 @@ func NewPairs(args ...interface{}) Pairs {
 func (p Pairs) Fields() logrus.Fields {
 	fields := logrus.Fields{}
 	for _, pair := range p {
-		fields[pair.Right] = pair.Left
+		fields[pair.Left] = pair.Right
 	}
 	return fields
 }
@@ -54,11 +54,30 @@ func (p Pairs) Warnln(f string, args ...interface{}) {
 
 func (p Pairs) Errorln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
+	p = append(p, stackPair()...)
 	Errorln(s, p...)
+}
+
+func stackPair() []Pair {
+	return []Pair{
+		{
+			Left:  "__local__",
+			Right: RecordStack(2),
+		},
+		{
+			Left:  "__parent__",
+			Right: RecordStack(3),
+		},
+		{
+			Left:  "grand",
+			Right: RecordStack(4),
+		},
+	}
 }
 
 func (p Pairs) Fatalln(f string, args ...interface{}) {
 	s := fmt.Sprintf(f, args...)
+	p = append(p, stackPair()...)
 	Fatalln(s, p...)
 }
 

@@ -15,6 +15,7 @@ func init() {
 
 // singleton
 type IGateway struct {
+	Reset   int32
 	Mappers model.MapperRules
 }
 
@@ -44,16 +45,17 @@ func (I *IGateway) GetMapperRules() (model.MapperRules, error) {
 }
 
 func (I *IGateway) ClearRules() {
-	I.Mappers = nil
+	I.Reset = 0
 }
 
 func (I *IGateway) Transfer(ctx context.Context, request *http.Request) (*model.HttpResponse, error) {
-	if I.Mappers == nil {
+	if I.Reset == 0 {
 		rules, err := I.GetMapperRules()
 		if err != nil {
 			return nil, inline.PrependErrorFmt(err, "get mapper err")
 		}
 		I.Mappers = rules
+		I.Reset = 1
 	}
 
 	rules := I.Mappers

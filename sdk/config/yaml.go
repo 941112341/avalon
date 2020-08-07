@@ -1,8 +1,8 @@
 package config
 
 import (
+	"fmt"
 	"github.com/941112341/avalon/sdk/inline"
-	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"strings"
@@ -13,12 +13,12 @@ const defaultConfig = "config.yaml"
 func read(config interface{}, resource string) error {
 	file, err := ioutil.ReadFile(resource)
 	if err != nil {
-		return errors.Wrap(err, resource)
+		return inline.PrependErrorFmt(err, "resource %s", resource)
 	}
 
 	err = yaml.Unmarshal(file, config)
 	if err != nil {
-		return errors.Wrap(err, string(file))
+		return inline.PrependErrorFmt(err, "file %s", file)
 	}
 	return nil
 }
@@ -43,8 +43,7 @@ func Read(config interface{}, resource string) (err error) {
 		if err == nil {
 			return nil
 		}
-		inline.Warningln("read file err", inline.NewPair("resource", file), inline.NewPair("err", inline.String(err)))
-
+		inline.WithFields("resource", file, "err", err, "stack", inline.RecordStack(1)).Warnln("read file err")
 	}
-	return errors.Wrap(err, resource)
+	return fmt.Errorf("resource file not found %+v", files)
 }

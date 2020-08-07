@@ -32,10 +32,12 @@ func (b *BaseConverter) ConvertRequest(request *http.Request) (interface{}, erro
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "unmarshal body %s", request.Body)
 	}
-	if _, ok := raw[MapperKey]; ok {
-		return nil, inline.PrependErrorFmt(ErrArgsKeyExists, "body %s", request.Body)
-	} else {
-		raw[MapperKey] = b.mapperArgs
+	for k, v := range b.mapperArgs {
+		old, ok := raw[k]
+		if ok {
+			inline.WithFields("key", k, "old", old).Warnln("parameter overwrite")
+		}
+		raw[k] = v
 	}
 	return map[string]interface{}{
 		"request": raw,
@@ -57,11 +59,11 @@ func (b *BaseConverter) ConvertResponse(data interface{}) (*model.HttpResponse, 
 			Body:     "error happend",
 		}, nil
 	default:
-		return DefaultHttpResponse(inline.ToJsonString(data)), nil
+		return DefaultHttpResponse(data), nil
 	}
 }
 
-func DefaultHttpResponse(body string) *model.HttpResponse {
+func DefaultHttpResponse(body interface{}) *model.HttpResponse {
 	return &model.HttpResponse{
 		HTTPCode: 200,
 		Headers:  DefaultHttpResponseHeader(),

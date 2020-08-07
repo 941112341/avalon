@@ -32,6 +32,14 @@ func (D *DBUploaderService) SaveGroupContent(request *service.SaveGroupContentRe
 			Content: content,
 		})
 	}
+	err := D.Repo.DeleteGroup(&repository.UploadGroupKey{
+		PSM:     request.PSM,
+		Version: request.Version,
+	})
+	if err != nil {
+		return inline.PrependErrorFmt(err, "deleted group fail psm=%s, version=%s", request.PSM, request.Version)
+	}
+
 	return D.Repo.BatchInsert(vos)
 }
 

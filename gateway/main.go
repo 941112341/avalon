@@ -29,7 +29,7 @@ func main() {
 			inline.WithFields("response", resp, "request", request).Errorln("upload %s", err)
 		}
 	})
-	http.HandleFunc("/api", func(writer http.ResponseWriter, request *http.Request) {
+	http.HandleFunc("/api/", func(writer http.ResponseWriter, request *http.Request) {
 		resp, err := handler.Transfer(request)
 		if err = resp.write(writer, err); err != nil {
 			inline.WithFields("response", resp, "request", request).Errorln("transfer %s", err)

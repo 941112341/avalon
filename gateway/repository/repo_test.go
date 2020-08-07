@@ -171,3 +171,20 @@ func TestBatchInsert(t *testing.T) {
 	}
 
 }
+
+func TestDeleted(t *testing.T) {
+	err := initial.InitAllForTest()
+	if err != nil {
+		panic(err)
+	}
+
+	repo := uploadRepository{}
+	err = repo.DeleteGroup(&UploadGroupKey{
+		PSM:     "base",
+		Version: "0",
+	})
+	if err != nil {
+		panic(err)
+	}
+
+}

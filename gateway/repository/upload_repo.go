@@ -18,9 +18,17 @@ type UploadRepository interface {
 	BatchInsert(vos []*UploadVo) error
 	FindByKey(id *UploadUnionKey) (*UploadVo, error)
 	FindGroup(id *UploadGroupKey) ([]*UploadVo, error)
+	DeleteGroup(id *UploadGroupKey) error
 }
 
 type uploadRepository struct {
+}
+
+func (r uploadRepository) DeleteGroup(id *UploadGroupKey) error {
+	if err := id.valid(); err != nil {
+		return inline.PrependErrorFmt(err, "valid before deleted")
+	}
+	return database.DB.Model(&UploadVo{}).Where(&UploadVo{UploadUnionKey: UploadUnionKey{UploadGroupKey: *id}}).Update("Deleted", true).Error
 }
 
 func (r uploadRepository) BatchInsert(vos []*UploadVo) error {
@@ -34,9 +42,9 @@ func (r uploadRepository) BatchInsert(vos []*UploadVo) error {
 	union := ` select ?, ?, ?, ?, ?, ?, ? `
 	ifaces := make([]interface{}, 0)
 	for i, vo := range vos {
-		//if err := vo.valid(); err != nil {
-		//	return inline.PrependErrorFmt(err, "valid fail")
-		//}
+		if err := vo.valid(); err != nil {
+			return inline.PrependErrorFmt(err, "valid fail")
+		}
 		if i == 0 {
 			union = ` select ? as id, ? as psm, ? as content, ? as base, ? as created, ? as updated, ? as version `
 		}

@@ -8,7 +8,6 @@ import (
 	"math"
 	"net/http"
 	"regexp"
-	"sort"
 )
 
 type Ruler struct {
@@ -16,7 +15,6 @@ type Ruler struct {
 }
 
 func (r *Ruler) GetApplication(request *http.Request) (model.Application, error) {
-	sort.Sort(r)
 
 	for _, rule := range r.Rules {
 		key, ok := rule.Match(request)
@@ -27,18 +25,6 @@ func (r *Ruler) GetApplication(request *http.Request) (model.Application, error)
 	}
 
 	return nil, fmt.Errorf("request not match %+v", request)
-}
-
-func (r *Ruler) Len() int {
-	return len(r.Rules)
-}
-
-func (r *Ruler) Swap(i, j int) {
-	r.Rules[i], r.Rules[j] = r.Rules[j], r.Rules[i]
-}
-
-func (r *Ruler) Less(i, j int) bool {
-	return r.Rules[i].Order() < r.Rules[j].Order()
 }
 
 const (
@@ -53,10 +39,6 @@ type AbsRules struct {
 
 func (r *AbsRules) GetType() model.MapperRuleType {
 	return AbsoluteMatch
-}
-
-func (r *AbsRules) Order() int {
-	return int(r.GetType())
 }
 
 func (r *AbsRules) Match(request *http.Request) (model.ApplicationKey, bool) {
@@ -82,10 +64,6 @@ type PartialRule struct {
 
 func (p *PartialRule) GetType() model.MapperRuleType {
 	return PartialMatch
-}
-
-func (p *PartialRule) Order() int {
-	return int(p.GetType())
 }
 
 func (p *PartialRule) Match(request *http.Request) (model.ApplicationKey, bool) {
@@ -141,10 +119,6 @@ type NilMatchRule struct {
 }
 
 func (n *NilMatchRule) GetType() model.MapperRuleType {
-	return math.MaxInt32
-}
-
-func (n *NilMatchRule) Order() int {
 	return math.MaxInt32
 }
 

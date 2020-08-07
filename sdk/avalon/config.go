@@ -42,7 +42,7 @@ func (d *DefaultConfigBuilder) Config() Config {
 	d.once.Do(func() {
 		err = config.Read(cfg, inline.GetEnv("base", "base.yaml"))
 		if err != nil {
-			inline.WithFields("err", err.Error()).Errorln("read fail")
+			inline.WithFields("err", err).Errorln("read fail")
 		}
 	})
 	return cfg.newConfigWithPSM(d.psm)

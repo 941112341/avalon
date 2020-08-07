@@ -22,6 +22,7 @@ type Handler interface {
 type Response struct {
 	Code    int
 	Message string
+	Data    interface{}
 }
 
 func (r *Response) write(writer http.ResponseWriter, err error) error {
@@ -69,15 +70,15 @@ func (d *DefaultHandler) Upload(request *http.Request) (*Response, error) {
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "add uploader %+v", r)
 	}
-	return &Response{Message: "success"}, nil
+	return &Response{}, nil
 }
 
 func (d *DefaultHandler) Test() (*Response, error) {
-	return &Response{Message: "hello world"}, nil
+	return &Response{}, nil
 }
 
 func (d *DefaultHandler) Registry(request *http.Request) (*Response, error) {
-	if err := d.Auth.CanAccess("Upload", request); err != nil {
+	if err := d.Auth.CanAccess("Registry", request); err != nil {
 		return nil, err
 	}
 	body, err := ioutil.ReadAll(request.Body)
@@ -94,11 +95,11 @@ func (d *DefaultHandler) Registry(request *http.Request) (*Response, error) {
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "add mapper %+v", r)
 	}
-	return &Response{Message: "success"}, nil
+	return &Response{}, nil
 }
 
 func (d *DefaultHandler) Transfer(request *http.Request) (*Response, error) {
-	if err := d.Auth.CanAccess("Upload", request); err != nil {
+	if err := d.Auth.CanAccess("Transfer", request); err != nil {
 		return nil, err
 	}
 	response, err := d.Gateway.Transfer(context.Background(), request)

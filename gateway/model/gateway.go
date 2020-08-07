@@ -18,5 +18,5 @@ type Gateway interface {
 type HttpResponse struct {
 	HTTPCode int
 	Headers  map[string]string
-	Body     string
+	Body     interface{}
 }
