@@ -93,6 +93,7 @@ func (z *ZkDiscover) Register() error {
 	if err != nil {
 		return err
 	}
+	inline.WithFields("psm", z.psm, "timeout", z.timeout).Infoln("start register")
 
 	ticker := time.NewTicker(z.timeout)
 	go func() {
@@ -110,7 +111,6 @@ func (z *ZkDiscover) register() error {
 	if err := z.valid(); err != nil {
 		return inline.PrependErrorFmt(err, "zk valid err")
 	}
-	inline.WithFields("psm", z.psm, "timeout", z.timeout).Infoln("start register")
 
 	cli, err := zookeeper.GetZkClientInstance(zookeeper.ZkConfig{
 		HostPorts:      z.session,

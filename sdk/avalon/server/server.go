@@ -38,7 +38,7 @@ func (b *serverBuilder) Timeout(t time.Duration) *serverBuilder {
 	return b
 }
 
-func (b *serverBuilder) Hostport(hostport Hostport) *serverBuilder {
+func (b *serverBuilder) Hostport(hostport both.Hostport) *serverBuilder {
 	b.s.Hostport = hostport
 	return b
 }

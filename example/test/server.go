@@ -16,17 +16,17 @@ type Handler struct {
 func (h Handler) GetCat(ctx context.Context, request *test.CatRequest) (r *test.CatResponse, err error) {
 	return &test.CatResponse{
 		Cats: map[int64]*test.Cat{
-			/*1: {
+			1: {
 				Age:    1,
 				Name:   nil,
 				Babies: nil,
-			},*/
+			},
 			2: {
-				//Age:  20,
-				//Name: inline.StringPtr("Tom"),
+				Age:  20,
+				Name: inline.StringPtr("Tom"),
 				Babies: []*test.LittleCat{
 					{
-						Cat:   nil,
+						Cat:   &test.Cat{},
 						Age:   5,
 						Color: 0,
 						Ids: map[int64][]*test.Foo{

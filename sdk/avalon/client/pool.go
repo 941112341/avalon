@@ -6,6 +6,7 @@ import (
 	"github.com/941112341/avalon/sdk/collect"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
+	"math/rand"
 	"time"
 )
 
@@ -18,6 +19,7 @@ type Event struct {
 type TClient struct {
 	socket        *thrift.TSocket
 	input, output thrift.TProtocol
+	UUID          string
 }
 
 func (t *TClient) Consume(e collect.Event) error {
@@ -26,6 +28,8 @@ func (t *TClient) Consume(e collect.Event) error {
 		return fmt.Errorf("event %+v", e)
 	}
 
+	time.Sleep(time.Second * time.Duration(rand.Intn(2)))
+	inline.WithFields("uuid", t.UUID, "event", e).Infoln("handler")
 	client := thrift.NewTStandardClient(t.input, t.output)
 	return client.Call(event.Ctx, event.Method, event.Args, event.Result)
 }
@@ -72,11 +76,12 @@ func (T *TClientFactory) CreateConsumer() (collect.Consumer, error) {
 		socket: tSocket,
 		input:  T.protocalFactory.GetProtocol(transport),
 		output: T.protocalFactory.GetProtocol(transport),
+		UUID:   inline.RandString(32),
 	}, nil
 }
 
-func NewPool(timeout time.Duration, max, min int, factory collect.ConsumerFactory) (*collect.ConsumerManager, error) {
-	return collect.ManagerBuilder().
+func NewPool(timeout time.Duration, min, max int, factory collect.ConsumerFactory) (collect.Consumer, error) {
+	return collect.NewManagerBuilder().
 		Timeout(timeout).
 		Max(int64(max)).
 		Min(int64(min)).

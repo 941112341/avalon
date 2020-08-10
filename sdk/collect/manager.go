@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/941112341/avalon/sdk/inline"
-	"sync/atomic"
 	"time"
 )
 
 type Consumer interface {
 	Consume(e Event) error
 	Shutdown() error
+	//UUID() string
 }
 
 type Event interface {
@@ -23,9 +23,11 @@ type ConsumerFactory interface {
 type ConsumerManager struct {
 	factory       ConsumerFactory
 	freeConsumers chan Consumer
+	consumers     chan Consumer
+	producer      chan struct{}
 
-	Max, Min, Count int64
-	Timeout         time.Duration
+	Max, Min          int64
+	Timeout, idleTime time.Duration // 等待consumer时间
 
 	isShutdown bool
 }
@@ -42,46 +44,32 @@ func (c *ConsumerManager) Shutdown() error {
 }
 
 func (c *ConsumerManager) outOfRange() bool {
-	return atomic.LoadInt64(&c.Count) >= c.Max
+	return int64(len(c.consumers)) >= c.Max
 }
 
 func (c *ConsumerManager) shouldFastAdd() bool {
-	return atomic.LoadInt64(&c.Count) < c.Min
+	return int64(len(c.consumers)) < c.Min
 }
 
-func (c *ConsumerManager) incr() error {
-	return c.add(func() error {
-		return nil
-	})
-}
-
-func (c *ConsumerManager) decr(f func() error) error {
-	for old := c.Count; !atomic.CompareAndSwapInt64(&c.Count, old, old-1); old = c.Count {
-		if old <= 0 {
-			return errors.New("less zero")
-		}
-	}
-	return f()
-}
-
-func (c *ConsumerManager) add(f func() error) error {
-	for old := c.Count; !atomic.CompareAndSwapInt64(&c.Count, old, old+1); old = c.Count {
-		if c.outOfRange() {
-			return errors.New("out of range")
-		}
-	}
-
-	return f()
-}
-
-func (c *ConsumerManager) returnConsumer(consumer Consumer) {
-	if !c.isShutdown {
-		c.freeConsumers <- consumer
-	}
+func (c *ConsumerManager) shouldClose() bool {
+	return int64(len(c.freeConsumers)) > c.Min
 }
 
 // 这里策略可以有很多，比如尽可能的往下访问，又或者是直接在当前报错
 func (c *ConsumerManager) Consume(e Event) error {
+	select {
+	case c.producer <- struct{}{}:
+	case <-time.NewTimer(c.Timeout).C:
+		return errors.New("wait consumer timeout")
+	}
+
+	defer func() {
+		<-c.producer
+	}()
+
+	if c.isShutdown {
+		return errors.New("manager has shutdown")
+	}
 	if c.shouldFastAdd() {
 		return c.createAndConsumer(e)
 	}
@@ -89,12 +77,28 @@ func (c *ConsumerManager) Consume(e Event) error {
 	timer := time.NewTimer(c.Timeout)
 	select {
 	case consumer := <-c.freeConsumers:
+		inline.WithFields("e", e).Infoln("borrow consumer")
 		return c.execute(consumer, e)
 	case <-timer.C:
 		if c.outOfRange() {
 			return errors.New("out of range")
 		} else {
 			return c.createAndConsumer(e)
+		}
+	}
+}
+
+func (c *ConsumerManager) closeIdle() {
+	ticker := time.NewTicker(c.idleTime)
+	for range ticker.C {
+		if c.shouldClose() {
+			consumer := <-c.freeConsumers
+			<-c.consumers
+			if err := consumer.Shutdown(); err != nil {
+				inline.WithFields("consumer", consumer).Infoln("shutdown idle err")
+			} else {
+				inline.WithFields("consumer", consumer).Infoln("destroy success")
+			}
 		}
 	}
 }
@@ -110,17 +114,13 @@ func (c *ConsumerManager) createAndConsumer(e Event) (err error) {
 	if err != nil {
 		return inline.PrependErrorFmt(err, "create fail")
 	}
-	if err := consumer.Consume(e); err != nil {
-		if err := consumer.Shutdown(); err != nil {
-			return inline.PrependErrorFmt(err, "shutdown err")
-		}
-		return inline.PrependErrorFmt(err, "consumer err event %+v", e)
-	}
-	return c.add(func() error {
-		c.returnConsumer(consumer)
-		return nil
-	})
 
+	c.consumers <- consumer
+	fmt.Println("create consumer")
+	if err := c.execute(consumer, e); err != nil {
+		return inline.PrependErrorFmt(err, "execute fail")
+	}
+	return nil
 }
 
 func (c *ConsumerManager) execute(consumer Consumer, e Event) (err error) {
@@ -131,16 +131,15 @@ func (c *ConsumerManager) execute(consumer Consumer, e Event) (err error) {
 		}
 	}()
 	if err := consumer.Consume(e); err != nil {
-		if err := c.decr(func() error {
-			return consumer.Shutdown()
-		}); err != nil {
-			return inline.PrependErrorFmt(err, "decr")
+		<-c.consumers
+		if err := consumer.Shutdown(); err != nil {
+			return inline.PrependErrorFmt(err, "shut down %+v", consumer)
 		}
-
-		return inline.PrependErrorFmt(err, "consume %+v", e)
+		return inline.PrependErrorFmt(err, "consume %+v", consumer)
 	}
+	fmt.Println("add to free")
 
-	c.returnConsumer(consumer)
+	c.freeConsumers <- consumer
 	return nil
 }
 
@@ -148,13 +147,26 @@ type managerBuilder struct {
 	consumer *ConsumerManager
 }
 
-func ManagerBuilder() *managerBuilder {
-	return &managerBuilder{consumer: &ConsumerManager{Timeout: time.Second, Max: 20, Min: 10, freeConsumers: make(chan Consumer, 20)}}
+func NewManagerBuilder() *managerBuilder {
+	return &managerBuilder{consumer: &ConsumerManager{
+		Timeout:  time.Second,
+		idleTime: time.Second,
+		Max:      20, Min: 10,
+		freeConsumers: make(chan Consumer, 20),
+		producer:      make(chan struct{}, 20),
+		consumers:     make(chan Consumer, 20),
+	}}
 }
 
 func (b *managerBuilder) Max(max int64) *managerBuilder {
 	b.consumer.Max = max
 	b.consumer.freeConsumers = make(chan Consumer, max)
+	b.consumer.consumers = make(chan Consumer, max)
+	return b
+}
+
+func (b *managerBuilder) Backend(cnt int64) *managerBuilder {
+	b.consumer.producer = make(chan struct{}, cnt)
 	return b
 }
 
@@ -165,6 +177,11 @@ func (b *managerBuilder) Min(min int64) *managerBuilder {
 
 func (b *managerBuilder) Timeout(timeout time.Duration) *managerBuilder {
 	b.consumer.Timeout = timeout
+	return b
+}
+
+func (b *managerBuilder) IdleTimeout(timeout time.Duration) *managerBuilder {
+	b.consumer.idleTime = timeout
 	return b
 }
 
@@ -187,5 +204,6 @@ func (b *managerBuilder) Build() (*ConsumerManager, error) {
 	if err := b.consumer.valid(); err != nil {
 		return nil, err
 	}
+	go b.consumer.closeIdle()
 	return b.consumer, nil
 }
