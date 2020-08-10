@@ -150,10 +150,10 @@ type managerBuilder struct {
 func NewManagerBuilder() *managerBuilder {
 	return &managerBuilder{consumer: &ConsumerManager{
 		Timeout:  time.Second,
-		idleTime: time.Second,
+		idleTime: time.Minute,
 		Max:      20, Min: 10,
 		freeConsumers: make(chan Consumer, 20),
-		producer:      make(chan struct{}, 20),
+		producer:      make(chan struct{}, 30),
 		consumers:     make(chan Consumer, 20),
 	}}
 }
