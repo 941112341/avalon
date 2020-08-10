@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/941112341/avalon/common/gen/test"
+	"github.com/941112341/avalon/sdk/avalon/server"
 	"github.com/941112341/avalon/sdk/inline"
 	"os"
+	"time"
 )
 
 type Handler struct {
@@ -60,8 +62,16 @@ func main() {
 
 	fmt.Println(os.Getwd())
 
-	err := test.Run("example.jiangshihao.test", &Handler{})
+	err := server.Builder().
+		Timeout(2 * time.Second).
+		Hostport(server.NewZkDiscoverBuilder().
+			Port(8889).
+			PSM("example.jiangshihao.test").
+			Build()).
+		Build().Run(test.NewCatServiceProcessor(&Handler{}))
+
 	if err != nil {
 		panic(err)
 	}
+
 }

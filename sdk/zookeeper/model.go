@@ -95,7 +95,7 @@ func (n *ZkNode) Exist(client *ZkClient) (bool, *zk.Stat, error) {
 func (n *ZkNode) Save(client *ZkClient, flag int32) error {
 	ok, stat, err := n.Exist(client)
 	if err != nil {
-		return errors.Wrap(err, "exist")
+		return inline.PrependErrorFmt(err, "exist")
 	}
 	if !ok {
 		_, err = client.Conn.Create(n.path, []byte(n.data), flag, zk.WorldACL(zk.PermAll))
@@ -103,11 +103,12 @@ func (n *ZkNode) Save(client *ZkClient, flag int32) error {
 			if strings.Contains(err.Error(), "zk: node does not exist") {
 				return n.GetParent().Save(client, 0)
 			}
-			return errors.Wrap(err, "create node fail")
+			return inline.PrependErrorFmt(err, "create node fail")
 		}
 	} else if n.data != "" {
+		inline.WithFields("path", n.path, "stat", stat).Infoln("node exists")
 		stat, err = client.Conn.Set(n.path, []byte(n.data), stat.Version)
-		return errors.Wrap(err, "set value fail")
+		return inline.PrependErrorFmt(err, "set value fail")
 	}
 
 	for dir, node := range n.children {
@@ -125,15 +126,15 @@ func (n *ZkNode) Delete(client *ZkClient) error {
 		return nil
 	}
 	if !ok && err != nil {
-		return errors.WithMessage(err, n.path)
+		return inline.PrependErrorFmt(err, "delete node err %s", n.path)
 	}
 	err = n.List(client, false)
 	if err != nil {
-		return errors.WithMessage(err, n.path)
+		return inline.PrependErrorFmt(err, "list err")
 	}
 	for dir, node := range n.children {
 		if err := node.Delete(client); err != nil {
-			return errors.WithMessage(err, dir)
+			return inline.PrependErrorFmt(err, "dir %s", dir)
 		}
 	}
 
@@ -167,6 +168,7 @@ func (n *ZkNode) GetWL(client *ZkClient, watchers ...Watcher) error {
 	}, watchers...)
 }
 
+// 循环到loopFunc报错
 func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) (err error) {
 	ch, err := loopFunc()
 	if err != nil {
@@ -187,7 +189,7 @@ func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) (e
 				ch, err = loopFunc()
 			}
 		}
-		log.New().WithField("err", err).Errorln("watch err")
+		inline.WithFields("err", err).Errorln("watch loop err")
 	}()
 	return
 }

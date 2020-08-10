@@ -2,6 +2,7 @@ package inline
 
 import (
 	"math/rand"
+	"reflect"
 	"time"
 )
 
@@ -17,4 +18,12 @@ func RandString(n int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+// o need a list
+func RandomList(o interface{}) interface{} {
+	v := reflect.ValueOf(o)
+	l := v.Len()
+	i := rand.Intn(l)
+	return v.Index(i).Interface()
 }
