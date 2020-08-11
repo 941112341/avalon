@@ -18,6 +18,10 @@ func ToJsonBytes(o interface{}) []byte {
 	return body
 }
 
+func MustUnmarshal(json string, o interface{}) {
+	_ = jsoniter.UnmarshalFromString(json, o)
+}
+
 func VString(o interface{}) string {
 	return fmt.Sprintf("%+v", o)
 }

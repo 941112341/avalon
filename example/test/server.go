@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/941112341/avalon/common/gen/test"
 	"github.com/941112341/avalon/sdk/avalon/server"
@@ -44,31 +45,22 @@ func (h Handler) GetCat(ctx context.Context, request *test.CatRequest) (r *test.
 }
 
 func (h Handler) GetLittleCat(ctx context.Context, request *test.LittleCatRequest) (r *test.LittleCatResponse, err error) {
-	return &test.LittleCatResponse{LittleCat: []*test.LittleCat{
-		{
-			Cat: &test.Cat{
-				Age:    5,
-				Name:   inline.StringPtr("Jimmy"),
-				Babies: nil,
-			},
-			Age:   20,
-			Color: 1,
-			Ids:   nil,
-		},
-	}}, nil
+	return nil, errors.New("request invalid")
 }
 
 func main() {
 
 	fmt.Println(os.Getwd())
 
+	psm := "example.jiangshihao.test"
 	err := server.Builder().
 		Timeout(2 * time.Second).
 		Hostport(server.NewZkDiscoverBuilder().
 			Port(8889).
-			PSM("example.jiangshihao.test").
+			PSM(psm).
 			Build()).
-		Build().Run(test.NewCatServiceProcessor(&Handler{}))
+		PSM(psm).
+		Build().Run(test.NewCatServiceProcessor(test.NewAvalonHandler(&Handler{})))
 
 	if err != nil {
 		panic(err)

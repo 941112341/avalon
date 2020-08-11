@@ -9,7 +9,7 @@ import (
 	"text/template"
 )
 
-const Version = "1.0.1"
+const Version = "1.1.0"
 
 // output absolute
 func build(info IDLInfo) (string, error) {

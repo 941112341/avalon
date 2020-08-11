@@ -2,14 +2,15 @@ package server
 
 import (
 	"github.com/941112341/avalon/sdk/avalon/both"
+	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/pkg/errors"
 	"time"
 )
 
 type Server struct {
-	Timeout time.Duration
-
+	Timeout  time.Duration
+	PSM      string
 	Hostport both.Hostport
 }
 
@@ -38,11 +39,23 @@ func (b *serverBuilder) Timeout(t time.Duration) *serverBuilder {
 	return b
 }
 
+func (b *serverBuilder) PSM(psm string) *serverBuilder {
+	b.s.PSM = psm
+	return b
+}
+
 func (b *serverBuilder) Hostport(hostport both.Hostport) *serverBuilder {
 	b.s.Hostport = hostport
 	return b
 }
 
 func (b *serverBuilder) Build() *Server {
+	selfBase = &both.Base{
+		Psm:   b.s.PSM,
+		IP:    inline.GetIP(),
+		Time:  0,
+		Extra: map[string]string{},
+		Base:  nil,
+	}
 	return b.s
 }

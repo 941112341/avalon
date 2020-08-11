@@ -13,6 +13,7 @@ type Client struct {
 
 func (c *Client) Call(ctx context.Context, method string, args, result thrift.TStruct) error {
 
+	SetBaseArgs(ctx, args)
 	event := &Event{Ctx: ctx, Method: method, Args: args, Result: result}
 	return c.LoadBalancer.Consume(event)
 }
@@ -21,12 +22,21 @@ func NewClient(loadBalancer LoadBalancer) *Client {
 	return &Client{LoadBalancer: loadBalancer}
 }
 
-func NewClientOptions(psm string) (*Client, error) {
-	balancer, err := NewBalancerBuilder().PSM(psm).Build()
+func NewClientOptions(psm string, options ...Option) (*Client, error) {
+	builder := NewBalancerBuilder()
+	for _, option := range options {
+		option.BalanceBuilder(builder)
+	}
+	balancer, err := builder.PSM(psm).Build()
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "build fail")
 	}
-	loadBalancer := NewLoadBalancerBuilder().Balancer(balancer).Build()
+
+	balancerBuilder := NewLoadBalancerBuilder()
+	for _, option := range options {
+		option.LoadBalanceBuilder(balancerBuilder)
+	}
+	loadBalancer := balancerBuilder.Balancer(balancer).Build()
 	return &Client{LoadBalancer: loadBalancer}, nil
 }
 
@@ -43,10 +53,7 @@ func (t TimeoutOption) BalanceBuilder(builder *BalancerBuilder) {
 	builder.Timeout(t.timeout)
 }
 
-func (t TimeoutOption) LoadBalanceBuilder(builder *loadBalancerBuilder) {
-	// todo
-
-}
+func (t TimeoutOption) LoadBalanceBuilder(builder *loadBalancerBuilder) {}
 
 func WithTimeoutOption(timeout time.Duration) Option {
 	return &TimeoutOption{timeout: timeout}
