@@ -108,6 +108,6 @@ func (d *DefaultHandler) Transfer(request *http.Request) (*Response, error) {
 	}
 	return &Response{
 		Code:    response.HTTPCode,
-		Message: response.Body,
+		Message: inline.ToJsonString(response.Body),
 	}, nil
 }

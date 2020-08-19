@@ -1,4 +1,6 @@
 git.apache.org/thrift.git v0.13.0/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqblrnkyeyg=
+github.com/941112341/avalon/sdk v0.0.0-20200810130135-4fae6bb39015 h1:DZqfkMOhTJX+hmY2ROJsqU2YBiEFbjmrk+DAaLHaq8U=
+github.com/941112341/avalon/sdk v0.0.0-20200810130135-4fae6bb39015/go.mod h1:Lk2bQKN52i/WId74geGtgaR86j0qWlicxjC18ShlcLM=
 github.com/apache/thrift v0.13.0 h1:5hryIiq9gtn+MiLVn0wP37kb/uTeRZgN08WoCsAhIhI=
 github.com/apache/thrift v0.13.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=

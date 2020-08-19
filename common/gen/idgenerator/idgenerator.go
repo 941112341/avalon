@@ -314,7 +314,7 @@ func (p *IDResponse) String() string {
 
 type IDGenerator interface {
   // Parameters:
-  //  - Request
+  //  - request
   GenIDs(ctx context.Context, request *IDRequest) (r *IDResponse, err error)
 }
 
@@ -344,7 +344,7 @@ func (p *IDGeneratorClient) Client_() thrift.TClient {
   return p.c
 }
 // Parameters:
-//  - Request
+//  - request
 func (p *IDGeneratorClient) GenIDs(ctx context.Context, request *IDRequest) (r *IDResponse, err error) {
   var _args1 IDGeneratorGenIDsArgs
   _args1.Request = request
@@ -449,7 +449,7 @@ var retval *IDResponse
 // HELPER FUNCTIONS AND STRUCTURES
 
 // Attributes:
-//  - Request
+//  - request
 type IDGeneratorGenIDsArgs struct {
   Request *IDRequest `thrift:"request,1" db:"request" json:"request"`
 }

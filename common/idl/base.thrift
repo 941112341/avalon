@@ -1,5 +1,6 @@
 namespace go base
 
+
 struct Base {
     1: string psm
     2: string ip

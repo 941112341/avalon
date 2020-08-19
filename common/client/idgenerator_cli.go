@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/941112341/avalon/common/gen/idgenerator"
-	"github.com/941112341/avalon/sdk/avalon"
+	_cli "github.com/941112341/avalon/sdk/avalon/client"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/bwmarrin/snowflake"
 	"sync"
@@ -12,11 +12,18 @@ import (
 
 var (
 	client *idgenerator.IDGeneratorClient
+
+	cacheClient *CacheIDClient
 )
 
 func init() {
-	cli := avalon.NewClient("avalon.test.idgenerator")
+	cli, err := _cli.NewClientOptions("avalon.test.idgenerator")
+	if err != nil {
+		panic(err)
+	}
 	client = idgenerator.NewIDGeneratorClient(cli)
+
+	cacheClient = NewCacheIDClient(0)
 }
 
 
@@ -66,7 +73,7 @@ func (c *CacheIDClient) canAssign(cnt int) bool {
 	return c.Length() >= cnt
 }
 
-func (c *CacheIDClient) MultiIDs(cnt int) []int64 {
+func (c *CacheIDClient) Assign(cnt int) []int64 {
 	if cnt > 100 {
 		cnt = 100
 	}
@@ -94,6 +101,10 @@ func (c *CacheIDClient) MultiIDs(cnt int) []int64 {
 }
 
 
-func (c *CacheIDClient) GenID() []int64 {
-	return c.MultiIDs(1)
+func (c *CacheIDClient) GenID() int64 {
+	return c.Assign(1)[0]
+}
+
+func GenID() int64 {
+	return cacheClient.GenID()
 }
