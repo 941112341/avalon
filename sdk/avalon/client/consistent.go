@@ -21,5 +21,8 @@ func SetBaseConsistent(ctx context.Context, req interface{}) {
 		baseField.Set(newBaseField)
 	}
 
+	if _, err := both.GetRequestID(ctx); err != nil {
+		_  = both.SetRequestID(ctx, inline.RandString(32))
+	}
 	inline.MustCopy(base, baseField.Interface())
 }

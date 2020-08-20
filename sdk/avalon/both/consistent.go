@@ -2,8 +2,10 @@ package both
 
 import (
 	"context"
+	"errors"
 	"github.com/941112341/avalon/sdk/avalon/util"
 	"github.com/941112341/avalon/sdk/inline"
+	jsoniter "github.com/json-iterator/go"
 	"time"
 )
 
@@ -62,15 +64,38 @@ func SetConsistentValue(ctx context.Context, key string, value interface{}) cont
 	return SetBase(ctx, base)
 }
 
-func GetConsistentValue(ctx context.Context, key string, value interface{}) {
+func GetConsistentValue(ctx context.Context, key string, value interface{}) error {
 	base := GetBase(ctx)
 	if base == nil {
-		return
+		return errors.New("key not found")
 	}
 	vstring, ok := base.Extra[key]
 	for !ok && base != nil {
 		vstring, ok = base.Base.Extra[key]
 		base = base.Base
 	}
-	inline.MustUnmarshal(vstring, value)
+	if !ok {
+		return errors.New("key not found")
+	}
+	return jsoniter.UnmarshalFromString(vstring, value)
 }
+
+func GetStringValue(ctx context.Context, key string) (string, error) {
+	var str string
+	err := GetConsistentValue(ctx, key, &str)
+
+	return str, err
+}
+
+func SetStringValue(ctx context.Context, key, value string) context.Context {
+	return SetConsistentValue(ctx, key, value)
+}
+
+func GetRequestID(ctx context.Context) (string, error) {
+	return GetStringValue(ctx, "requestID")
+}
+
+func SetRequestID(ctx context.Context, value string) context.Context {
+	return SetStringValue(ctx, "requestID", value)
+}
+
