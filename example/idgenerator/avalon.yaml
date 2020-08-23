@@ -1,0 +1,13 @@
+
+zookeeper:
+  session:
+    - "localhost:2181"
+  timeout: "10s"
+  registertimeout: "10s"
+
+
+server:
+  discover:
+    path: "/host"
+  port: 8889
+  psm: "avalon.test.idgenerator"

@@ -11,8 +11,8 @@ type LogWrapper struct {
 	avalon.TodoBean
 }
 
-func (l *LogWrapper) Middleware(call Call) Call {
-	return func(ctx context.Context, invoke *Invoke) error {
+func (l *LogWrapper) Middleware(call avalon.Call) avalon.Call {
+	return func(ctx context.Context, invoke *avalon.Invoke) error {
 		start := time.Now()
 		err := call(ctx, invoke)
 

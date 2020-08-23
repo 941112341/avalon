@@ -6,7 +6,7 @@ require (
 	github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a
 	github.com/941112341/avalon/example/idgenerator v0.0.0-20200803095615-2069c2472e9a
 	github.com/941112341/avalon/pkg v0.0.0-20200805082850-62111f650098
-	github.com/941112341/avalon/sdk v0.0.0-20200803095615-2069c2472e9a
+	github.com/941112341/avalon/sdk v0.0.0-20200810130135-4fae6bb39015
 	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b
 	github.com/jinzhu/gorm v1.9.15
 	github.com/json-iterator/go v1.1.10

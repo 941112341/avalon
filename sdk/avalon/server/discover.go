@@ -55,7 +55,7 @@ func (z *Zookeeper) Register() error {
 	if err != nil {
 		return err
 	}
-	inline.WithFields("psm", z.PSM, "Timeout", z.Timeout).Infoln("start register")
+	inline.WithFields("path", z.path()).Infoln("start register")
 
 	ticker := time.NewTicker(z.timeout)
 	go func() {

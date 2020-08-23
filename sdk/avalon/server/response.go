@@ -17,11 +17,11 @@ type ErrorWrapper struct {
 //	Extra map[string]string `thrift:"extra,3" db:"extra" json:"extra"`
 //}
 
-func (e ErrorWrapper) Middleware(call Call) Call {
-	return func(ctx context.Context, invoke *Invoke) error {
+func (e ErrorWrapper) Middleware(call avalon.Call) avalon.Call {
+	return func(ctx context.Context, invoke *avalon.Invoke) error {
 		field := reflect.ValueOf(invoke.Response).Elem().FieldByName("BaseResp")
 		if field.IsNil() {
-			fieldVal := reflect.New(field.Elem().Type())
+			fieldVal := reflect.New(field.Type().Elem())
 			field.Set(fieldVal)
 		}
 		var code int32
@@ -38,8 +38,8 @@ func (e ErrorWrapper) Middleware(call Call) Call {
 			message = err.Error()
 		}
 
-		field.FieldByName("Code").Set(reflect.ValueOf(code))
-		field.FieldByName("Message").Set(reflect.ValueOf(message))
+		field.Elem().FieldByName("Code").Set(reflect.ValueOf(code))
+		field.Elem().FieldByName("Message").Set(reflect.ValueOf(message))
 		return nil
 	}
 }

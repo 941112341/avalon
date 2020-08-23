@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"github.com/941112341/avalon/sdk/avalon"
 	"github.com/941112341/avalon/sdk/inline"
 )
@@ -15,7 +14,7 @@ type Bootstrap interface {
 	avalon.Bean
 	Run(handler interface{}) error
 
-	wrap(handler interface{}, wrapper Wrapper) interface{}
+	wrap(handler interface{}, wrapper avalon.Wrapper) interface{}
 }
 
 type BootstrapHook interface {
@@ -24,50 +23,16 @@ type BootstrapHook interface {
 	BeforeRun() error
 }
 
-type Invoke struct {
-	MethodName string
-	Request    interface{}
-	Response   interface{}
-}
-
-type Call func(ctx context.Context, invoke *Invoke) error
-
-type Wrapper interface {
-	avalon.Bean
-
-	Middleware(call Call) Call
-}
-
-// handler implements
-
-type HandlerComposite []Wrapper
-
-func (h HandlerComposite) Initial() error {
-	return avalon.InitialSlice(h)
-}
-
-func (h HandlerComposite) Destroy() error {
-	return avalon.DestroySlice(h)
-}
-
-func (h HandlerComposite) Middleware(call Call) Call {
-
-	for _, wrapper := range h {
-		call = wrapper.Middleware(call)
-	}
-	return call
-}
-
 // server implements
 type MyServer struct {
 	bootstrapHooks []BootstrapHook
 	bootstraps     []Bootstrap
-	handlers       HandlerComposite
+	handlers       avalon.WrapperComposite
 
 	signal chan interface{}
 }
 
-func (MyServer MyServer) wrap(handler interface{}, wrapper Wrapper) interface{} {
+func (MyServer MyServer) wrap(handler interface{}, wrapper avalon.Wrapper) interface{} {
 	return handler
 }
 
@@ -156,7 +121,7 @@ func (MyServer *MyServer) AddBootstrap(bootstrap Bootstrap) *MyServer {
 	return MyServer
 }
 
-func (MyServer *MyServer) AddWrapper(handler Wrapper) *MyServer {
+func (MyServer *MyServer) AddWrapper(handler avalon.Wrapper) *MyServer {
 	MyServer.handlers = append(MyServer.handlers, handler)
 	return MyServer
 }

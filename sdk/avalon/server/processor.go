@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/941112341/avalon/sdk/avalon"
 	"github.com/apache/thrift/lib/go/thrift"
 	"reflect"
 )
@@ -30,7 +31,7 @@ func (p *ProcessorMap) Process(ctx context.Context, in, out thrift.TProtocol) (b
 }
 
 type ProcessorFunction struct {
-	call                      Call
+	call                      avalon.Call
 	requestType, responseType reflect.Type
 	methodName                string
 }
@@ -227,7 +228,7 @@ func (p *ProcessorFunction) Process(ctx context.Context, seqId int32, iprot, opr
 
 	result := Result{method: p.methodName, responseType: p.responseType}
 	var err2 error
-	invoke := &Invoke{MethodName: p.methodName, Request: args.Request, Response: reflect.New(p.responseType).Interface()}
+	invoke := &avalon.Invoke{MethodName: p.methodName, Request: args.Request, Response: reflect.New(p.responseType).Interface()}
 	if err2 = p.call(ctx, invoke); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GenIDs: "+err2.Error())
 		_ = oprot.WriteMessageBegin(p.methodName, thrift.EXCEPTION, seqId)

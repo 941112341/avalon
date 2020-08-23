@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/941112341/avalon/sdk/avalon"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/pkg/errors"
@@ -22,27 +23,31 @@ func (s *ThriftServer) Key() string {
 	return "server"
 }
 
-func (s *ThriftServer) wrap(handler interface{}, wrapper Wrapper) interface{} {
+func (s *ThriftServer) wrap(handler interface{}, wrapper avalon.Wrapper) interface{} {
 	processorMap := ProcessorMap{processorMap: map[string]*ProcessorFunction{}}
 	val := reflect.ValueOf(handler).Elem()
+	typ := val.Type()
 	for i := 0; i < val.NumMethod(); i++ {
 		method := val.Method(i)
 
-		var call Call = func(ctx context.Context, invoke *Invoke) error {
+		var call = func(ctx context.Context, invoke *avalon.Invoke) error {
 			result := method.Call([]reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(invoke.Request)})
-			invoke.Response = result[0].Interface()
-			err := result[1].Interface().(error)
+			r := result[0]
+			if !r.IsNil() {
+				invoke.Response = r.Interface()
+			}
+			err, _ := result[1].Interface().(error)
 			return err
 		}
 
 		call = wrapper.Middleware(call)
 		methodType := method.Type()
-		methodName := methodType.Name()
+		methodName := typ.Method(i).Name
 		processorMap.processorMap[methodName] = &ProcessorFunction{
 			call:         call,
 			methodName:   methodName,
-			requestType:  methodType.In(1),
-			responseType: methodType.Out(1),
+			requestType:  methodType.In(1).Elem(),
+			responseType: methodType.Out(0).Elem(),
 		}
 
 	}

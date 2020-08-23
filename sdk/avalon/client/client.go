@@ -2,59 +2,55 @@ package client
 
 import (
 	"context"
+	"github.com/941112341/avalon/sdk/avalon"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/apache/thrift/lib/go/thrift"
 	"time"
 )
 
-type Client struct {
-	LoadBalancer LoadBalancer
+type DirectThriftClient struct {
+	Hostport string
+	Timeout  time.Duration
 }
 
-func (c *Client) Call(ctx context.Context, method string, args, result thrift.TStruct) error {
-
-	SetBaseArgs(ctx, args)
-	event := &Event{Ctx: ctx, Method: method, Args: args, Result: result}
-	return c.LoadBalancer.Consume(event)
-}
-
-func NewClient(loadBalancer LoadBalancer) *Client {
-	return &Client{LoadBalancer: loadBalancer}
-}
-
-func NewClientOptions(psm string, options ...Option) (*Client, error) {
-	builder := NewBalancerBuilder()
-	for _, option := range options {
-		option.BalanceBuilder(builder)
-	}
-	balancer, err := builder.PSM(psm).Build()
+func (d *DirectThriftClient) Call(ctx context.Context, invoke *avalon.Invoke) error {
+	tSocket, err := thrift.NewTSocketTimeout(d.Hostport, d.Timeout)
 	if err != nil {
-		return nil, inline.PrependErrorFmt(err, "build fail")
+		return inline.PrependErrorFmt(err, "open socket %+v", *d)
 	}
+	defer tSocket.Close()
+	transport, err := thrift.NewTFramedTransportFactory(thrift.NewTTransportFactory()).GetTransport(tSocket)
+	if err != nil {
+		return inline.PrependErrorFmt(err, "get transport")
+	}
+	if err = transport.Open(); err != nil {
+		return inline.PrependErrorFmt(err, "transport open")
+	}
+	input := thrift.NewTBinaryProtocolFactoryDefault().GetProtocol(transport)
+	output := input
+	client := thrift.NewTStandardClient(input, output)
 
-	balancerBuilder := NewLoadBalancerBuilder()
-	for _, option := range options {
-		option.LoadBalanceBuilder(balancerBuilder)
-	}
-	loadBalancer := balancerBuilder.Balancer(balancer).Build()
-	return &Client{LoadBalancer: loadBalancer}, nil
+	return client.Call(ctx, invoke.MethodName, invoke.Request.(thrift.TStruct), invoke.Response.(thrift.TStruct))
 }
 
-type Option interface {
-	BalanceBuilder(builder *BalancerBuilder)
-	LoadBalanceBuilder(builder *loadBalancerBuilder)
-}
-
-type TimeoutOption struct {
+// may be pool
+type ThriftClientFactory struct {
+	Timeout string `default:"2s"`
 	timeout time.Duration
 }
 
-func (t TimeoutOption) BalanceBuilder(builder *BalancerBuilder) {
-	builder.Timeout(t.timeout)
+func (t *ThriftClientFactory) Initial() error {
+	t.timeout = inline.Parse(t.Timeout)
+	return nil
 }
 
-func (t TimeoutOption) LoadBalanceBuilder(builder *loadBalancerBuilder) {}
+func (t *ThriftClientFactory) Destroy() error {
+	return nil
+}
 
-func WithTimeoutOption(timeout time.Duration) Option {
-	return &TimeoutOption{timeout: timeout}
+func (t *ThriftClientFactory) NewClient(hostport string) (interface{}, error) {
+	return &DirectThriftClient{
+		Hostport: hostport,
+		Timeout:  t.timeout,
+	}, nil
 }
