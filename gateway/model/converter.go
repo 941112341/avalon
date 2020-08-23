@@ -1,8 +1,11 @@
 package model
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+)
 
 type Converter interface {
-	ConvertRequest(request *http.Request) (interface{}, error)
-	ConvertResponse(data interface{}) (*HttpResponse, error)
+	ConvertRequest(ctx context.Context, request *http.Request) (interface{}, error)
+	ConvertResponse(ctx context.Context, data interface{}) (*HttpResponse, error)
 }

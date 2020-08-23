@@ -1,9 +1,7 @@
 package server
 
 import (
-	"errors"
 	"fmt"
-	"github.com/941112341/avalon/sdk/avalon/both"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/941112341/avalon/sdk/zookeeper"
 	"github.com/samuel/go-zookeeper/zk"
@@ -11,89 +9,53 @@ import (
 	"time"
 )
 
-type Discover interface {
-	Register() error
-	both.Hostport
+type Zookeeper struct {
+	Session      []string `default:"localhost:2181"`
+	Timeout      string   `default:"2s"`
+	RegisterTime string   `default:"10s"`
+	PSM          string   `viper:"server.psm"`
+	Port         int      `viper:"server.port"`
+	Path         string   `viper:"server.discover.path"`
+
+	timeout      time.Duration
+	registerTime time.Duration
+	client       *zookeeper.ZkClient
 }
 
-type ZkDiscover struct {
-	session  []string
-	timeout  time.Duration
-	psm      string
-	hostport string
-	port     string
+func (z *Zookeeper) Key() string {
+	return "zookeeper"
 }
 
-func (z *ZkDiscover) Port() string {
-	return z.port
+func (z *Zookeeper) path() string {
+	return path.Join(z.Path, z.PSM, z.hostport())
 }
 
-func (z *ZkDiscover) Hostport() string {
-	return z.hostport
+func (z *Zookeeper) Initial() (err error) {
+	z.timeout = inline.Parse(z.Timeout)
+	z.registerTime = inline.Parse(z.Timeout)
+
+	z.client, err = zookeeper.NewClient(zookeeper.ZkConfig{
+		HostPorts:      z.Session,
+		SessionTimeout: z.timeout,
+	})
+	return
 }
 
-func (z *ZkDiscover) valid() error {
-	if z.psm == "" {
-		return errors.New("psm is empty")
-	}
-	if z.hostport == "" {
-		return errors.New("host port is nil")
-	}
+func (z *Zookeeper) Destroy() error {
+	z.client.Conn.Close()
 	return nil
 }
 
-func (z *ZkDiscover) nodePath() string {
-	return path.Join("/host", z.psm, z.hostport)
+func (z *Zookeeper) BeforeRun() error {
+	return z.Register()
 }
 
-type zkDiscoverBuilder struct {
-	discover *ZkDiscover
-}
-
-func NewZkDiscoverBuilder() *zkDiscoverBuilder {
-	return &zkDiscoverBuilder{discover: &ZkDiscover{timeout: 10 * time.Second, session: []string{"localhost:2181"}}}
-}
-
-func (b *zkDiscoverBuilder) Session(session []string) *zkDiscoverBuilder {
-	b.discover.session = session
-	return b
-}
-
-func (b *zkDiscoverBuilder) Timeout(t time.Duration) *zkDiscoverBuilder {
-	b.discover.timeout = t
-	return b
-}
-
-func (b *zkDiscoverBuilder) PSM(psm string) *zkDiscoverBuilder {
-	b.discover.psm = psm
-	return b
-}
-
-func (b *zkDiscoverBuilder) Hostport(hostport string) *zkDiscoverBuilder {
-	b.discover.hostport = hostport
-	return b
-}
-
-func (b *zkDiscoverBuilder) Port(port int) *zkDiscoverBuilder {
-	ip := inline.GetIP()
-	b.discover.hostport = fmt.Sprintf("%s:%d", ip, port)
-	b.discover.port = fmt.Sprintf(":%d", port)
-	return b
-}
-
-func (b *zkDiscoverBuilder) Build() *ZkDiscover {
-	if err := b.discover.Register(); err != nil {
-		panic(err)
-	}
-	return b.discover
-}
-
-func (z *ZkDiscover) Register() error {
+func (z *Zookeeper) Register() error {
 	err := z.register()
 	if err != nil {
 		return err
 	}
-	inline.WithFields("psm", z.psm, "timeout", z.timeout).Infoln("start register")
+	inline.WithFields("psm", z.PSM, "Timeout", z.Timeout).Infoln("start register")
 
 	ticker := time.NewTicker(z.timeout)
 	go func() {
@@ -107,23 +69,18 @@ func (z *ZkDiscover) Register() error {
 	return nil
 }
 
-func (z *ZkDiscover) register() error {
-	if err := z.valid(); err != nil {
-		return inline.PrependErrorFmt(err, "zk valid err")
-	}
+func (z *Zookeeper) register() error {
 
-	cli, err := zookeeper.GetZkClientInstance(zookeeper.ZkConfig{
-		HostPorts:      z.session,
-		SessionTimeout: z.timeout,
-	})
-	if err != nil {
-		return inline.PrependErrorFmt(err, "get zk client %+v", *z)
-	}
+	cli := z.client
 
-	node := zookeeper.NewZkNodeBuilder(z.nodePath()).Build()
+	node := zookeeper.NewZkNodeBuilder(z.path()).Build()
 	if err := node.Save(cli, zk.FlagEphemeral); err != nil {
-		return inline.PrependErrorFmt(err, "save node fail %s", z.nodePath())
+		return inline.PrependErrorFmt(err, "save node fail %s", z.path())
 	}
 
 	return nil
+}
+
+func (z *Zookeeper) hostport() string {
+	return fmt.Sprintf("%s:%d", inline.GetIP(), z.Port)
 }

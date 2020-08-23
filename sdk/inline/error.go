@@ -160,3 +160,10 @@ func RecordStack(index int) string {
 	}
 	return stack.ToString()
 }
+
+func Recovery() {
+	r := recover()
+	if r != nil {
+		WithFields("recover", r).Errorln("panic !!")
+	}
+}

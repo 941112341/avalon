@@ -1,8 +1,10 @@
 package impl
 
 import (
+	"context"
 	"errors"
 	"github.com/941112341/avalon/gateway/model"
+	"github.com/941112341/avalon/sdk/avalon/both"
 	"github.com/941112341/avalon/sdk/inline"
 	"github.com/json-iterator/go"
 	"io/ioutil"
@@ -20,7 +22,7 @@ type BaseConverter struct {
 	mapperArgs map[string]interface{}
 }
 
-func (b *BaseConverter) ConvertRequest(request *http.Request) (interface{}, error) {
+func (b *BaseConverter) ConvertRequest(ctx context.Context, request *http.Request) (interface{}, error) {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return nil, err
@@ -39,12 +41,18 @@ func (b *BaseConverter) ConvertRequest(request *http.Request) (interface{}, erro
 		}
 		raw[k] = v
 	}
+
+	base := both.GetBase(ctx)
+	if base == nil {
+		return nil, errors.New("base not found")
+	}
+	raw["base"] = base
 	return map[string]interface{}{
 		"request": raw,
 	}, nil
 }
 
-func (b *BaseConverter) ConvertResponse(data interface{}) (*model.HttpResponse, error) {
+func (b *BaseConverter) ConvertResponse(ctx context.Context, data interface{}) (*model.HttpResponse, error) {
 	switch d := data.(type) {
 	case string:
 		return DefaultHttpResponse(d), nil

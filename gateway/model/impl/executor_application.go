@@ -5,7 +5,7 @@ import (
 	"github.com/941112341/avalon/gateway/model"
 	"github.com/941112341/avalon/gateway/repository"
 	"github.com/941112341/avalon/gateway/service"
-	"github.com/941112341/avalon/sdk/avalon"
+	"github.com/941112341/avalon/sdk/avalon/client"
 	"github.com/941112341/avalon/sdk/generic"
 	"github.com/941112341/avalon/sdk/generic/invoker"
 	"github.com/941112341/avalon/sdk/inline"
@@ -47,7 +47,7 @@ func (e *Executor) Invoker(ctx context.Context, request *http.Request) (resp *mo
 		}
 	}()
 
-	value, err := e.converter.ConvertRequest(request)
+	value, err := e.converter.ConvertRequest(ctx, request)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "convert request %+v", request)
 	}
@@ -70,10 +70,14 @@ func (e *Executor) Invoker(ctx context.Context, request *http.Request) (resp *mo
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "create invoker %+v", e)
 	}
-	result, err := i.Invoke(ctx, avalon.NewClient(e.psm), data)
+	cli, err := client.NewClientOptions(e.psm)
+	if err != nil {
+		return nil, inline.PrependErrorFmt(err, "get client fail")
+	}
+	result, err := i.Invoke(ctx, cli, data)
 	if err != nil {
 		return nil, inline.PrependErrorFmt(err, "invoke %s", data)
 	}
 
-	return e.converter.ConvertResponse(result)
+	return e.converter.ConvertResponse(ctx, result)
 }
