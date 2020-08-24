@@ -25,9 +25,12 @@ func (s *ThriftServer) Key() string {
 
 func (s *ThriftServer) wrap(handler interface{}, wrapper avalon.Wrapper) interface{} {
 	processorMap := ProcessorMap{processorMap: map[string]*ProcessorFunction{}}
-	val := reflect.ValueOf(handler).Elem()
+	val := reflect.ValueOf(handler)
+	if val.NumMethod() == 0 {
+		val = val.Elem()
+	}
 	typ := val.Type()
-	for i := 0; i < val.NumMethod(); i++ {
+	for i := 0; i < typ.NumMethod(); i++ {
 		method := val.Method(i)
 
 		var call = func(ctx context.Context, invoke *avalon.Invoke) error {
@@ -43,6 +46,7 @@ func (s *ThriftServer) wrap(handler interface{}, wrapper avalon.Wrapper) interfa
 		call = wrapper.Middleware(call)
 		methodType := method.Type()
 		methodName := typ.Method(i).Name
+
 		processorMap.processorMap[methodName] = &ProcessorFunction{
 			call:         call,
 			methodName:   methodName,

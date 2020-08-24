@@ -15,7 +15,7 @@ type Zookeeper struct {
 	RegisterTime string   `default:"10s"`
 	PSM          string   `viper:"server.psm"`
 	Port         int      `viper:"server.port"`
-	Path         string   `viper:"server.discover.path"`
+	Path         string   `viper:"server.discover.path" default:"/host"`
 
 	timeout      time.Duration
 	registerTime time.Duration

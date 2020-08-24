@@ -1,16 +1,15 @@
 package conf
 
-type config struct {
-	Https struct {
-		Port int `yaml:"port"`
-	} `yaml:"https"`
-	Http struct {
-		Port int `yaml:"port"`
-	} `yaml:"http"`
-	Database struct {
-		DB     string `yaml:"DB"`
-		DBRead string `yaml:"DBRead"`
-	} `yaml:"Database"`
-}
+import (
+	"github.com/spf13/viper"
+)
 
-var Config config
+func InitViper() error {
+	viper.AddConfigPath(".")
+	viper.SetConfigName("mapper")
+	if err := viper.ReadInConfig(); err != nil {
+		return err
+	}
+	viper.WatchConfig()
+	return nil
+}

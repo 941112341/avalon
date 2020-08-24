@@ -17,6 +17,7 @@ type ViperBean interface {
 
 type Viper struct {
 	Bean
+	Config func() error
 }
 
 func (v *Viper) Key() string {
@@ -30,15 +31,8 @@ func (v *Viper) Key() string {
 
 func (v *Viper) Initial() (err error) {
 	once.Do(func() {
-		viper.SetConfigName("avalon")
-		viper.AddConfigPath(".")
-		viper.AddConfigPath("$GOPATH/src/github.com/941112341/avalon/sdk/avalon")
-		err = viper.ReadInConfig()
+		err = v.Config()
 	})
-	if err != nil {
-		return err
-	}
-
 	if err := viper.UnmarshalKey(v.Key(), &v.Bean); err != nil {
 		return err
 	}
@@ -83,5 +77,14 @@ func InitialByDefault(bean Bean) {
 }
 
 func NewBean(bean Bean) Bean {
-	return &Viper{Bean: bean}
+	return &Viper{Bean: bean, Config: func() error {
+		viper.SetConfigName("avalon")
+		viper.AddConfigPath(".")
+		viper.AddConfigPath("$GOPATH/src/github.com/941112341/avalon/sdk/avalon")
+		return viper.ReadInConfig()
+	}}
+}
+
+func NewBeanFunc(bean Bean, function func() error) Bean {
+	return &Viper{Bean: bean, Config: function}
 }

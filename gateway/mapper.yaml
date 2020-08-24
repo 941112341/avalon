@@ -1,0 +1,24 @@
+conf:
+  idlpath: "/Users/jiangshihao/Desktop/go/src/github.com/941112341/avalon/common/idl"
+  port: 8081
+  psm: "avalon.gateway.jiangshihao"
+
+/api/listArticle:
+  psm: "avalon.blog.jiangshihao"
+  method: "ListBlogs"
+  base: "blog"
+
+/api/saveArticle:
+  psm: "avalon.blog.jiangshihao"
+  base: "blog"
+  method: "SaveBlog"
+
+/api/getArticle:
+  psm: "avalon.blog.jiangshihao"
+  base: "blog"
+  method: "GetBlog"
+
+/api/deleteArticle:
+  psm: "avalon.blog.jiangshihao"
+  base: "blog"
+  method: "DeleteBlogs"

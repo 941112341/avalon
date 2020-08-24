@@ -26,6 +26,14 @@ type ThriftGroup struct {
 	ModelMap map[string]*ThriftFileModel
 }
 
+func (t *ThriftGroup) Merge(grps []*ThriftGroup) {
+	for _, grp := range grps {
+		for s, model := range grp.ModelMap {
+			t.ModelMap[s] = model
+		}
+	}
+}
+
 func (t *ThriftGroup) GetMethod(base, service, method string) (*ThriftMethodModel, bool) {
 	serviceModel, ok := t.GetService(base, service)
 	if !ok {

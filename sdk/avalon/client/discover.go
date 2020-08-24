@@ -12,10 +12,10 @@ type ZkIPDiscover struct {
 	namespace string
 
 	Session      []string `default:"localhost:2181"`
-	Timeout      string   `default:"2s"`
+	Timeout      string   `default:"10s"`
 	RegisterTime string   `default:"10s"`
 
-	Path string `viper:"server.discover.path"`
+	Path string `viper:"server.discover.path" default:"/host"`
 
 	timeout time.Duration
 	client  *zookeeper.ZkClient

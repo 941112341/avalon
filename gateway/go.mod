@@ -11,6 +11,7 @@ require (
 	github.com/jinzhu/gorm v1.9.15
 	github.com/json-iterator/go v1.1.10
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/spf13/viper v1.7.1
 	github.com/t-tiger/gorm-bulk-insert/v2 v2.0.1
 )
 

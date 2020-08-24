@@ -125,3 +125,10 @@ func (MyServer *MyServer) AddWrapper(handler avalon.Wrapper) *MyServer {
 	MyServer.handlers = append(MyServer.handlers, handler)
 	return MyServer
 }
+
+func DefaultServer() Bootstrap {
+
+	return (&MyServer{}).AddBootstrap(&ThriftServer{}).
+		AddBootstrapHook(&Zookeeper{}).
+		AddWrapper(&ErrorWrapper{}).AddWrapper(&LogWrapper{})
+}
