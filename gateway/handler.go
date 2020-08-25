@@ -6,34 +6,28 @@ import (
 	"net/http"
 )
 
-type BaseResp struct {
-	Code    int32
-	Message string
-	Data    interface{}
-}
-
 func Transfer(writer http.ResponseWriter, request *http.Request) {
 
-	errResponse := &BaseResp{
+	errResponse := &service.BaseResp{
 		Code:    -1,
 		Message: "",
 		Data:    nil,
 	}
 	defer func() {
-		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if _, err := writer.Write(inline.ToJsonBytes(errResponse)); err != nil {
-			panic(err)
-		}
+		inline.WithFields("request", request, "response", errResponse, "path", request.URL.Path).Infoln("finish")
+		writer.Write(inline.ToJsonBytes(errResponse))
 	}()
 	data, err := service.TransferServiceInstance.Transfer(request)
 	if err != nil {
 		errResponse.Message = err.Error()
 		return
 	}
-	errResponse.Data = data.Data
+	errResponse = data.BaseResp
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	writer.Header().Set("Access-Control-Allow-Headers", "*")
 	for k, v := range data.Header {
 		writer.Header().Set(k, v)
 	}
-
 	return
 }

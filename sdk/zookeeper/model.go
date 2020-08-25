@@ -8,7 +8,10 @@ import (
 	"strings"
 )
 
-type Watcher func(event zk.Event)
+type Watcher interface {
+	WatchEvent(event zk.Event)
+	WatchError(err error)
+}
 
 // unThreadSave
 type ZkNode struct {
@@ -184,12 +187,14 @@ func watchLoop(loopFunc func() (<-chan zk.Event, error), watchers ...Watcher) (e
 			select {
 			case event := <-ch:
 				for _, watcher := range watchers {
-					watcher(event)
+					watcher.WatchEvent(event)
 				}
 				ch, err = loopFunc()
 			}
 		}
-		inline.WithFields("err", err).Errorln("watch loop err")
+		for _, watcher := range watchers {
+			watcher.WatchError(err)
+		}
 	}()
 	return
 }

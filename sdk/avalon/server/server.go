@@ -35,11 +35,10 @@ func (s *ThriftServer) wrap(handler interface{}, wrapper avalon.Wrapper) interfa
 
 		var call = func(ctx context.Context, invoke *avalon.Invoke) error {
 			result := method.Call([]reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(invoke.Request)})
-			r := result[0]
-			if !r.IsNil() {
-				invoke.Response = r.Interface()
-			}
 			err, _ := result[1].Interface().(error)
+			if err == nil {
+				invoke.Response = result[0].Interface()
+			}
 			return err
 		}
 

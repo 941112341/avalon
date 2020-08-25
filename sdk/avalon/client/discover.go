@@ -41,24 +41,26 @@ func (z *ZkIPDiscover) Initial() error {
 	z.client = cli
 
 	node := zookeeper.NewZkNodeBuilder(path.Join(z.Path, z.PSM)).Build()
-	err = node.ListWL(cli, false, func(event zk.Event) {
-		switch event.Type {
-		case zk.EventNodeCreated, zk.EventNodeDeleted:
-			z.doRefresh(event, node, cli)
-		}
+	err = node.ListWL(cli, false, &watcher{
+		z: z,
 	})
 	z.hostports = node.GetChildrenKey()
 	return err
 }
 
-func (z *ZkIPDiscover) doRefresh(event zk.Event, node *zookeeper.ZkNode, cli *zookeeper.ZkClient) {
-	inline.WithFields("path", event.Path).Infoln("receive a register event")
-	if err := node.List(cli, false); err != nil {
-		inline.WithFields("path", event.Path).Errorln("refresh host list fail")
+func (z *ZkIPDiscover) doRefresh() {
+	node := zookeeper.NewZkNodeBuilder(z.path()).Build()
+	inline.WithFields("path", z.path()).Infoln("receive a register event")
+	if err := node.List(z.client, false); err != nil {
+		inline.WithFields("path", z.path()).Errorln("refresh host list fail")
 	} else {
 		inline.WithFields("hostports", node.GetChildrenKey()).Infoln("refresh host list success")
 		z.hostports = node.GetChildrenKey()
 	}
+}
+
+func (z *ZkIPDiscover) path() string {
+	return path.Join(z.Path, z.PSM)
 }
 
 func (z *ZkIPDiscover) Destroy() error {
@@ -67,5 +69,24 @@ func (z *ZkIPDiscover) Destroy() error {
 }
 
 func (z *ZkIPDiscover) GetHostports() []string {
+	if len(z.hostports) == 0 {
+		z.doRefresh()
+	}
 	return z.hostports
+}
+
+type watcher struct {
+	z *ZkIPDiscover
+}
+
+func (w *watcher) WatchEvent(event zk.Event) {
+	switch event.Type {
+	case zk.EventNodeCreated, zk.EventNodeDeleted:
+		w.z.doRefresh()
+	}
+}
+
+func (w *watcher) WatchError(err error) {
+	w.z.hostports = nil
+	inline.WithFields("err", err).Errorln("watch %s instance fail", w.z.PSM)
 }

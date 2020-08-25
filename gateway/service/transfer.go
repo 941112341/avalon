@@ -16,6 +16,8 @@ import (
 	"time"
 )
 
+const baseRespKey = "baseResp"
+
 var TransferServiceInstance = &TransferService{}
 
 var clientMap sync.Map
@@ -31,11 +33,19 @@ type TransferTarget struct {
 	Method  string
 	Base    string
 	PSM     string
+	Timeout string
+	Retry   int
 }
 
 type Response struct {
-	Data   interface{}
-	Header map[string]string
+	BaseResp *BaseResp
+	Header   map[string]string
+}
+
+type BaseResp struct {
+	Code    int32
+	Message string
+	Data    interface{}
 }
 
 type TransferService struct {
@@ -88,7 +98,7 @@ func (t *TransferService) Transfer(request *http.Request) (*Response, error) {
 		return nil, inline.PrependErrorFmt(err, "viper unmarshal %s", urlPath)
 	}
 
-	if time.Now().Sub(time.Now()) > time.Minute {
+	if time.Now().Sub(t.lastUpdate) > time.Minute {
 		if err := t.Initial(); err != nil {
 			return nil, inline.PrependErrorFmt(err, "init when transfer")
 		}
@@ -122,10 +132,11 @@ func (t *TransferService) Transfer(request *http.Request) (*Response, error) {
 	if ok {
 		cli = o.(*client.AvalonClient)
 	} else {
-		cli = client.DefaultClient(target.PSM)
+		cli = client.DefaultClientTimeout(target.PSM, target.Timeout)
 		if err := cli.Initial(); err != nil {
 			return nil, err
 		}
+		cli.Retry = target.Retry
 		clientMap.Store(target.PSM, cli)
 	}
 
@@ -136,9 +147,18 @@ func (t *TransferService) Transfer(request *http.Request) (*Response, error) {
 
 	any := inline.JSONAny(response)
 	respData := any.Get("success").GetInterface()
-	resp := &Response{Data: respData, Header: map[string]string{}}
+	respMap := respData.(map[string]interface{})
+	delete(respMap, baseRespKey)
+	baseResp := any.Get("success").Get(baseRespKey)
+	code := baseResp.Get("code").ToInt32()
+	message := baseResp.Get("message").ToString()
+	resp := &Response{BaseResp: &BaseResp{
+		Code:    code,
+		Message: message,
+		Data:    respMap,
+	}, Header: map[string]string{}}
 
-	extraAny := any.Get("success").Get("baseResp").Get("extra").Get("header")
+	extraAny := baseResp.Get("extra").Get("header")
 	if extraAny.LastError() == nil {
 		header := extraAny.ToString()
 		inline.MustUnmarshal(header, &resp.Header)

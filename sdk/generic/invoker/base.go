@@ -129,7 +129,7 @@ func (b *BaseArgs) BindValue(o interface{}) error {
 
 		if err := any.LastError(); err != nil {
 			if !b.Optional() {
-				inline.WithFields("path", b.JsonPath(), "typeName", b.TypeName()).Infoln("skip field")
+				inline.WithFields("path", b.JsonPath(), "typeName", b.TypeName(), "err", any.LastError()).Infoln("skip field")
 				//return inline.Error("bind data is nil %+v", b)
 				return nil
 			}

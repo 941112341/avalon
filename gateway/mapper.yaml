@@ -7,6 +7,7 @@ conf:
   psm: "avalon.blog.jiangshihao"
   method: "ListBlogs"
   base: "blog"
+  timeout: "30s"
 
 /api/saveArticle:
   psm: "avalon.blog.jiangshihao"

@@ -28,6 +28,8 @@ type AvalonClient struct {
 	loadBalancer LoadBalancer
 	wrappers     avalon.WrapperComposite
 	factory      Factory
+
+	Retry int
 }
 
 func (f *AvalonClient) Call(ctx context.Context, method string, args, result thrift.TStruct) error {
@@ -53,7 +55,7 @@ func (f *AvalonClient) Call(ctx context.Context, method string, args, result thr
 			Request:    args,
 			Response:   result,
 		})
-	}, 3, 0)
+	}, f.Retry, 0)
 }
 
 func (f *AvalonClient) Initial() error {
@@ -112,4 +114,10 @@ func DefaultClient(psm string) *AvalonClient {
 	return (&AvalonClient{}).SetDiscover(&ZkIPDiscover{PSM: psm}).
 		SetLoadBalancer(&RandomBalancer{}).
 		SetCoreClient(&ThriftClientFactory{})
+}
+
+func DefaultClientTimeout(psm string, timeout string) *AvalonClient {
+	return (&AvalonClient{}).SetDiscover(&ZkIPDiscover{PSM: psm}).
+		SetLoadBalancer(&RandomBalancer{}).
+		SetCoreClient(&ThriftClientFactory{Timeout: timeout})
 }

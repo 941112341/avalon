@@ -88,3 +88,9 @@ func NewBean(bean Bean) Bean {
 func NewBeanFunc(bean Bean, function func() error) Bean {
 	return &Viper{Bean: bean, Config: function}
 }
+
+func NewBeanTODO(bean Bean) Bean {
+	return NewBeanFunc(bean, func() error {
+		return nil
+	})
+}

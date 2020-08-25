@@ -19,6 +19,8 @@ type ErrorWrapper struct {
 
 func (e ErrorWrapper) Middleware(call avalon.Call) avalon.Call {
 	return func(ctx context.Context, invoke *avalon.Invoke) error {
+
+		err := call(ctx, invoke)
 		field := reflect.ValueOf(invoke.Response).Elem().FieldByName("BaseResp")
 		if field.IsNil() {
 			fieldVal := reflect.New(field.Type().Elem())
@@ -26,8 +28,6 @@ func (e ErrorWrapper) Middleware(call avalon.Call) avalon.Call {
 		}
 		var code int32
 		var message string
-
-		err := call(ctx, invoke)
 		if err != nil {
 			aErr, ok := err.(inline.AvalonError)
 			if ok {
