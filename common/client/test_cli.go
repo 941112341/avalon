@@ -10,7 +10,8 @@ var (
 )
 
 func init() {
-	cli, err := _cli.NewClientOptions("example.jiangshihao.test")
+	cli := _cli.DefaultClient("example.jiangshihao.test")
+	err := cli.Initial()
 	if err != nil {
 		panic(err)
 	}

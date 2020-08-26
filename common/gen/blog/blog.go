@@ -28,6 +28,7 @@ var _ = base.GoUnusedProtection__
 //  - Categories
 //  - Name
 //  - Description
+//  - Updated
 type Blog struct {
   ID string `thrift:"id,1" db:"id" json:"id"`
   ImageURL string `thrift:"imageURL,2" db:"imageURL" json:"imageURL"`
@@ -35,6 +36,7 @@ type Blog struct {
   Categories []string `thrift:"categories,4" db:"categories" json:"categories"`
   Name string `thrift:"name,5" db:"name" json:"name"`
   Description string `thrift:"description,6" db:"description" json:"description"`
+  Updated string `thrift:"updated,7" db:"updated" json:"updated"`
 }
 
 func NewBlog() *Blog {
@@ -64,6 +66,10 @@ func (p *Blog) GetName() string {
 
 func (p *Blog) GetDescription() string {
   return p.Description
+}
+
+func (p *Blog) GetUpdated() string {
+  return p.Updated
 }
 func (p *Blog) Read(iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(); err != nil {
@@ -131,6 +137,16 @@ func (p *Blog) Read(iprot thrift.TProtocol) error {
     case 6:
       if fieldTypeId == thrift.STRING {
         if err := p.ReadField6(iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(fieldTypeId); err != nil {
+          return err
+        }
+      }
+    case 7:
+      if fieldTypeId == thrift.STRING {
+        if err := p.ReadField7(iprot); err != nil {
           return err
         }
       } else {
@@ -220,6 +236,15 @@ func (p *Blog)  ReadField6(iprot thrift.TProtocol) error {
   return nil
 }
 
+func (p *Blog)  ReadField7(iprot thrift.TProtocol) error {
+  if v, err := iprot.ReadString(); err != nil {
+  return thrift.PrependError("error reading field 7: ", err)
+} else {
+  p.Updated = v
+}
+  return nil
+}
+
 func (p *Blog) Write(oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin("Blog"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
@@ -230,6 +255,7 @@ func (p *Blog) Write(oprot thrift.TProtocol) error {
     if err := p.writeField4(oprot); err != nil { return err }
     if err := p.writeField5(oprot); err != nil { return err }
     if err := p.writeField6(oprot); err != nil { return err }
+    if err := p.writeField7(oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -303,6 +329,16 @@ func (p *Blog) writeField6(oprot thrift.TProtocol) (err error) {
   return thrift.PrependError(fmt.Sprintf("%T.description (6) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field end error 6:description: ", p), err) }
+  return err
+}
+
+func (p *Blog) writeField7(oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin("updated", thrift.STRING, 7); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:updated: ", p), err) }
+  if err := oprot.WriteString(string(p.Updated)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.updated (7) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 7:updated: ", p), err) }
   return err
 }
 
@@ -801,10 +837,12 @@ func (p *ListBlogsRequest) String() string {
 
 // Attributes:
 //  - Blogs
+//  - Count
 //  - BaseResp
 type ListBlogsResponse struct {
   Blogs []*Blog `thrift:"blogs,1" db:"blogs" json:"blogs"`
-  // unused fields # 2 to 254
+  Count int64 `thrift:"count,2" db:"count" json:"count"`
+  // unused fields # 3 to 254
   BaseResp *base.BaseResp `thrift:"baseResp,255" db:"baseResp" json:"baseResp"`
 }
 
@@ -815,6 +853,10 @@ func NewListBlogsResponse() *ListBlogsResponse {
 
 func (p *ListBlogsResponse) GetBlogs() []*Blog {
   return p.Blogs
+}
+
+func (p *ListBlogsResponse) GetCount() int64 {
+  return p.Count
 }
 var ListBlogsResponse_BaseResp_DEFAULT *base.BaseResp
 func (p *ListBlogsResponse) GetBaseResp() *base.BaseResp {
@@ -843,6 +885,16 @@ func (p *ListBlogsResponse) Read(iprot thrift.TProtocol) error {
     case 1:
       if fieldTypeId == thrift.LIST {
         if err := p.ReadField1(iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(fieldTypeId); err != nil {
+          return err
+        }
+      }
+    case 2:
+      if fieldTypeId == thrift.I64 {
+        if err := p.ReadField2(iprot); err != nil {
           return err
         }
       } else {
@@ -895,6 +947,15 @@ func (p *ListBlogsResponse)  ReadField1(iprot thrift.TProtocol) error {
   return nil
 }
 
+func (p *ListBlogsResponse)  ReadField2(iprot thrift.TProtocol) error {
+  if v, err := iprot.ReadI64(); err != nil {
+  return thrift.PrependError("error reading field 2: ", err)
+} else {
+  p.Count = v
+}
+  return nil
+}
+
 func (p *ListBlogsResponse)  ReadField255(iprot thrift.TProtocol) error {
   p.BaseResp = &base.BaseResp{}
   if err := p.BaseResp.Read(iprot); err != nil {
@@ -908,6 +969,7 @@ func (p *ListBlogsResponse) Write(oprot thrift.TProtocol) error {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
     if err := p.writeField1(oprot); err != nil { return err }
+    if err := p.writeField2(oprot); err != nil { return err }
     if err := p.writeField255(oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(); err != nil {
@@ -933,6 +995,16 @@ func (p *ListBlogsResponse) writeField1(oprot thrift.TProtocol) (err error) {
   }
   if err := oprot.WriteFieldEnd(); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field end error 1:blogs: ", p), err) }
+  return err
+}
+
+func (p *ListBlogsResponse) writeField2(oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin("count", thrift.I64, 2); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:count: ", p), err) }
+  if err := oprot.WriteI64(int64(p.Count)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.count (2) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:count: ", p), err) }
   return err
 }
 

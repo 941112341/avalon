@@ -294,9 +294,11 @@ func (p *Base) String() string {
 // Attributes:
 //  - Code
 //  - Message
+//  - Extra
 type BaseResp struct {
   Code int32 `thrift:"code,1" db:"code" json:"code"`
   Message string `thrift:"message,2" db:"message" json:"message"`
+  Extra map[string]string `thrift:"extra,3" db:"extra" json:"extra"`
 }
 
 func NewBaseResp() *BaseResp {
@@ -310,6 +312,10 @@ func (p *BaseResp) GetCode() int32 {
 
 func (p *BaseResp) GetMessage() string {
   return p.Message
+}
+
+func (p *BaseResp) GetExtra() map[string]string {
+  return p.Extra
 }
 func (p *BaseResp) Read(iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(); err != nil {
@@ -337,6 +343,16 @@ func (p *BaseResp) Read(iprot thrift.TProtocol) error {
     case 2:
       if fieldTypeId == thrift.STRING {
         if err := p.ReadField2(iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(fieldTypeId); err != nil {
+          return err
+        }
+      }
+    case 3:
+      if fieldTypeId == thrift.MAP {
+        if err := p.ReadField3(iprot); err != nil {
           return err
         }
       } else {
@@ -377,12 +393,41 @@ func (p *BaseResp)  ReadField2(iprot thrift.TProtocol) error {
   return nil
 }
 
+func (p *BaseResp)  ReadField3(iprot thrift.TProtocol) error {
+  _, _, size, err := iprot.ReadMapBegin()
+  if err != nil {
+    return thrift.PrependError("error reading map begin: ", err)
+  }
+  tMap := make(map[string]string, size)
+  p.Extra =  tMap
+  for i := 0; i < size; i ++ {
+var _key2 string
+    if v, err := iprot.ReadString(); err != nil {
+    return thrift.PrependError("error reading field 0: ", err)
+} else {
+    _key2 = v
+}
+var _val3 string
+    if v, err := iprot.ReadString(); err != nil {
+    return thrift.PrependError("error reading field 0: ", err)
+} else {
+    _val3 = v
+}
+    p.Extra[_key2] = _val3
+  }
+  if err := iprot.ReadMapEnd(); err != nil {
+    return thrift.PrependError("error reading map end: ", err)
+  }
+  return nil
+}
+
 func (p *BaseResp) Write(oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin("BaseResp"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
     if err := p.writeField1(oprot); err != nil { return err }
     if err := p.writeField2(oprot); err != nil { return err }
+    if err := p.writeField3(oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -408,6 +453,26 @@ func (p *BaseResp) writeField2(oprot thrift.TProtocol) (err error) {
   return thrift.PrependError(fmt.Sprintf("%T.message (2) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field end error 2:message: ", p), err) }
+  return err
+}
+
+func (p *BaseResp) writeField3(oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin("extra", thrift.MAP, 3); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:extra: ", p), err) }
+  if err := oprot.WriteMapBegin(thrift.STRING, thrift.STRING, len(p.Extra)); err != nil {
+    return thrift.PrependError("error writing map begin: ", err)
+  }
+  for k, v := range p.Extra {
+    if err := oprot.WriteString(string(k)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err) }
+    if err := oprot.WriteString(string(v)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err) }
+  }
+  if err := oprot.WriteMapEnd(); err != nil {
+    return thrift.PrependError("error writing map end: ", err)
+  }
+  if err := oprot.WriteFieldEnd(); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 3:extra: ", p), err) }
   return err
 }
 

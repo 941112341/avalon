@@ -17,7 +17,8 @@ var (
 )
 
 func init() {
-	cli, err := _cli.NewClientOptions("avalon.test.idgenerator")
+	cli := _cli.DefaultClient("avalon.test.idgenerator")
+	err := cli.Initial()
 	if err != nil {
 		panic(err)
 	}

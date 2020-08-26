@@ -102,18 +102,26 @@ func TestCall4(t *testing.T) {
 }
 
 func TestCall5(t *testing.T) {
-	funcName(0)
+	funcErr()
 }
 
 func funcName(idx int) {
-	_, err := TestCli.GetCat(context.Background(), &test.CatRequest{
+	resp, err := TestCli.GetCat(context.Background(), &test.CatRequest{
 		ID:   []int64{2,},
 		Base: nil,
 	})
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(idx)
+	fmt.Println(inline.ToJsonString(resp))
+}
+
+func funcErr() {
+	resp, err := TestCli.GetLittleCat(context.Background(), &test.LittleCatRequest{
+		Cat:  nil,
+		Base: nil,
+	})
+	fmt.Println(resp, err)
 }
 
 func TestCall6(t *testing.T) {

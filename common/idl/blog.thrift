@@ -9,6 +9,7 @@ struct Blog {
     4: list<string> categories
     5: string name
     6: string description
+    7: string updated
 }
 
 struct GetBlogRequest {
@@ -31,6 +32,7 @@ struct ListBlogsRequest {
 
 struct ListBlogsResponse {
     1: list<Blog> blogs
+    2: i64 count
     255: base.BaseResp baseResp
 }
 

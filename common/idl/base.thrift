@@ -12,4 +12,5 @@ struct Base {
 struct BaseResp {
     1: i32 code
     2: string message
+    3: map<string, string> extra
 }
