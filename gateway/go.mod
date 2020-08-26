@@ -3,21 +3,17 @@ module github.com/941112341/avalon/gateway
 go 1.14
 
 require (
-	github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a
-	github.com/941112341/avalon/example/idgenerator v0.0.0-20200803095615-2069c2472e9a
-	github.com/941112341/avalon/pkg v0.0.0-20200805082850-62111f650098
-	github.com/941112341/avalon/sdk v0.0.0-20200810130135-4fae6bb39015
-	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b
-	github.com/jinzhu/gorm v1.9.15
-	github.com/json-iterator/go v1.1.10
-	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/941112341/avalon/common v0.0.0-20200825112635-1b3fa96290ee // indirect
+	github.com/941112341/avalon/example/idgenerator v0.0.0-20200825112635-1b3fa96290ee
+	github.com/941112341/avalon/sdk v0.0.0-20200825112635-1b3fa96290ee
+	github.com/denisenkom/go-mssqldb v0.0.0-20200206145737-bbfc9a55622e // indirect
+	github.com/jinzhu/now v1.1.1 // indirect
+	github.com/kr/text v0.2.0 // indirect
+	github.com/lib/pq v1.3.0 // indirect
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
+	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/spf13/viper v1.7.1
-	github.com/t-tiger/gorm-bulk-insert/v2 v2.0.1
-)
-
-replace (
-	github.com/941112341/avalon/common => ../common
-	github.com/941112341/avalon/example/idgenerator => ../example/idgenerator
-	github.com/941112341/avalon/pkg => ../pkg
-	github.com/941112341/avalon/sdk => ../sdk
+	github.com/stretchr/testify v1.5.1 // indirect
+	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
+	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 )

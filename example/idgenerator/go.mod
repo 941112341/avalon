@@ -3,8 +3,8 @@ module github.com/941112341/avalon/example/idgenerator
 go 1.14
 
 require (
-	github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a
-	github.com/941112341/avalon/sdk v0.0.0-20200810130135-4fae6bb39015
+	github.com/941112341/avalon/common v0.0.0-20200825112635-1b3fa96290ee
+	github.com/941112341/avalon/sdk v0.0.0-20200825112635-1b3fa96290ee
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
@@ -13,9 +13,4 @@ require (
 	github.com/jinzhu/gorm v1.9.15
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.3.0
-)
-
-replace (
-	github.com/941112341/avalon/common => ../../common
-	github.com/941112341/avalon/sdk => ../../sdk
 )
