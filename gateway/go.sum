@@ -15,12 +15,16 @@ git.apache.org/thrift.git v0.13.0/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqbl
 github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a/go.mod h1:unvxDmUHhY11p3iDOWgFOYSjbI5mLLAIBCAq/xAwHYM=
 github.com/941112341/avalon/common v0.0.0-20200825112635-1b3fa96290ee h1:wAND7pIMpLcIdMLEU+aZdqYs2XJ8+dVNlilcSDV26KI=
 github.com/941112341/avalon/common v0.0.0-20200825112635-1b3fa96290ee/go.mod h1:o2m9VKlBypDEPdYVIVER3KiglJxssLVTCHXETzM69h8=
+github.com/941112341/avalon/common v0.0.0-20200826030227-3883be846a60 h1:T5TEY3rUKnKZIAPG0MEC9clw5AZr+ibdBCjSZ2cEYMs=
+github.com/941112341/avalon/common v0.0.0-20200826030227-3883be846a60/go.mod h1:o2m9VKlBypDEPdYVIVER3KiglJxssLVTCHXETzM69h8=
 github.com/941112341/avalon/example/idgenerator v0.0.0-20200825112635-1b3fa96290ee h1:Edl+x1BjnTjpeU5XJ9YsrvTudUt84KeAPscFt78CgE0=
 github.com/941112341/avalon/example/idgenerator v0.0.0-20200825112635-1b3fa96290ee/go.mod h1:KYTukhR0z8UxLDwwdXgcrRFoBkwACKpnaG7XfAVrwY8=
 github.com/941112341/avalon/sdk v0.0.0-20200719035616-ff7359fa4a5a/go.mod h1:Lk2bQKN52i/WId74geGtgaR86j0qWlicxjC18ShlcLM=
 github.com/941112341/avalon/sdk v0.0.0-20200810130135-4fae6bb39015/go.mod h1:Lk2bQKN52i/WId74geGtgaR86j0qWlicxjC18ShlcLM=
 github.com/941112341/avalon/sdk v0.0.0-20200825112635-1b3fa96290ee h1:R9mjLbjq1ykmeJtd/WyEpAtu9NtV8oz9mDYTi6sYi28=
 github.com/941112341/avalon/sdk v0.0.0-20200825112635-1b3fa96290ee/go.mod h1:iEzb3xURSTkddw0XLnyMc1NoNSHbkkYqMFlJWD3M4oE=
+github.com/941112341/avalon/sdk v0.0.0-20200826025428-3268e9e82f29 h1:Wjlf9AgoFL1YMqz0MeNSZeN2XlkkaM+Q2RhLjpsKtJc=
+github.com/941112341/avalon/sdk v0.0.0-20200826025428-3268e9e82f29/go.mod h1:iEzb3xURSTkddw0XLnyMc1NoNSHbkkYqMFlJWD3M4oE=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
