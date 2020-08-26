@@ -12,6 +12,7 @@ cloud.google.com/go/pubsub v1.0.1/go.mod h1:R0Gpsv3s54REJCy4fxDixWD93lHJMoZTyQ2k
 cloud.google.com/go/storage v1.0.0/go.mod h1:IhtSnM/ZTZV8YYJWCY8RULGVqBDmpoyjwiyrjsg+URw=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 git.apache.org/thrift.git v0.13.0/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqblrnkyeyg=
+github.com/941112341/avalon v0.0.0-20200826031331-457b5041e469 h1:rrO6PuZmpMB8C889ZmYGgXQC1d6H65n2LsbaPq5aLss=
 github.com/941112341/avalon/common v0.0.0-20200803095615-2069c2472e9a/go.mod h1:unvxDmUHhY11p3iDOWgFOYSjbI5mLLAIBCAq/xAwHYM=
 github.com/941112341/avalon/common v0.0.0-20200825112635-1b3fa96290ee h1:wAND7pIMpLcIdMLEU+aZdqYs2XJ8+dVNlilcSDV26KI=
 github.com/941112341/avalon/common v0.0.0-20200825112635-1b3fa96290ee/go.mod h1:o2m9VKlBypDEPdYVIVER3KiglJxssLVTCHXETzM69h8=

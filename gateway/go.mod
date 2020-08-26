@@ -3,7 +3,6 @@ module github.com/941112341/avalon/gateway
 go 1.14
 
 require (
-	github.com/941112341/avalon/common v0.0.0-20200826030227-3883be846a60 // indirect
 	github.com/941112341/avalon/sdk v0.0.0-20200826025428-3268e9e82f29
 	github.com/denisenkom/go-mssqldb v0.0.0-20200206145737-bbfc9a55622e // indirect
 	github.com/jinzhu/now v1.1.1 // indirect
