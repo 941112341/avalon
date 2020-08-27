@@ -27,7 +27,7 @@ func main() {
 			panic(err)
 		}
 	} else {
-		err = http.ListenAndServeTLS(hostport, "resource/1_www.jiangshihao.cn_bundle.crt", "resource/2_www.jiangshihao.cn.key", nil)
+		err = http.ListenAndServeTLS(hostport, "resource/1_book.jiangshihao.cn_bundle.crt", "resource/2_book.jiangshihao.cn.key", nil)
 		if err != nil {
 			panic(err)
 		}
