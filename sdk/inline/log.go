@@ -62,8 +62,10 @@ func (p Pairs) Errorln(f string, args ...interface{}) {
 
 func (p Pairs) String(msg string) string {
 	m := map[string]interface{}{
-		"tag": p,
-		"msg": msg,
+		"__msg__": msg,
+	}
+	for _, pair := range p {
+		m[pair.Left] = pair.Right
 	}
 	return ToJsonString(m)
 }
