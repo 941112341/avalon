@@ -6,6 +6,7 @@ require (
 	git.apache.org/thrift.git v0.13.0 // indirect
 	github.com/apache/thrift v0.13.0
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
+	github.com/getsentry/sentry-go v0.7.0
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/json-iterator/go v1.1.10

@@ -1,6 +1,6 @@
 conf:
   idlpath: "/home/common/idl"
-  port: 443
+  port: 8081
   psm: "avalon.gateway.jiangshihao"
 
 /api/listArticle:

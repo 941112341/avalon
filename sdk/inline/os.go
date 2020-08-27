@@ -18,3 +18,7 @@ func GetEnvs(key string, defaultValues ...string) string {
 	d := defaultValues[rand.Intn(len(defaultValues))]
 	return GetEnv(key, d)
 }
+
+func IsOnline() bool {
+	return GetEnv("env", "") == "online"
+}

@@ -1,8 +1,10 @@
 package inline
 
 import (
+	"errors"
 	"fmt"
 	"github.com/941112341/avalon/sdk/log"
+	"github.com/getsentry/sentry-go"
 	"github.com/sirupsen/logrus"
 )
 
@@ -58,6 +60,14 @@ func (p Pairs) Errorln(f string, args ...interface{}) {
 	Errorln(s, p...)
 }
 
+func (p Pairs) String(msg string) string {
+	m := map[string]interface{}{
+		"tag": p,
+		"msg": msg,
+	}
+	return ToJsonString(m)
+}
+
 func stackPair() []Pair {
 	return []Pair{
 		{
@@ -83,10 +93,12 @@ func (p Pairs) Fatalln(f string, args ...interface{}) {
 
 func Errorln(msg string, pairs ...Pair) {
 	log.New().WithFields(Pairs(pairs).Fields()).Errorln(msg)
+	sentry.CaptureException(errors.New(Pairs(pairs).String(msg)))
 }
 
 func Infoln(msg string, pairs ...Pair) {
 	log.New().WithFields(Pairs(pairs).Fields()).Infoln(msg)
+	sentry.CaptureMessage(Pairs(pairs).String(msg))
 }
 
 func Debugln(msg string, pairs ...Pair) {
@@ -95,10 +107,12 @@ func Debugln(msg string, pairs ...Pair) {
 
 func Warningln(msg string, pairs ...Pair) {
 	log.New().WithFields(Pairs(pairs).Fields()).Warningln(msg)
+	sentry.CaptureException(errors.New(Pairs(pairs).String(msg)))
 }
 
 func Fatalln(msg string, pairs ...Pair) {
 	log.New().WithFields(Pairs(pairs).Fields()).Fatalln(msg)
+	sentry.CaptureException(errors.New(Pairs(pairs).String(msg)))
 }
 
 func WithFields(args ...interface{}) Pairs {

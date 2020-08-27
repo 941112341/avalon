@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="49.232.24.249">
+  <component name="PublishConfigData" serverName="tx">
     <serverData>
-      <paths name="49.232.24.249">
+      <paths name="home">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/opt/gateway" local="$PROJECT_DIR$/gateway" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="tx">
         <serverdata>
           <mappings>
             <mapping deploy="/common" local="$PROJECT_DIR$/common" web="/" />
             <mapping deploy="" local="" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="home">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/opt/avalon" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
