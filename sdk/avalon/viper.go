@@ -77,11 +77,7 @@ func InitialByDefault(bean Bean) {
 }
 
 func NewBean(bean Bean) Bean {
-	return &Viper{Bean: bean, Config: func() error {
-		viper.SetConfigName("avalon")
-		viper.AddConfigPath(".")
-		return viper.ReadInConfig()
-	}}
+	return NewBeanTODO(bean)
 }
 
 func NewBeanFunc(bean Bean, function func() error) Bean {

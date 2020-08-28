@@ -23,3 +23,7 @@ conf:
   psm: "avalon.blog.jiangshihao"
   base: "blog"
   method: "DeleteBlogs"
+
+zookeeper:
+  session:
+    - "localhost:2182"
