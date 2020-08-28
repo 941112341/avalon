@@ -80,7 +80,6 @@ func NewBean(bean Bean) Bean {
 	return &Viper{Bean: bean, Config: func() error {
 		viper.SetConfigName("avalon")
 		viper.AddConfigPath(".")
-		viper.AddConfigPath("$GOPATH/src/github.com/941112341/avalon/sdk/avalon")
 		return viper.ReadInConfig()
 	}}
 }
